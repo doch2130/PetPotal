@@ -1,0 +1,33 @@
+.wrap {
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: rgb(255, 242, 204);
+  align-items: center;
+}
+
+.wrapCol {
+  flex: 1 0 0%;
+}
+
+.wrapImg {
+  text-align: right;
+}
+
+.wrapImg img {
+  max-width: 500px;
+}
+
+.wrapText {
+  max-width: 500px;
+  margin-left: 6rem;
+}
+
+.wrapText h1 {
+  font-size: 3em;
+}
+
+.wrapText p {
+  font-size: 1.2em;
+}
