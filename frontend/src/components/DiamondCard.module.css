@@ -1,0 +1,43 @@
+.diamondCardWrap {
+  display: inline-block;
+  width: 50%;
+  height: 250px;
+}
+
+.diamondCard {
+  display: inline-block;
+  background: #FFFFFF;
+  border-radius: 20px;
+  transform: rotate(-45deg);
+  width: 160px;
+  height: 160px;
+  position: relative;
+  top: 18%;
+}
+
+.diamondCard img {
+  position: relative;
+  transform: rotate(45deg);
+  width: 140px;
+  height: 140px;
+  top: 10px;
+}
+
+.diamondCardText {
+  display: inline-block;
+  width: 200px;
+  margin-left: 2rem;
+  text-align: left;
+  position: relative;
+  top: 18%;
+}
+
+.diamondCardText p {
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+}
+
+.diamondCardText span {
+  font-size: 1.2rem;
+}

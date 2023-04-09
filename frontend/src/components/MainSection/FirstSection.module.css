@@ -1,5 +1,5 @@
 .wrap {
-  width: 100%;
+  /* width: 100%; */
   min-height: 500px;
   display: flex;
   flex-wrap: wrap;
@@ -15,8 +15,15 @@
   text-align: right;
 }
 
-.wrapImg img {
-  max-width: 500px;
+.dogImg {
+  width: 500px;
+  height: 400px;
+}
+
+.catImg {
+  width: 320px;
+  height: 350px;
+  margin: 1rem 6rem 0 0;
 }
 
 .wrapText {
@@ -25,9 +32,13 @@
 }
 
 .wrapText h1 {
-  font-size: 3em;
+  font-size: 3rem;
 }
 
 .wrapText p {
-  font-size: 1.2em;
+  font-size: 1.2rem;
+}
+
+.imgSource {
+  display: none;
 }
