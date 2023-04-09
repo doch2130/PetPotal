@@ -26,6 +26,11 @@
   margin: 2rem auto 0;
 }
 
+.imgSubWrap {
+  display: flex;
+  justify-content: center;
+}
+
 .imgWrap img {
   border-radius: 10px;
   width: 400px;
