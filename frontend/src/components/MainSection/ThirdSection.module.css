@@ -1,0 +1,24 @@
+.wrap {
+  background-color: #E5FFD4;
+  min-height: 800px;
+  padding-top: 5rem;
+  /* display: flex; */
+}
+
+.body {
+  width: 70%;
+  margin: auto;
+  
+}
+
+.title {
+  font-size: 3rem;
+  margin: 0px 10px 0px 1rem;
+}
+
+.subTitle {
+  font-size: 2rem;
+  max-width: 700px;
+  margin-left: 1rem;
+  margin-top: 0px;
+}

@@ -49,30 +49,28 @@ const explanationData = [
 
 export default function SecondSection() {
   return (
-    <>
-      <div className={style.wrap}>
-        <h1>Everything you need, all in one piece!</h1>
-        <div>
-          {explanationData.reduce((rows:any, el, index:number) => {
-            if (index % 2 === 0) rows.push([]);
-            rows[rows.length-1].push(
-              <DiamondCard iconImage={el.image} key={index}>
-                <p>{el.title}</p>
-                <span>{el.explanation}</span>
-                <div className={style.imgSource}>
-                  {el.imgSource}
-                </div>
-              </DiamondCard>
-            );
-            return rows;
-          }, []).map((row:any, index:number) => (
-            <div className={style.explanationLineWrap} key={index}>
-              {row}
-            </div>
-          )
-          )}
-        </div>
+    <div className={style.wrap}>
+      <h1>Everything you need, all in one piece!</h1>
+      <div>
+        {explanationData.reduce((rows:any, el, index:number) => {
+          if (index % 2 === 0) rows.push([]);
+          rows[rows.length-1].push(
+            <DiamondCard iconImage={el.image} key={index}>
+              <p>{el.title}</p>
+              <span>{el.explanation}</span>
+              <div className={style.imgSource}>
+                {el.imgSource}
+              </div>
+            </DiamondCard>
+          );
+          return rows;
+        }, []).map((row:any, index:number) => (
+          <div className={style.explanationLineWrap} key={index}>
+            {row}
+          </div>
+        )
+        )}
       </div>
-    </>
+    </div>
   )
 }

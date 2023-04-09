@@ -1,6 +1,5 @@
 .wrap {
-  /* width: 100%; */
-  min-height: 500px;
+  min-height: 800px;
   display: flex;
   flex-wrap: wrap;
   background-color: rgb(255, 242, 204);
