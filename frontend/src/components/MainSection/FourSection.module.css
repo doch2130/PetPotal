@@ -32,3 +32,7 @@
   height: 300px;
   margin: 1rem;
 }
+
+.imgSource {
+  display: none;
+}
