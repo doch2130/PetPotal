@@ -5,13 +5,13 @@ import style from './Navbar.module.css';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const [Keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const historyValue = useParams();
-
+  console.log(historyValue);
   const searchSubmit = (e) => {
     e.preventDefault();
-    navigate(`/search/${Keyword}`);
+    navigate(`/search/${keyword}`);
     /**
      * 2023.04.11 gkfrjt
      * 검색 경로로 이동시키기
@@ -25,7 +25,7 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    setKeyword(historyValue.searchKeyword);
+    setKeyword(historyValue.keyword);
   }, [historyValue]);
 
   return (
@@ -47,7 +47,8 @@ export default function Navbar() {
             <input
               onChange={handleKeyword}
               type="search"
-              class="search-input"
+              className="style.searchInput"
+              value={keyword}
             />
             <button className="style.searchBtn">아이콘</button>
           </form>
