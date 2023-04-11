@@ -1,12 +1,12 @@
 // import React from 'react'
-import style from './EighthSection.module.css';
-import DogFoodImg from '../../assets/mainpage/Food/MainPage_Food_Img_1.png';
-import LogoBrandImg1 from '../../assets/mainpage/Food/RoyalCanin.png';
-import LogoBrandImg2 from '../../assets/mainpage/Food/ANF.png';
-import LogoBrandImg3 from '../../assets/mainpage/Food/NaturalCore.png';
-import LogoBrandImg4 from '../../assets/mainpage/Food/Nutrena.png';
-import LogoBrandImg5 from '../../assets/mainpage/Food/LamuDali.png';
-import LogoBrandImg6 from '../../assets/mainpage/Food/NaturalLab.png';
+import style from './MainFood.module.css';
+import DogFoodImg from '../../../assets/mainpage/Food/MainPage_Food_Img_1.png';
+import LogoBrandImg1 from '../../../assets/mainpage/Food/RoyalCanin.png';
+import LogoBrandImg2 from '../../../assets/mainpage/Food/ANF.png';
+import LogoBrandImg3 from '../../../assets/mainpage/Food/NaturalCore.png';
+import LogoBrandImg4 from '../../../assets/mainpage/Food/Nutrena.png';
+import LogoBrandImg5 from '../../../assets/mainpage/Food/LamuDali.png';
+import LogoBrandImg6 from '../../../assets/mainpage/Food/NaturalLab.png';
 
 const logoBrand = [
   {
@@ -41,7 +41,7 @@ const logoBrand = [
   },
 ]
 
-export default function EighthSection() {
+export default function MainFood() {
   return (
     <div className={style.wrap}>
       <div className={style.box}>

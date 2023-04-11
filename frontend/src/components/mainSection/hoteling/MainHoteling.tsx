@@ -1,10 +1,10 @@
 // import React from 'react'
-import style from './SixthSection.module.css';
-import HotelingImg1 from '../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_1.jpg';
-import HotelingImg2 from '../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_2.jpg';
-import HotelingImg3 from '../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_3.jpg';
+import style from './MainHoteling.module.css';
+import HotelingImg1 from '../../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_1.jpg';
+import HotelingImg2 from '../../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_2.jpg';
+import HotelingImg3 from '../../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_3.jpg';
 
-export default function SixthSection() {
+export default function MainHoteling() {
   return (
     <div className={style.wrap}>
       <div className={style.wrapCol}>
