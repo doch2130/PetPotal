@@ -8,9 +8,9 @@ import MainPage from './pages/MainPage';
 function App() {
   return (
     <div className="App">
+      <MainPage />
       <LoginPage />
-      {/* <MainPage /> */}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
