@@ -4,8 +4,8 @@ import MainExplanation from '../components/mainSection/explanation/MainExplanati
 import MainMate from '../components/mainSection/mate/MainMate';
 import MainHospital from '../components/mainSection/hospital/MainHospital';
 import MainBeauty from '../components/mainSection/beauty/MainBeauty';
-import MainHotel from '../components/mainSection/hotel/MainHotel';
 import MainHoteling from '../components/mainSection/hoteling/MainHoteling';
+import MainHotel from '../components/mainSection/hotel/MainHotel';
 import MainFood from '../components/mainSection/food/MainFood';
 
 export default function MainPage() {
