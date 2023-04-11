@@ -1,3 +1,96 @@
-.test {
-    background-color: red;
+header {
+    position: relative;
+    margin-bottom: 150px;
 }
+
+
+.navbarContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+
+.navbarWrapper {
+    max-width: 1320px;
+    margin: 1rem auto 0;
+}
+
+.navbarTop {
+    display: flex;
+}
+
+.topInner {
+    display: flex;
+    margin-left: auto;
+}
+
+.topInner > li:not(:first-of-type) {
+    margin-left: 1rem;
+}
+
+.navbarMiddle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.searchForm {
+    position: relative;
+    display: flex;
+    height: 40px;
+    flex: 0.8;
+}
+
+.searchInput {
+    flex: 1;
+    margin-right: 10px;
+    border: 1px solid black;
+    border-radius: 0.3em;
+    font-size: 1rem;
+}
+
+.searchBtn {
+    background-color: transparent;
+    border: 0;
+    position: absolute;
+    top: 9px;
+    right: 0%;
+}
+
+.headerItem {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem auto;
+}
+
+.menuItem {
+    cursor: pointer;
+}
+
+.menuItemLink {
+    display: block;
+    font-size: 1.1rem; 
+    font-weight: bold;
+    color: #555;
+    text-decoration: none;
+    text-align: center;
+}
+
+.menuItemLink:nth-child(1) {
+    padding-left: 0;
+}
+
+.menuItemLink:hover {
+    border-bottom: 2px solid #000;
+}
+
+

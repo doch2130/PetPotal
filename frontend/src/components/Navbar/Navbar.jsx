@@ -30,70 +30,72 @@ export default function Navbar() {
 
   return (
     <header>
-      <section className={style.navbarWrapper}>
-        <div className={style.navbarTop}>
-          <ul className={style.topInner}>
-            <li>회원가입</li>
-            <Link to={'/login'}>로그인</Link>
-            <li>고객센터</li>
-          </ul>
-        </div>
+      <article className={style.navbarContainer}>
+        <section className={style.navbarWrapper}>
+          <div className={style.navbarTop}>
+            <ul className={style.topInner}>
+              <li>회원가입</li>
+              <li><Link to={'/login'}>로그인</Link></li>
+              <li>고객센터</li>
+            </ul>
+          </div>
 
-        <div className="style.navbarMiddle">
-          <h1 className="style.navbarLogo">
-            <Link to={'/'}>Pet Portal</Link>
-          </h1>
-          <form onSubmit={searchSubmit} className="style.searchForm">
-            <input
-              onChange={handleKeyword}
-              type="search"
-              className="style.searchInput"
-              value={keyword}
-            />
-            <button className="style.searchBtn">아이콘</button>
-          </form>
-          <ul className="style.headerItem">
-            <li>아이콘1</li>
-            <li>아이콘2</li>
-            <li>아이콘3</li>
-          </ul>
-        </div>
+          <div className={style.navbarMiddle}>
+            <h1 className={style.navbarLogo}>
+              <Link to={'/'}>Pet Portal</Link>
+            </h1>
+            <form onSubmit={searchSubmit} className={style.searchForm}>
+              <input
+                onChange={handleKeyword}
+                type="search"
+                className={style.searchInput}
+                value={keyword}
+              />
+              <button className={style.searchBtn}>아이콘</button>
+            </form>
+            <ul className={style.headerItem}>
+              <li>아이콘1</li>
+              <li>아이콘2</li>
+              <li>아이콘3</li>
+            </ul>
+          </div>
 
-        <nav className="style.navbarBottom">
-          <ul className="menu">
-            <li className="menuItem">
-              <a href="#" className="menuItemLink">
-                메이트
-              </a>
-            </li>
-            <li className="menuItem">
-              <a href="#" className="menuItemLink">
-                메이트
-              </a>
-            </li>
-            <li className="menuItem">
-              <a href="#" className="menuItemLink">
-                병원
-              </a>
-            </li>
-            <li className="menuItem">
-              <a href="#" className="menuItemLink">
-                호텔링
-              </a>
-            </li>
-            <li className="menuItem">
-              <a href="#" className="menuItemLink">
-                숙박
-              </a>
-            </li>
-            <li className="menuItem">
-              <a href="#" className="menuItemLink">
-                음식
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </section>
+          <nav className={style.navbarBottom}>
+            <ul className={style.menu}>
+              <li className={style.menuItem}>
+                <a href="#" className={style.menuItemLink}>
+                  메이트
+                </a>
+              </li>
+              <li className={style.menuItem}>
+                <a href="#" className={style.menuItemLink}>
+                  메이트
+                </a>
+              </li>
+              <li className={style.menuItem}>
+                <a href="#" className={style.menuItemLink}>
+                  병원
+                </a>
+              </li>
+              <li className={style.menuItem}>
+                <a href="#" className={style.menuItemLink}>
+                  호텔링
+                </a>
+              </li>
+              <li className={style.menuItem}>
+                <a href="#" className={style.menuItemLink}>
+                  숙박
+                </a>
+              </li>
+              <li className={style.menuItem}>
+                <a href="#" className={style.menuItemLink}>
+                  음식
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </section>
+      </article>
     </header>
   );
 }
