@@ -61,6 +61,7 @@ export default function MainFood() {
           <div className={style.boxBottomFlex}>
             <div className={style.wrapLogo}>
               { logoBrand.map((el) => <div className={style.logoBox} key={el.id}><img src={el.img} alt={el.text} /></div>) }
+              { logoBrand.map((el) => <div className={style.logoBox} key={el.id}><img src={el.img} alt={el.text} /></div>) }
             </div>
           </div>
         </div>
