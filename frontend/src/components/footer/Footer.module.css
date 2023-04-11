@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
+
+.wrap {
+  min-height: 500px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  width: 100%;
+  flex: 1 0;
+}
+
+hr {
+  width: 65%;
+  height: 1px;
+  background-color: black;
+  margin: 1rem auto 2rem;
+}
+
+.footLogo {
+  font-family: 'Imperial Script';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 4rem;
+  text-align: center;
+  margin: 1rem 0 0;
+}
+
+.copyright {
+  font-size: 1.5rem;
+  color: #959595;
+  text-align: center;
+}
+
+.footText ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footText li {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
