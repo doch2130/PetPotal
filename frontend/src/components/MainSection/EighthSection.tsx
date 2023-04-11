@@ -8,6 +8,39 @@ import LogoBrandImg4 from '../../assets/mainpage/Food/Nutrena.png';
 import LogoBrandImg5 from '../../assets/mainpage/Food/LamuDali.png';
 import LogoBrandImg6 from '../../assets/mainpage/Food/NaturalLab.png';
 
+const logoBrand = [
+  {
+    id: 1,
+    img: LogoBrandImg1,
+    text: 'RoyalCanin'
+  },
+  {
+    id: 2,
+    img: LogoBrandImg2,
+    text: 'ANF'
+  },
+  {
+    id: 3,
+    img: LogoBrandImg3,
+    text: 'NaturalCore'
+  },
+  {
+    id: 4,
+    img: LogoBrandImg4,
+    text: 'Nutrena'
+  },
+  {
+    id: 5,
+    img: LogoBrandImg5,
+    text: 'LamuDali'
+  },
+  {
+    id: 6,
+    img: LogoBrandImg6,
+    text: 'NaturalLab'
+  },
+]
+
 export default function EighthSection() {
   return (
     <div className={style.wrap}>
@@ -27,24 +60,7 @@ export default function EighthSection() {
           </div>
           <div className={style.boxBottomFlex}>
             <div className={style.wrapLogo}>
-              <div className={style.logoBox}>
-                <img src={LogoBrandImg1} alt='logoBrand RoyalCanin' />
-              </div>
-              <div className={style.logoBox}>
-                <img src={LogoBrandImg2} alt='logoBrand ANF' />
-              </div>
-              <div className={style.logoBox}>
-                <img src={LogoBrandImg3} alt='logoBrand NaturalCore' />
-              </div>
-              <div className={style.logoBox}>
-                <img src={LogoBrandImg4} alt='logoBrand Nutrena' />
-              </div>
-              <div className={style.logoBox}>
-                <img src={LogoBrandImg5} alt='logoBrand LamuDali' />
-              </div>
-              <div className={style.logoBox}>
-                <img src={LogoBrandImg6} alt='logoBrand NaturalLab' />
-              </div>
+              { logoBrand.map((el) => <div className={style.logoBox}><img src={el.img} alt={el.text} /></div>) }
             </div>
           </div>
         </div>
