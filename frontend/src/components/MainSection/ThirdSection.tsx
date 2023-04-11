@@ -39,7 +39,7 @@ export default function ThirdSection() {
           adipisicing elit. Sit, sint minus vel neque sed sol
         </p>
 
-        <div>
+        <div className={style.wrapCard}>
           { cardData.map((el) => <Card key={el.id}><img src={el.image} alt={el.image} /></Card> )}
         </div>
       </div>
