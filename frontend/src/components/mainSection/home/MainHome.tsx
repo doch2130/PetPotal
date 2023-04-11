@@ -1,10 +1,10 @@
 // import React from 'react'
 import { useEffect, useState } from 'react';
-import DogImage from '../../assets/mainpage/MainPage_Dog.png';
-import CatImage from '../../assets/mainpage/MainPage_Cat.png';
-import style from './FirstSection.module.css';
+import DogImage from '../../../assets/mainpage/MainPage_Dog.png';
+import CatImage from '../../../assets/mainpage/MainPage_Cat.png';
+import style from './MainHome.module.css';
 
-export default function FirstSection() {
+export default function MainHome() {
   const [imgChange, setImgChange] = useState(true);
 
   useEffect(() => {

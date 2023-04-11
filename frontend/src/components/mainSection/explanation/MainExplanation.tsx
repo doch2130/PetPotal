@@ -1,12 +1,12 @@
 // import React from 'react'
-import DiamondCard from '../DiamondCard';
-import style from './SecondSection.module.css';
-import Mate from '../../assets/mainpage/Icon/MainPage_Pet_Mate.png';
-import Hospital from '../../assets/mainpage/Icon/MainPage_Pet_Hospital.png';
-import Beauty from '../../assets/mainpage/Icon/MainPage_Pet_Beauty.png';
-import Hoteling from '../../assets/mainpage/Icon/MainPage_Pet_Hoteling.png';
-import Hotel from '../../assets/mainpage/Icon/MainPage_Pet_Hotel.png';
-import Food from '../../assets/mainpage/Icon/MainPage_Pet_Food.png';
+import DiamondCard from '../../UI/DiamondCard';
+import style from './MainExplanation.module.css';
+import Mate from '../../../assets/mainpage/Icon/MainPage_Pet_Mate.png';
+import Hospital from '../../../assets/mainpage/Icon/MainPage_Pet_Hospital.png';
+import Beauty from '../../../assets/mainpage/Icon/MainPage_Pet_Beauty.png';
+import Hoteling from '../../../assets/mainpage/Icon/MainPage_Pet_Hoteling.png';
+import Hotel from '../../../assets/mainpage/Icon/MainPage_Pet_Hotel.png';
+import Food from '../../../assets/mainpage/Icon/MainPage_Pet_Food.png';
 
 const explanationData = [
   {
@@ -47,7 +47,7 @@ const explanationData = [
   }
 ]
 
-export default function SecondSection() {
+export default function MainExplanation() {
   return (
     <div className={style.wrap}>
       <h1>Everything you need, all in one piece!</h1>

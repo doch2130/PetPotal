@@ -1,16 +1,16 @@
 // import React from 'react'
-import style from './SeventhSection.module.css';
-import HotelImg1 from '../../assets/mainpage/Hotel/MainPage_Hotel_Check_Img_1.png';
-import HotelImg2 from '../../assets/mainpage/Hotel/MainPage_Hotel_Check_Img_2.png';
-import PlusIcon from '../../assets/icon/plus.png';
-import MinusIcon from '../../assets/icon/minus.png';
+import style from './MainHotel.module.css';
+import HotelImg1 from '../../../assets/mainpage/Hotel/MainPage_Hotel_Check_Img_1.png';
+import HotelImg2 from '../../../assets/mainpage/Hotel/MainPage_Hotel_Check_Img_2.png';
+import PlusIcon from '../../../assets/icon/plus.png';
+import MinusIcon from '../../../assets/icon/minus.png';
 
-export default function SeventhSection() {
+export default function MainHotel() {
   return (
     <div className={style.wrap}>
       <div className={style.wrapCol}>
         <div className={style.wrapLeft}>
-          <h1>Hoteling</h1>
+          <h1>Hotel</h1>
           <p>To keep pets from being lonely<br />
           You can find accommodations that you can go with.</p>
         </div>

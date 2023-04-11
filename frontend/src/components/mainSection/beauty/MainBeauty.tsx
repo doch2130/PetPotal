@@ -1,11 +1,11 @@
 // import React from 'react'
-import style from './FifthSection.module.css';
-import BeautyImg1 from '../../assets/mainpage/Beauty/MainPage_Beauting_Img_1.jpg';
-import BeautyImg2 from '../../assets/mainpage/Beauty/MainPage_Beauting_Img_2.jpg';
-import BeautyImg3 from '../../assets/mainpage/Beauty/MainPage_Beauting_Img_3.jpg';
-import BeautyImg4 from '../../assets/mainpage/Beauty/MainPage_Beauting_Img_4.jpg';
+import style from './MainBeauty.module.css';
+import BeautyImg1 from '../../../assets/mainpage/Beauty/MainPage_Beauting_Img_1.jpg';
+import BeautyImg2 from '../../../assets/mainpage/Beauty/MainPage_Beauting_Img_2.jpg';
+import BeautyImg3 from '../../../assets/mainpage/Beauty/MainPage_Beauting_Img_3.jpg';
+import BeautyImg4 from '../../../assets/mainpage/Beauty/MainPage_Beauting_Img_4.jpg';
 
-export default function FifthSection() {
+export default function MainBeauty() {
   return (
     <div className={style.wrap}>
       <div className={style.wrapCol}>
