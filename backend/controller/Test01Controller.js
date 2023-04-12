@@ -1,4 +1,5 @@
 const Test01 = require("../models/Test01");
+const Crypt = require("../middleware/Crypt");
 
 exports.findAll = (req, res) => {
     Test01.findAll((err, test01) => {
@@ -36,4 +37,10 @@ exports.insertRow02 = (req, res) => {
             res.send(test01);
         }
     })
+}
+
+exports.cryptTest = async (req, res) => {
+    let result = await Crypt.encrypt(req.params.pw);
+    console.log(result);
+    res.send("Testing");
 }

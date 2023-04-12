@@ -10,7 +10,7 @@ exports.insertOne = (request, result) => {
 }
 
 exports.insertOne2 = (request, result) => {
-    console.log("input body:\n", request.body);
+    console.log("input body:\n", request.body)
     const insertOne = SequelizeTest01.create({
         column01: request.body.column01,
         column02: request.body.column02
