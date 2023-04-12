@@ -1,5 +1,5 @@
 const Test01 = require("../models/Test01");
-const Sequelize01 = require("../models/Sequelize01");
+const Crypt = require("../middleware/Crypt");
 
 exports.findAll = (req, res) => {
     Test01.findAll((err, test01) => {
@@ -39,13 +39,8 @@ exports.insertRow02 = (req, res) => {
     })
 }
 
-exports.insertSequelize = (req, res) => {
-    Test01.insertRow02(req.params, (err, test01) => {
-        console.log("param:\n", req.params.column01);
-        if(err) res.send(err);
-        else {
-            console.log("insertRow02 Controller result: ", req.params);
-            res.send(test01);
-        }
-    })
+exports.cryptTest = async (req, res) => {
+    let result = await Crypt.encrypt(req.params.pw);
+    console.log(result);
+    res.send("Testing");
 }

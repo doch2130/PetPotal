@@ -12,50 +12,18 @@ const router = express.Router();
 const crypto = require("crypto");
 const mysql = require("../config/mysql");
 
+const UsersController = require("../controller/UsersController");
+
 router.post("/signIn", (req, res, next) => { 
     passport.authenticate("local", function(err, users, info, status) {
         // console.log(users[0]);
         res.send(users[0]);
     }) (req, res, next)
 });
+router.post("/signUp", UsersController.insertUser)
 
-
-router.post("/signUp", (req, res, next) => {
-    console.log(req.body);
-    let salt = crypto.randomBytes(16).toString("base64");
-    crypto.pbkdf2(req.body.password, salt, 310000, 32, "sha256", (err, hashedPassword) => {
-        let convertedPw = hashedPassword.toString("base64");
-        if(err) { return next(err); }
-        mysql.query("INSERT INTO Users " +
-        "(account, password, salt, name, nickName, phone, email, address1, address2, address3, " +
-        "joinDate, modifiedDate) " +
-        "VALUES(?, ?, ?, ?, ?, " +
-        "?, ?, ?, ?, ?, " +
-        "?, ?)",
-        [
-            req.body.account,
-            convertedPw,
-            salt,
-            req.body.name,
-            req.body.nickName,
-            req.body.phone,
-            req.body.email,
-            req.body.address1,
-            req.body.address2,
-            req.body.address3,
-            req.body.joinDate,
-            req.body.modifiedDate,
-        ], (err) => {
-            if(err) { return next(err); }
-            else { 
-                return res.send("ok"); 
-            }
-            // req.login(function (err) {
-            //     if (err) { return next(err); }
-            //     res.redirect('/');
-            // });
-        });
-    });
-});
+router.post("/duplicateAccount", UsersController.findByAccount);
+router.post("/duplicateEmail", UsersController.findByEmail);
+router.post("/duplicatePhone", UsersController.findByPhone);
 
 module.exports = router;

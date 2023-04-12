@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require("express-session");
+const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const multer = require("multer");
@@ -12,8 +13,13 @@ const UsersRoute = require("./routes/UsersRoutes");
 const app = express();
 const port = 3010;
 
-app.use(morgan("dev"));
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true
+}
 
+app.use(morgan("dev"));
+app.use(cors(corsOptions));
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
