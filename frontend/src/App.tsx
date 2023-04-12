@@ -1,15 +1,16 @@
 // import React from 'react';
 // import logo from './logo.svg';
-// import './App.css';
+import './App.css';
+import Navbar from './components/Navbar/Navbar';
 import Footer from './components/footer/Footer';
-import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
-      <MainPage />
-      <LoginPage />
+      <Navbar />
+      <Outlet />
       <Footer />
     </div>
   );
