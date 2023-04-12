@@ -34,7 +34,7 @@ export default function Navbar() {
         <section className={style.navbarWrapper}>
           <div className={style.navbarTop}>
             <ul className={style.topInner}>
-              <li>회원가입</li>
+              <li><Link to={'/memberjoin'}>회원가입</Link></li>
               <li><Link to={'/login'}>로그인</Link></li>
               <li>고객센터</li>
             </ul>
@@ -49,7 +49,7 @@ export default function Navbar() {
                 onChange={handleKeyword}
                 type="search"
                 className={style.searchInput}
-                value={keyword}
+                value={keyword || ''}
               />
               <button className={style.searchBtn}>아이콘</button>
             </form>
