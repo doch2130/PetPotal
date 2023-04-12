@@ -30,10 +30,19 @@ hr {
   margin: 1rem 0 0;
 }
 
+.footLogo span {
+  cursor: pointer;
+}
+
+.footLogo span:hover {
+  color: #777;
+}
+
 .copyright {
   font-size: 1.5rem;
   color: #959595;
   text-align: center;
+  cursor: default;
 }
 
 .footText ul {

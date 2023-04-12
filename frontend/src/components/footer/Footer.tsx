@@ -1,12 +1,6 @@
 // import React from 'react'
 import style from './Footer.module.css';
 
-const footText = [
-  ['PetPotal', 'Service', 'About', 'Contact'],
-  ['Mate', 'Hospital', 'Beauty', 'Hoteling', 'Hotel', 'Food'],
-  ['Follow Us', 'Twitter', 'Instagram', 'Facebook'],
-];
-
 const footTextArray = [
   ['PetPotal', 'Service', 'About', 'Contact'],
   ['Mate', 'Hospital', 'Beauty', 'Hoteling', 'Hotel', 'Food'],
@@ -22,7 +16,9 @@ export default function Footer() {
 
       <div className={style.row}>
         <div className={style.col}>
-          <h1 className={style.footLogo}>Pet Potal</h1>
+          <h1 className={style.footLogo}>
+            <span>Pet Potal</span>
+          </h1>
         </div>
         <div className={style.col}>
           <div className={style.row}>
