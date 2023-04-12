@@ -1,12 +1,14 @@
 // import React from 'react';
-import MainHome from '../components/mainSection/home/MainHome';
-import MainExplanation from '../components/mainSection/explanation/MainExplanation';
-import MainMate from '../components/mainSection/mate/MainMate';
-import MainHospital from '../components/mainSection/hospital/MainHospital';
-import MainBeauty from '../components/mainSection/beauty/MainBeauty';
-import MainHoteling from '../components/mainSection/hoteling/MainHoteling';
-import MainHotel from '../components/mainSection/hotel/MainHotel';
-import MainFood from '../components/mainSection/food/MainFood';
+
+import MainBeauty from "../components/MainSection/beauty/MainBeauty";
+import MainExplanation from "../components/MainSection/explanation/MainExplanation";
+import MainFood from "../components/MainSection/food/MainFood";
+import MainHome from "../components/MainSection/home/MainHome";
+import MainHospital from "../components/MainSection/hospital/MainHospital";
+import MainHotel from "../components/MainSection/hotel/MainHotel";
+import MainHoteling from "../components/MainSection/hoteling/MainHoteling";
+import MainMate from "../components/MainSection/mate/MainMate";
+
 
 export default function MainPage() {
   return (
