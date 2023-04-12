@@ -1,5 +1,4 @@
 const Test01 = require("../models/Test01");
-const Sequelize01 = require("../models/Sequelize01");
 
 exports.findAll = (req, res) => {
     Test01.findAll((err, test01) => {
@@ -29,17 +28,6 @@ exports.insertRow = (req, res) => {
 }
 
 exports.insertRow02 = (req, res) => {
-    Test01.insertRow02(req.params, (err, test01) => {
-        console.log("param:\n", req.params.column01);
-        if(err) res.send(err);
-        else {
-            console.log("insertRow02 Controller result: ", req.params);
-            res.send(test01);
-        }
-    })
-}
-
-exports.insertSequelize = (req, res) => {
     Test01.insertRow02(req.params, (err, test01) => {
         console.log("param:\n", req.params.column01);
         if(err) res.send(err);
