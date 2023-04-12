@@ -1,10 +1,10 @@
 // import React from 'react'
-import style from './FourSection.module.css';
-import HospitalImg1 from '../../assets/mainpage/Hospital/MainPage_Hospital_Img_1.jpg';
-import HospitalImg2 from '../../assets/mainpage/Hospital/MainPage_Hospital_Img_2.jpg';
-import HospitalImg3 from '../../assets/mainpage/Hospital/MainPage_Hospital_Img_3.jpg';
+import style from './MainHospital.module.css';
+import HospitalImg1 from '../../../assets/mainpage/Hospital/MainPage_Hospital_Img_1.jpg';
+import HospitalImg2 from '../../../assets/mainpage/Hospital/MainPage_Hospital_Img_2.jpg';
+import HospitalImg3 from '../../../assets/mainpage/Hospital/MainPage_Hospital_Img_3.jpg';
 
-export default function FourSection() {
+export default function MainHospital() {
   return (
     <div className={style.wrap}>
       <div className={style.title}>

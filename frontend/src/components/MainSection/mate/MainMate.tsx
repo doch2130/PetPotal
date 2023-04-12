@@ -1,10 +1,10 @@
 // import React from 'react'
-import Card from '../Card';
-import style from './ThirdSection.module.css';
-import MateImg1 from '../../assets/mainpage/Mate/MainPage_Mate_Img_1.jpg';
-import MateImg2 from '../../assets/mainpage/Mate/MainPage_Mate_Img_2.jpg';
-import MateImg3 from '../../assets/mainpage/Mate/MainPage_Mate_Img_3.jpg';
-import MateImg4 from '../../assets/mainpage/Mate/MainPage_Mate_Img_4.jpg';
+import Card from '../../UI/Card';
+import style from './MainMate.module.css';
+import MateImg1 from '../../../assets/mainpage/Mate/MainPage_Mate_Img_1.jpg';
+import MateImg2 from '../../../assets/mainpage/Mate/MainPage_Mate_Img_2.jpg';
+import MateImg3 from '../../../assets/mainpage/Mate/MainPage_Mate_Img_3.jpg';
+import MateImg4 from '../../../assets/mainpage/Mate/MainPage_Mate_Img_4.jpg';
 
 const cardData = [
   {
@@ -29,7 +29,7 @@ const cardData = [
   }
 ]
 
-export default function ThirdSection() {
+export default function MainMate() {
   return (
     <div className={style.wrap}>
       <div className={style.body}>
@@ -39,7 +39,7 @@ export default function ThirdSection() {
           adipisicing elit. Sit, sint minus vel neque sed sol
         </p>
 
-        <div>
+        <div className={style.wrapCard}>
           { cardData.map((el) => <Card key={el.id}><img src={el.image} alt={el.image} /></Card> )}
         </div>
       </div>

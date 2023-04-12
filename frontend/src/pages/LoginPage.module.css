@@ -1,0 +1,140 @@
+.wrap > .row {
+  align-items: center;
+  min-height: 90vh;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  width: 100%;
+  flex: 1 0;
+}
+
+.col form {
+  width: 400px;
+  margin: auto;
+  text-align: center;
+}
+
+.loginInputWrap input {
+  width: 350px;
+  height: 55px;
+  font-size: 14px;
+  color: rgb(51, 51, 51);
+  outline: none;
+  box-sizing: border-box;
+  padding: 0px 11px 1px 15px;
+  border-radius: 4px;
+  border: 1px solid rgb(221, 221, 221);
+  margin: 0.5rem 0px;
+}
+
+.findAccountWrap {
+  font-size: 13px;
+  text-align: right;
+  margin: 0px 25px;
+}
+
+.findAccountWrap span:not(:nth-of-type(2)) {
+  cursor: pointer;
+}
+
+.findAccountWrap span:nth-of-type(2) {
+  cursor: default;
+}
+
+.loginButtonWrap {
+  margin: 0.5rem 0;
+}
+
+.loginButton,
+.registerButton,
+.naverLoginButton,
+.googleLoginButton {
+  width: 350px;
+  height: 55px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.loginButton {
+  background-color: rgb(95, 0, 128);
+  border: 0px none;
+}
+
+.registerButton {
+  background-color: #FFF;
+  border: 1px solid rgb(95, 0, 128);
+}
+
+.loginButton span {
+  font-weight: 500;
+  font-size: 16px;
+  color: #FFF;
+}
+
+.registerButton span {
+  font-weight: 500;
+  font-size: 16px;
+  color: rgb(95, 0, 128);
+}
+
+
+.oauthLoginWrap {
+  width: 400px;
+  margin: auto;
+}
+
+.oauthLoginWrap > div {
+  margin: 0.5rem 25px;
+}
+
+.oauthLoginWrap button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.naverLoginButton {
+  background-color: #03C75A;
+  border: 0 none;
+  color: #FFF;
+}
+
+.googleLoginButton {
+  background-color: #FFF;
+  border: 1px solid black;
+  color: #000;
+}
+
+.naverLoginButton img {
+  width: 45px;
+  height: 45px;
+}
+
+.googleLoginButton img {
+  width: 30px;
+  height: 30px;
+  margin: 7.5px;
+}
+
+.naverLoginButton div,
+.googleLoginButton div {
+  flex: auto;
+  font-size: 16px;
+}
+
+.loginLine {
+  width: 350px;
+  height: 1px;
+  margin: 1rem auto;
+  background-color: #e4e4e4;
+}
+
+.naverLoginButton span,
+.googleLoginButton span {
+  margin-right: 45px;
+}
