@@ -1,29 +1,32 @@
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import style from './MemberJoin.module.css';
 import { useState } from 'react';
+import Controller from '../api/controller';
 
 export default function MemberJoin() {
-
-
     const POSTCODE_URL = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    const controller = new Controller();
     const POST_WIDTH = 500;
     const POST_HEIGHT = 500;
 
     const open = useDaumPostcodePopup(POSTCODE_URL);
 
-    type Value = { zonecode: string, address: string}
+    type Value = {sido: string, sigungu: string, zonecode: string, address: string}
 
-    const onComplete = (data : Value) => {
-        const fullArress = `(${data.zonecode}) ${data.address}`
+    const test = (data : Value) => {
+        const fullAddress = `(${data.zonecode}) ${data.address}`;
         setForm({
             ...form,
-            address: fullArress,
+            address1: data.sido,
+            address2: data.sigungu,
+            address3: data.address,
+            detailAddress: fullAddress,
         });
+
     };
 
     const onAddressClickHandle = () => {
-        console.log("hi");
-        open({width : POST_WIDTH, height : POST_HEIGHT, onComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
+        open({width : POST_WIDTH, height : POST_HEIGHT, onComplete : test, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
     };
 
     const [form, setForm] = useState({
@@ -36,11 +39,13 @@ export default function MemberJoin() {
         nickNameDuplicate : false,
         phone: '',
         email: '',
-        address: '',
+        address1: '',
+        address2: '',
+        address3: '',
         detailAddress: '',
     });
 
-    const {account, password, passwordCheck, name, nickName, email, phone, address, detailAddress} = form;
+    const {account, password, passwordCheck, name, nickName, email, phone, address1, address2, address3, detailAddress} = form;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -71,9 +76,15 @@ export default function MemberJoin() {
 
     };
 
+    const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+        console.log("실행");
+        console.log(form);
+        controller.join(form);
+    };
+
 
     return (
-        <form className={style.joinContainer}>
+        <div className={style.joinContainer} >
             <h1 className={style.joinTitle}>회원가입</h1>
             <div className={style.joinDivider}>
                 <span className={style.requiredTag}>필수입력사항</span>
@@ -123,19 +134,14 @@ export default function MemberJoin() {
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>주소</label>
-                    <input className={style.joinInput} type="text" placeholder='주소를 입력해주세요.' name='address' value={address || ''} onChange={onChange} disabled/>
+                    <input className={style.joinInput} type="text" placeholder='주소를 입력해주세요.' name='address' value={detailAddress || ''} onChange={onChange} disabled/>
                     <button className={style.joinButton} onClick={onAddressClickHandle}>주소검색</button>
                 </div>
 
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>상세주소</label>
-                    <input className={style.joinInput} type="text" placeholder='상세주소를 입력해주세요.' name='detailAddress' value={detailAddress} onChange={onChange}/>
-                    <div className={style.empty}></div>
-                </div>
-
                 <div className={style.joinDivider}></div>
+                <button className={style.joinSubmitButton} onClick={onSubmit}>가입하기</button>
             </div>
-        </form>
+        </div>
     );
 }
 

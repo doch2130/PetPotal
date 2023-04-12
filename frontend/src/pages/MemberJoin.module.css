@@ -58,6 +58,19 @@
     border: 1px solid rgb(95, 0, 128);
     border-radius: 4px;
     cursor: pointer;
-
 }
 
+
+.joinSubmitButton {
+    display: block;
+    margin: 30px auto;
+    text-align: center;
+    padding: 0 10px;
+    border-radius: 3px;
+    background-color: rgb(95, 0, 128);
+    border: 0px none;
+    width: 40%;
+    height: 56px;
+    color: white;
+    font-size: 20px;
+}
