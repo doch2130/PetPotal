@@ -3,27 +3,77 @@ import style from './MemberJoin.module.css';
 import { useState } from 'react';
 
 export default function MemberJoin() {
-    const [address, setAddress] = useState('');
-    const [detailAddress, setDetailAddress] = useState('');
+
 
     const POSTCODE_URL = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
     const POST_WIDTH = 500;
     const POST_HEIGHT = 500;
+
     const open = useDaumPostcodePopup(POSTCODE_URL);
 
-    const handleComplete = (data : any) => {
-        const test = 'roadAddress'
+    type Value = { zonecode: string, address: string}
+
+    const onComplete = (data : Value) => {
         const fullArress = `(${data.zonecode}) ${data.address}`
-        setAddress(fullArress);
+        setForm({
+            ...form,
+            address: fullArress,
+        });
     };
 
     const onAddressClickHandle = () => {
-
-        open({width : POST_WIDTH, height : POST_HEIGHT, onComplete : handleComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
+        console.log("hi");
+        open({width : POST_WIDTH, height : POST_HEIGHT, onComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
     };
 
+    const [form, setForm] = useState({
+        account: '',
+        accountDuplicate : false,
+        password: '',
+        passwordCheck: '',
+        name: '',
+        nickName: '',
+        nickNameDuplicate : false,
+        phone: '',
+        email: '',
+        address: '',
+        detailAddress: '',
+    });
+
+    const {account, password, passwordCheck, name, nickName, email, phone, address, detailAddress} = form;
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        
+        setForm({
+            ...form,
+            [name]: value,
+        });
+        
+        switch(name) {
+            case 'email':
+                //Todo Email 정규표현식
+                break;
+            case 'password':
+                // Better Comments
+                // TODO Password 정규 표현식
+                // ? 
+                // *
+                // !
+            case 'passwordCheck':
+                // TODO Password PasswordCheck 값 비교
+                
+        }
+    };
+    
+
+    const onHandleDuplicateCheck = (e: React.MouseEvent<HTMLButtonElement>) => {
+
+    };
+
+
     return (
-        <article className={style.joinContainer}>
+        <form className={style.joinContainer}>
             <h1 className={style.joinTitle}>회원가입</h1>
             <div className={style.joinDivider}>
                 <span className={style.requiredTag}>필수입력사항</span>
@@ -31,57 +81,61 @@ export default function MemberJoin() {
             <div className={style.joinForm}>
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>아이디</label>
-                    <input className={style.joinInput} type="text" placeholder='아이디를 입력해주세요' />
+                    <input className={style.joinInput} type="text" name='account' value={account} placeholder='아이디를 입력해주세요' onChange={onChange} />
                     <button className={style.joinButton}>중복확인</button>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                 <label className={style.joinLabel}>비밀번호</label>
-                    <input className={style.joinInput} type="password" placeholder='비밀번호를 입력해주세요' />
+                    <input className={style.joinInput} type="password" name='password' value={password} placeholder='비밀번호를 입력해주세요' onChange={onChange} />
                     <div className={style.empty}></div>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>비밀번호확인</label>
-                    <input className={style.joinInput}type="password" placeholder='비밀번호를 한번 더 입력해주세요' />
+                    <input className={style.joinInput} type="password" name='passwordCheck' value={passwordCheck} placeholder='비밀번호를 한번 더 입력해주세요' onChange={onChange} />
                     <div className={style.empty}></div>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>이름</label>
-                    <input className={style.joinInput}type="text" placeholder='이름을 입력해주세요' />
+                    <input className={style.joinInput}type="text" name='name' value={name} placeholder='이름을 입력해주세요' onChange={onChange} />
                     <div className={style.empty}></div>
+                </div>
+
+                <div className={style.inputColumnWrapper}>
+                    <label className={style.joinLabel}>닉네임</label>
+                    <input className={style.joinInput}type="text" name='nickName' value={nickName} placeholder='이름을 입력해주세요' onChange={onChange} />
+                    <button className={style.joinButton} onClick={onHandleDuplicateCheck}>중복확인</button>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>이메일</label>
-                    <input className={style.joinInput}type="text" placeholder='예: petportal@gmail.com' />
-                    <div className={style.empty}></div>
+                    <input className={style.joinInput} type="text" name='email' value={email} placeholder='예: petportal@gmail.com' onChange={onChange}/>
+                    <button className={style.joinButton}>중복확인</button>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>휴대폰</label>
-                    <input className={style.joinInput}type="text" placeholder='슷자만 입력해주세요.' />
+                    <input className={style.joinInput} type="text" name='phone' value={phone} placeholder='슷자만 입력해주세요.' onChange={onChange}/>
                     <div className={style.empty}></div>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>주소</label>
-                    <input className={style.joinInput} type="text" placeholder='주소를 입력해주세요.'  value={address || ''} disabled />
+                    <input className={style.joinInput} type="text" placeholder='주소를 입력해주세요.' name='address' value={address || ''} onChange={onChange} disabled/>
                     <button className={style.joinButton} onClick={onAddressClickHandle}>주소검색</button>
                 </div>
 
                 <div className={style.inputColumnWrapper}>
                     <label className={style.joinLabel}>상세주소</label>
-                    <input className={style.joinInput} type="text" placeholder='상세주소를 입력해주세요.'/>
+                    <input className={style.joinInput} type="text" placeholder='상세주소를 입력해주세요.' name='detailAddress' value={detailAddress} onChange={onChange}/>
                     <div className={style.empty}></div>
                 </div>
 
                 <div className={style.joinDivider}></div>
-
-
             </div>
-        </article>
+        </form>
     );
 }
 
