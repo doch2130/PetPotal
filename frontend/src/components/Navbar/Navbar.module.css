@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
+
 header {
     position: relative;
     margin-bottom: 150px;
@@ -36,6 +38,17 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.navbarLogo {
+    font-family: 'Imperial Script';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 4rem;
+}
+
+.navbarLogo a {
+    text-decoration: none;
 }
 
 .searchForm {
