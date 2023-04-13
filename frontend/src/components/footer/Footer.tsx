@@ -1,4 +1,5 @@
 // import React from 'react'
+import { Link } from 'react-router-dom';
 import style from './Footer.module.css';
 
 const footTextArray = [
@@ -17,7 +18,9 @@ export default function Footer() {
       <div className={style.row}>
         <div className={style.col}>
           <h1 className={style.footLogo}>
-            <span>Pet Potal</span>
+            <span>
+              <Link to='/'>Pet Potal</Link>
+            </span>
           </h1>
         </div>
         <div className={style.col}>

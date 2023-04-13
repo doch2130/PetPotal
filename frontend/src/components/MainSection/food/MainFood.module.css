@@ -105,10 +105,10 @@
 
 .logoBoxAnimation {
   will-change: transform;
-  animation: marquee 10s linear infinite;
+  animation: marquee 30s linear infinite;
 }
 
 .logoBoxCloneAnimation {
   will-change: transform;
-  animation: marqueeClone 10s linear infinite;
+  animation: marqueeClone 30s linear infinite;
 }

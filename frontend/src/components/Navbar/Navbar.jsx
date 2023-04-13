@@ -73,12 +73,12 @@ export default function Navbar() {
               </li>
               <li className={style.menuItem}>
                 <a href="#" className={style.menuItemLink}>
-                  메이트
+                  병원
                 </a>
               </li>
               <li className={style.menuItem}>
                 <a href="#" className={style.menuItemLink}>
-                  병원
+                  미용
                 </a>
               </li>
               <li className={style.menuItem}>
