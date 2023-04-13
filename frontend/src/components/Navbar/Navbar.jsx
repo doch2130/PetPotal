@@ -34,8 +34,12 @@ export default function Navbar() {
         <section className={style.navbarWrapper}>
           <div className={style.navbarTop}>
             <ul className={style.topInner}>
-              <li><Link to={'/memberjoin'}>회원가입</Link></li>
-              <li><Link to={'/login'}>로그인</Link></li>
+              <li>
+                <Link to={'/memberjoin'}>회원가입</Link>
+              </li>
+              <li>
+                <Link to={'/login'}>로그인</Link>
+              </li>
               <li>고객센터</li>
             </ul>
           </div>
