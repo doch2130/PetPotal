@@ -16,8 +16,21 @@ const UsersController = require("../controller/UsersController");
 
 router.post("/signIn", (req, res, next) => { 
     passport.authenticate("local", function(err, users, info, status) {
-        // console.log(users[0]);
-        res.send(users[0]);
+        if(users === false) {
+            res.send({
+                responseCode: 404,
+                message: "Login Failed..."
+            });
+        }
+        else {
+            res.send({
+                responseCode: 200,
+                data: {
+                    token: users
+                }
+            });
+        }
+        
     }) (req, res, next)
 });
 router.post("/signUp", UsersController.insertUser)
