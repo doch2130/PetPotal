@@ -98,7 +98,17 @@
   to { transform: translateX(-380%); }
 }
 
-.logoBox {
+@keyframes marqueeClone {
+  from { transform: translateX(280%); }
+  to { transform: translateX(-380%); }
+}
+
+.logoBoxAnimation {
   will-change: transform;
   animation: marquee 30s linear infinite;
+}
+
+.logoBoxCloneAnimation {
+  will-change: transform;
+  animation: marqueeClone 30s linear infinite;
 }

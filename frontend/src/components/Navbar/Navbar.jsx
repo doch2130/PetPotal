@@ -34,8 +34,12 @@ export default function Navbar() {
         <section className={style.navbarWrapper}>
           <div className={style.navbarTop}>
             <ul className={style.topInner}>
-              <li><Link to={'/memberjoin'}>회원가입</Link></li>
-              <li><Link to={'/login'}>로그인</Link></li>
+              <li>
+                <Link to={'/memberjoin'}>회원가입</Link>
+              </li>
+              <li>
+                <Link to={'/login'}>로그인</Link>
+              </li>
               <li>고객센터</li>
             </ul>
           </div>
@@ -69,12 +73,12 @@ export default function Navbar() {
               </li>
               <li className={style.menuItem}>
                 <a href="#" className={style.menuItemLink}>
-                  메이트
+                  병원
                 </a>
               </li>
               <li className={style.menuItem}>
                 <a href="#" className={style.menuItemLink}>
-                  병원
+                  미용
                 </a>
               </li>
               <li className={style.menuItem}>

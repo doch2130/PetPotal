@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Imperial+Script&display=swap');
 
 .wrap {
-  min-height: 500px;
+  min-height: 350px;
 }
 
 .row {
@@ -30,12 +30,16 @@ hr {
   margin: 1rem 0 0;
 }
 
-.footLogo span {
+.footLogo a {
   cursor: pointer;
 }
 
-.footLogo span:hover {
+.footLogo a:hover {
   color: #777;
+}
+
+.footLogo a {
+  text-decoration: none;
 }
 
 .copyright {
@@ -43,6 +47,7 @@ hr {
   color: #959595;
   text-align: center;
   cursor: default;
+  margin: 1rem 0;
 }
 
 .footText ul {
@@ -52,6 +57,6 @@ hr {
 }
 
 .footText li {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin: 1rem 0;
 }
