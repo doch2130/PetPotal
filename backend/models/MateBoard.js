@@ -25,8 +25,13 @@ const MateBoard = sequelize.define("MateBoard", {
         },
         mateBoardModifyDate: {
             type: DataTypes.STRING
+        },
+        usersIndexNumber: {
+            type: DataTypes.BIGINT
+        },
+        animalsIndexNumber: {
+            type: DataTypes.BIGINT
         }
-    
     },
     {
         sequelize,

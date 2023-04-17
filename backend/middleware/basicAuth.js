@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const redis = require("redis");
 
 const jwtKey = "testing";
-const redisConfig = require("../config/redisClient.json");
+let redisConfig = require("../config/redisClient.json");
 const Users = require("../models/Users");
 
 
@@ -46,13 +46,16 @@ module.exports = () => {
                         const token = jwt.sign({ 
                             account: response.dataValues.account
                         }, jwtKey, { algorithm: "HS256" });
-                        
+                        // 로그인 토큰은 redis db 1에 저장
+                        // redis config url format
+                        // redis[s]://[[username][:password]@][host][:port][/db-number]
+                        redisConfig.url += 1; 
                         const redisClient = redis.createClient(redisConfig);
                         await redisClient.connect();
                         await redisClient.set(account, token);
-                        await redisClient.expireAt(account, parseInt((+new Date)/1000) + 86400)
-                        const redisReulst = await redisClient.get(account);
-                        
+                        await redisClient.expireAt(account, parseInt((+new Date)/1000) + 86400);
+                        await redisClient.disconnect();
+
                         console.info("basicAuth success\nWelcome", response.dataValues.account);
                         console.log(`${account}'s token save in Redis`);
                         return result(null, token);

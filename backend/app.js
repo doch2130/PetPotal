@@ -10,6 +10,7 @@ const basicAuth = require("./middleware/basicAuth");
 const Test01Route = require("./routes/Test01Routes");
 const UsersRoute = require("./routes/UsersRoutes");
 const AnimalsRoute = require("./routes/AnimalsRoutes");
+const MateBoardRoute = require("./routes/MateBoardRoutes");
 
 const app = express();
 const port = 3010;
@@ -35,6 +36,7 @@ basicAuth();
 app.use("/api/test01", Test01Route);
 app.use("/api/users", UsersRoute);
 app.use("/api/animals", AnimalsRoute);
+app.use("/api/mateBoard", MateBoardRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

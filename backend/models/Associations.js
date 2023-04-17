@@ -11,6 +11,9 @@ Users.hasMany(MateBoard);
 MateBoard.belongsTo(Users, {
     foreignKey: "usersIndexNumber"
 })
+MateBoard.hasMany(Animals, {
+    foreignKey: "animalsIndexNumber"
+})
 
 export { 
     Users, Animals,

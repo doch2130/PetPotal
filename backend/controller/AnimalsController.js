@@ -1,7 +1,7 @@
 const redis = require("redis");
-const redisConfig = require("../config/redisClient.json");
 
 const Animals = require("../models/Animals");
+const CheckToken = require("../middleware/CheckToken");
 const CurrentDate = require("../middleware/CurrentDate");
 
 const ConvertAnimalsCategory2 = (animalsCategory2) => {
@@ -17,18 +17,14 @@ const ConvertAnimalsCategory2 = (animalsCategory2) => {
     return result;
 }
 
-exports.insertAnimal = async(request, result) => {
-    // console.log("REQUEST\n",request.headers.account);
-    // console.log("REQUEST\n",request.headers.token);
-    const redisClient = redis.createClient(redisConfig);
-    await redisClient.connect();
-    let standardToken = await redisClient.get(request.headers.account);
+exports.insertAnimal = async(request, result) => {   
     let inputToken = request.headers.token;
+    let checkTokenResult = await CheckToken.CheckToken(1, request.headers.account, inputToken);
 
     let currentTimeStamp = CurrentDate.CurrentTimeStamp();
     let convertedCategory2 = ConvertAnimalsCategory2(request.body.animalsCategory2);
     
-    if(standardToken === inputToken) {
+    if(checkTokenResult == true) {
         await Animals.create({
             animalsName: request.body.animalsName,
             animalsGender: parseInt(request.body.animalsGender),
@@ -71,23 +67,34 @@ exports.insertAnimal = async(request, result) => {
 };
 
 exports.findByUsersIndexNumber = async(request, result) => {
-    const findByUsersIndexNumber = await Animals.findOne({
-        // attributes: ["animalsUsersIndexNumber"],
-        where: { 
-            animalsUsersIndexNumber: request.params.animalsUsersIndexNumber
-        }
-    }).then((response) => {
-        if(response == null) {
-            result.send({
-                responseCode: 304,
-                message: "no result"
-            })
-        }
-        else {
-            result.send({
-                responseCode: 200,
-                data: response
-            })
-        }
-    })
+    let inputToken = request.headers.token;
+    let checkTokenResult = await CheckToken.CheckToken(1, request.headers.account, inputToken);
+
+    if(checkTokenResult == true) {
+        await Animals.findAll({
+            // attributes: ["animalsUsersIndexNumber"],
+            where: { 
+                animalsUsersIndexNumber: request.params.animalsUsersIndexNumber
+            }
+        }).then((response) => {
+            if(response == null) {
+                result.send({
+                    responseCode: 304,
+                    message: "no result"
+                })
+            }
+            else {
+                result.send({
+                    responseCode: 200,
+                    data: response
+                })
+            }
+        })
+    }
+    else {
+        result.send({
+            responseCode: 400,
+            message: "Incorrect Key"
+        })
+    }
 };
