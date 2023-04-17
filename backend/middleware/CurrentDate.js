@@ -8,5 +8,5 @@ exports.CurrentTimeStamp = () => {
     const seconds = landDate.getSeconds();
     const milsec = landDate.getMilliseconds();
 
-    return `${year}.${month}.${date}_${hour}:${minute}:${seconds}:${milsec}`;
+    return `${year}-${month}-${date}T${hour}:${minute}:${seconds}.${milsec}`;
 }

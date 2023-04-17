@@ -1,3 +1,6 @@
+const redis = require("redis");
+const redisConfig = require("../config/redisClient.json");
+
 const Animals = require("../models/Animals");
 const CurrentDate = require("../middleware/CurrentDate");
 
@@ -15,41 +18,56 @@ const ConvertAnimalsCategory2 = (animalsCategory2) => {
 }
 
 exports.insertAnimal = async(request, result) => {
+    // console.log("REQUEST\n",request.headers.account);
+    // console.log("REQUEST\n",request.headers.token);
+    const redisClient = redis.createClient(redisConfig);
+    await redisClient.connect();
+    let standardToken = await redisClient.get(request.headers.account);
+    let inputToken = request.headers.token;
+
     let currentTimeStamp = CurrentDate.CurrentTimeStamp();
     let convertedCategory2 = ConvertAnimalsCategory2(request.body.animalsCategory2);
     
-    const insertAnimal = await Animals.create({
-        animalsName: request.body.animalsName,
-        animalsGender: parseInt(request.body.animalsGender),
-        animalsAge: parseInt(request.body.animalsAge),
-        animalsCategory1: parseInt(request.body.animalsCategory1),
-        animalsCategory2: convertedCategory2,
-        animalsPhotos: request.body.animalsPhotos,
-        animalsRegistDate: currentTimeStamp,
-        animalsModifyDate: currentTimeStamp,
-        animalsUsersIndexNumber: parseInt(request.body.animalsUsersIndexNumber),
-    })
-    .then(response => {
-        if(response == null) {
+    if(standardToken === inputToken) {
+        await Animals.create({
+            animalsName: request.body.animalsName,
+            animalsGender: parseInt(request.body.animalsGender),
+            animalsAge: parseInt(request.body.animalsAge),
+            animalsCategory1: parseInt(request.body.animalsCategory1),
+            animalsCategory2: convertedCategory2,
+            animalsPhotos: request.body.animalsPhotos,
+            animalsRegistDate: currentTimeStamp,
+            animalsModifyDate: currentTimeStamp,
+            animalsUsersIndexNumber: parseInt(request.body.animalsUsersIndexNumber),
+        })
+        .then(response => {
+            if(response == null) {
+                result.send({
+                    responseCode: 400,
+                    message: "insertAnimal Failed"
+                })
+            }
+            else {
+                result.send({
+                    responseCode: 200,
+                    message: "insertAnimal Coplete"
+                });
+            }
+        })
+        .catch(err => {
+            console.error("error\n", err);
             result.send({
                 responseCode: 400,
-                message: "insertAnimal Failed"
+                message: "insertAnimal data request failed"
             })
-        }
-        else {
-            result.send({
-                responseCode: 200,
-                message: "insertAnimal Coplete"
-            });
-        }
-    })
-    .catch(err => {
-        console.error("error\n", err);
+        })
+    }
+    else {
         result.send({
             responseCode: 400,
-            message: "insertAnimal data request failed"
+            message: "Incorrect Key"
         })
-    })    
+    }  
 };
 
 exports.findByUsersIndexNumber = async(request, result) => {
