@@ -1,5 +1,6 @@
 .wrap {
-  background-color: #EFEFEF;
+  /* background-color: #EFEFEF; */
+  background-color: #FFF;
   min-height: 1000px;
   text-align: center;
 }
@@ -8,6 +9,7 @@
   margin-top: 0px;
   padding-top: 5rem;
   font-size: 3rem;
+  font-weight: 700;
 }
 
 .explanationLineWrap {

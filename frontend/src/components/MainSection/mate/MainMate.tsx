@@ -35,8 +35,7 @@ export default function MainMate() {
       <div className={style.body}>
         <h1 className={style.title}>Mate</h1>
         <p className={style.subTitle}>
-          Lorem ipsum dolor sit amet consectetur<br />
-          adipisicing elit. Sit, sint minus vel neque sed sol
+        You can create opportunities for your pet to meet good people.
         </p>
 
         <div className={style.wrapCard}>

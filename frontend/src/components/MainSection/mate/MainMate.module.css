@@ -1,5 +1,6 @@
 .wrap {
-  background-color: #E5FFD4;
+  /* background-color: #E5FFD4; */
+  background: rgba(187, 143, 79, 0.25);
   min-height: 800px;
   padding: 2rem 0 4rem;
   display: flex;
@@ -10,23 +11,48 @@
 .body {
   /* width: 70%; */
   margin: auto;
+  line-height: normal;
   
 }
 
 .title {
   font-size: 3rem;
-  margin: 0px 10px 0px 1rem;
+  font-weight: 700;
+  margin: 0px 10px 1.5rem 1rem;
 }
 
 .subTitle {
   font-size: 2rem;
   max-width: 700px;
-  margin-left: 1rem;
-  margin-top: 0px;
+  /* margin-left: 1rem; */
+  /* margin-top: 0px; */
+  margin: 0px 0px 2rem 1rem;
 }
 
 .wrapCard {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+
+@media (max-width: 1302px) {
+  .title {
+    width: 70%;
+    margin: auto;
+    text-align: center;
+  }
+
+  .subTitle {
+    width: 70%;
+    margin: 1rem auto 2rem;
+  }
+}
+
+@media (max-width: 658px) {
+  /* .wrapCard:nth-child(3), */
+  .wrapCard > div:nth-child(3),
+  .wrapCard > div:nth-child(4) {
+    display: none;
+  }
 }
