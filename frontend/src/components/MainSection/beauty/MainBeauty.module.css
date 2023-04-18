@@ -1,5 +1,5 @@
 .wrap {
-  background: conic-gradient(from -16.52deg at 53.36% 111.33%, rgba(231, 255, 255, 0) -56.41deg, #E7FFFF 137.95deg, rgba(231, 255, 255, 0) 303.59deg, #E7FFFF 497.95deg);
+  /* background: conic-gradient(from -16.52deg at 53.36% 111.33%, rgba(231, 255, 255, 0) -56.41deg, #E7FFFF 137.95deg, rgba(231, 255, 255, 0) 303.59deg, #E7FFFF 497.95deg); */
   min-height: 800px;
   /* padding-top: 5rem; */
   /* display: flex; */
@@ -13,14 +13,17 @@
 }
 
 .wrapLeft {
-  max-width: 500px;
+  max-width: 450px;
   margin-left: auto;
+  line-height: normal;
   position: relative;
   right: 70px;
 }
 
 .wrapLeft h1 {
   font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
 }
 
 .wrapLeft p {
@@ -28,29 +31,20 @@
 }
 
 .wrapLeft button {
-  background: #E7FFFF;
-  border: 1px solid #E7FFFF;
+  background: #4F92BB;
+  border: 1px solid #4F92BB;
   box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.25);
   border-radius: 50px;
-  width: 500px;
+  /* background: #E7FFFF; */
+  /* border: 1px solid #E7FFFF; */
+  /* box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.25); */
+  /* border-radius: 50px; */
   height: 120px;
   font-size: 2rem;
   margin-top: 2rem;
+  width: 450px;
+  color: #FFF;
 }
-
-.buttonWrap button {
-  background: #E7FFFF;
-  border: 1px solid #E7FFFF;
-  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.25);
-  border-radius: 50px;
-  width: 500px;
-  height: 120px;
-  font-size: 2rem;
-  position: relative;
-  left: 35%;
-  margin-top: 2rem;
-}
-
 
 .wrapRight {
   position: relative;
