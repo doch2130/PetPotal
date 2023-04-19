@@ -29,15 +29,6 @@ export default function MainBeauty() {
             <img src={BeautyImg4} alt='BeautyImg4' className={style.beautyImg} />
           </div>
         </div>
-        
-        {/* <div className={style.wrapRight}>
-          <img src={BeautyImg1} alt='BeautyImg1' className={style.beautyImg} />
-          <img src={BeautyImg2} alt='BeautyImg2' className={style.beautyImg} />
-        </div>
-        <div className={style.wrapRight}>
-          <img src={BeautyImg3} alt='BeautyImg3' className={style.beautyImg} />
-          <img src={BeautyImg4} alt='BeautyImg4' className={style.beautyImg} />
-        </div> */}
           {/* <div className={style.imgSource}>
             <a href="https://kr.freepik.com/free-photo/cat-s-getting-a-nail-trim_17094543.htm#from_view=detail_alsolike">작가 artursafronovvvv</a> 출처 Freepik
           </div>

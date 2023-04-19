@@ -1,7 +1,8 @@
 .wrap {
   /* background-color: #E5FFD4; */
-  background: rgba(187, 143, 79, 0.25);
-  min-height: 800px;
+  /* background: rgba(187, 143, 79, 0.25); */
+  background-color: #FFF;
+  min-height: 700px;
   padding: 2rem 0 4rem;
   display: flex;
   justify-content: center;

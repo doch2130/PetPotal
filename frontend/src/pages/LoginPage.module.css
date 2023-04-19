@@ -20,6 +20,11 @@
   text-align: center;
 }
 
+.col form h2 {
+  font-size: 2rem;
+  margin: 2rem 0;
+}
+
 .loginInputWrap input {
   width: 350px;
   height: 55px;
@@ -39,8 +44,16 @@
   margin: 0px 25px;
 }
 
+.findAccountWrap p {
+  margin: 0.5rem 0 1rem;
+}
+
 .findAccountWrap span:not(:nth-of-type(2)) {
   cursor: pointer;
+}
+
+.findAccountWrap span:not(:nth-of-type(2)):hover {
+  color: #00AF41;
 }
 
 .findAccountWrap span:nth-of-type(2) {
@@ -62,13 +75,20 @@
 }
 
 .loginButton {
-  background-color: rgb(95, 0, 128);
+  /* background-color: rgb(95, 0, 128); */
+  background-color: #4AD645;
   border: 0px none;
+}
+
+.loginButton:active {
+  background-color: #00AF41;
+  transition: 'background-color' 1s ease-in
 }
 
 .registerButton {
   background-color: #FFF;
   border: 1px solid rgb(95, 0, 128);
+  border: 1px solid #4AD645;
 }
 
 .loginButton span {
@@ -80,7 +100,8 @@
 .registerButton span {
   font-weight: 500;
   font-size: 16px;
-  color: rgb(95, 0, 128);
+  /* color: rgb(95, 0, 128); */
+  color: #4AD645;
 }
 
 

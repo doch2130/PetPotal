@@ -1,5 +1,6 @@
 .wrap {
   /* background: conic-gradient(from -16.52deg at 53.36% 111.33%, rgba(231, 255, 255, 0) -56.41deg, #E7FFFF 137.95deg, rgba(231, 255, 255, 0) 303.59deg, #E7FFFF 497.95deg); */
+  background-color: #FFF;
   min-height: 700px;
   display: flex;
   flex-wrap: wrap;
@@ -34,8 +35,10 @@
 }
 
 .wrapLeft button {
-  background: #4F92BB;
-  border: 1px solid #4F92BB;
+  /* background: #4F92BB; */
+  /* border: 1px solid #4F92BB; */
+  background-color: #4AD645;
+  border: 1px solid #4AD645;
   box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.25);
   border-radius: 50px;
   height: 120px;
