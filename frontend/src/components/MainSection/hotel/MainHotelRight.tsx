@@ -19,7 +19,7 @@ export default function MainHotelRight() {
             </div>
             <div className={style.boxFlex}>
               <div>
-                <img src={HotelImg2} alt='Hotel Img2' />
+                <img src={HotelImg1} alt='Hotel Img1' />
               </div>
               <div>
                 <p>Sunday,</p>
@@ -37,7 +37,7 @@ export default function MainHotelRight() {
               </div>
               <div className={style.boxFlex}>
                 <div>
-                  <img src={HotelImg1} alt='Hotel Img1' />
+                  <img src={HotelImg2} alt='Hotel Img2' />
                 </div>
                 <div>
                   <p>Friday,</p>

@@ -1,5 +1,5 @@
 .wrap {
-  min-height: 800px;
+  min-height: 700px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -35,12 +35,12 @@
 
 .box {
   width: 500px;
-  /* height: 350px; */
   background: #FFFFFF;
-  box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.25);
-  border: 1px solid #A46DC7;
-  /* border-radius: 20px 20px 5px 5px; */
+  border: 1px solid #4AD645;
   border-radius: 20px;
+  box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.25);
+  /* border: 1px solid #A46DC7; */
+  /* border-radius: 20px 20px 5px 5px; */
   /* position: relative; */
   top: -50px;
   right: 100px;
@@ -56,11 +56,11 @@
 }
 
 .boxTop {
-  border-bottom: 1px solid #A46DC7;
+  border-bottom: 1px solid #4AD645;
 }
 
 .boxBottom {
-  border-top: 1px solid #A46DC7;
+  border-top: 1px solid #4AD645;
 }
 
 .boxLeft, .boxRight {
@@ -69,11 +69,11 @@
 }
 
 .boxLeft {
-  border-right: 1px solid #A46DC7;
+  border-right: 1px solid #4AD645;
 }
 
 .boxRight {
-  border-left: 1px solid #A46DC7;
+  border-left: 1px solid #4AD645;
 }
 
 .boxFlex {
@@ -98,12 +98,13 @@
 
 .boxLeft p,
 .boxRight p {
-  color: #7E0CC6;
+  /* color: #7E0CC6; */
+  color: #000;
 }
 
 .boxTop .boxFlex:nth-of-type(1) p:nth-of-type(1) {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 10px;
   margin-top: 1.5rem;
 }
@@ -115,7 +116,6 @@
 
 .boxTop .boxFlex:nth-of-type(2) p:nth-of-type(2) {
   font-size: 1.6rem;
-  font-weight: 700;
   margin: 10px 0 0;
 }
 
@@ -127,7 +127,7 @@
 
 .boxBottom .boxFlex:nth-of-type(1) p {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 10px;
   margin-top: 1.5rem;
 }
@@ -154,8 +154,10 @@
 .boxBottom .boxFlex:nth-of-type(2) div:nth-of-type(2) > div {
   width: 30px;
   height: 30px;
-  background: rgba(126, 12, 198, 0.25);
-  border: 1px solid #7E0CC6;
+  /* background: rgba(126, 12, 198, 0.25); */
+  /* border: 1px solid #7E0CC6; */
+  background: rgba(74, 214, 69, 0.25);
+  border: 1px solid #4AD645;
   text-align: center;
   margin: auto;
 }
@@ -176,8 +178,11 @@
 .boxBottom .boxRight .boxFlex:nth-of-type(2) div {
   width: 85%;
   height: 50px;
-  background: rgba(126, 12, 198, 0.25);
-  border: 1px solid #7E0CC6;
+  /* background: rgba(126, 12, 198, 0.25); */
+  /* border: 1px solid #7E0CC6; */
+  /* border-radius: 5px; */
+  background: rgba(74, 214, 69, 0.25);
+  border: 1px solid #4AD645;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -193,8 +198,12 @@
 
 
 .boxButton {
-  background: linear-gradient(180deg, rgba(164, 109, 199, 0.5) 0%, #A46DC7 100%);
-  border: 1px solid #A46DC7;
+  /* background: linear-gradient(180deg, rgba(164, 109, 199, 0.5) 0%, #A46DC7 100%); */
+  /* border: 1px solid #A46DC7; */
+  /* box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.25); */
+  /* border-radius: 5px 5px 20px 20px; */
+  background: linear-gradient(180deg, rgba(74, 214, 69, 0.5) 0%, #4AD645 100%);
+  border: 1px solid #4AD645;
   box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.25);
   border-radius: 5px 5px 20px 20px;
   height: 100px;

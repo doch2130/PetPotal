@@ -3,11 +3,13 @@
 header {
     position: relative;
     margin-bottom: 150px;
-    color: #FFF;
+    /* color: #FFF; */
+    color: #000;
 }
 
 header a {
-    color: #FFF;
+    /* color: #FFF; */
+    color: #000;
     text-decoration: none;
 }
 
@@ -18,7 +20,8 @@ header a {
     right: 0;
     z-index: 1000;
     width: 100%;
-    background-color: #BB8F4F;
+    /* background-color: #BB8F4F; */
+    background-color: #FFF;
 }
 
 
@@ -51,6 +54,10 @@ header a {
     font-style: normal;
     font-weight: 700;
     font-size: 4rem;
+}
+
+.navbarLogo a:hover {
+    color: #00AF41;
 }
 
 .searchForm {
@@ -114,6 +121,7 @@ header a {
 
 .menuItemLink:hover {
     border-bottom: 2px solid #000;
+    color: #00AF41;
 }
 
 

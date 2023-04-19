@@ -1,9 +1,10 @@
 .wrap {
-  min-height: 800px;
+  min-height: 700px;
   display: flex;
   flex-wrap: wrap;
   /* background-color: rgb(255, 242, 204); */
-  background-color: #BB8F4F;
+  /* background-color: #BB8F4F; */
+  background-color: #FFF;
   align-items: center;
 }
 

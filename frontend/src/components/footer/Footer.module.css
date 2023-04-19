@@ -32,10 +32,12 @@ hr {
 
 .footLogo a {
   cursor: pointer;
+  color: #000;
 }
 
 .footLogo a:hover {
-  color: #777;
+  /* color: #777; */
+  color: #00AF41;
 }
 
 .footLogo a {

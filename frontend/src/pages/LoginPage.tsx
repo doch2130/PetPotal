@@ -98,7 +98,6 @@ export default function LoginPage() {
               </button>
             </div> */}
 
-            {/* test */}
             <AouthButton styleName={style.naverLoginButton} image={naver} imageAlt='Naver AOuth' text='네이버 로그인' />
             <AouthButton styleName={style.googleLoginButton} image={google} imageAlt='Google AOuth' text='구글 로그인' />
 
