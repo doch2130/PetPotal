@@ -9,8 +9,6 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
-const crypto = require("crypto");
-const mysql = require("../config/mysql");
 
 const UsersController = require("../controller/UsersController");
 
@@ -23,11 +21,15 @@ router.post("/signIn", (req, res, next) => {
             });
         }
         else {
+            res.cookie(
+                "token", users,
+            {
+                httpOnly: true,
+                expires: new Date(Date.now() + 86400)
+            })
             res.send({
                 responseCode: 200,
-                data: {
-                    token: users
-                }
+                message: "Login Success"
             });
         }
         
