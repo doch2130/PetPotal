@@ -1,0 +1,17 @@
+.toolbar, .textEditor {
+  border: 1px solid #000000 !important;
+  border-radius: 5px !important;
+}
+
+.textEditor {
+  padding: 5px 10px 0px;
+  height: 200px !important;
+}
+
+.textEditor > div {
+  height: 180px;
+}
+
+.textEditor > div > div > div > div > div > div {
+  margin: 10px 0;
+}
