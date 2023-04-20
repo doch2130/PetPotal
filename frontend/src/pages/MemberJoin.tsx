@@ -1,147 +1,367 @@
-import { useDaumPostcodePopup } from 'react-daum-postcode';
 import style from './MemberJoin.module.css';
-import { useState } from 'react';
 import Controller from '../api/controller';
 
+import React, { useState } from 'react';
+import { useForm, SubmitHandler} from 'react-hook-form';
+import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useNavigate } from 'react-router-dom';
+
+interface JoinFormInput {
+    account: String;
+    password: String;
+    passwordCheck: String;
+    name: String;
+    nickName: String;
+    email: String;
+    phone: String;
+    address: String;
+    address4: String;
+}
+
+
 export default function MemberJoin() {
-    const POSTCODE_URL = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    const controller = new Controller();
-    const POST_WIDTH = 500;
-    const POST_HEIGHT = 500;
+  const navigate = useNavigate();
+  const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<JoinFormInput>({mode: 'onChange'});
+  const [duplicateValue, setDuplicateValue] = useState({
+    account: false,
+    // nickName: false,
+    email: false,
+    // phone: false,
+  })
 
-    const open = useDaumPostcodePopup(POSTCODE_URL);
+  const [addressObj, setAddressObj] = useState({
+    address1: '',
+    address2: '',
+    address3: '',
+  });
 
-    type Value = {sido: string, sigungu: string, zonecode: string, address: string}
+  //Daum Post 관련
+  const POSTCODE_URL = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+  const POST_WIDTH = 500;
+  const POST_HEIGHT = 500;
 
-    const test = (data : Value) => {
-        const fullAddress = `(${data.zonecode}) ${data.address}`;
-        setForm({
-            ...form,
-            address1: data.sido,
-            address2: data.sigungu,
-            address3: data.address,
-            detailAddress: fullAddress,
-        });
+  type Value = {sido: string, sigungu: string, zonecode: string, address: string}
 
-    };
-
-    const onAddressClickHandle = () => {
-        open({width : POST_WIDTH, height : POST_HEIGHT, onComplete : test, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
-    };
-
-    const [form, setForm] = useState({
-        account: '',
-        accountDuplicate : false,
-        password: '',
-        passwordCheck: '',
-        name: '',
-        nickName: '',
-        nickNameDuplicate : false,
-        phone: '',
-        email: '',
-        address1: '',
-        address2: '',
-        address3: '',
-        detailAddress: '',
+  const onComplete = (data : Value) => {
+    const fullAddress = `(${data.zonecode}) ${data.address}`;
+    setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+    setAddressObj({
+        address1: data.sido,
+        address2: data.sigungu,
+        address3: data.address,
     });
+  };
 
-    const {account, password, passwordCheck, name, nickName, email, phone, address1, address2, address3, detailAddress} = form;
+  const daumPostCodeopen = useDaumPostcodePopup(POSTCODE_URL);
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        
-        setForm({
-            ...form,
-            [name]: value,
-        });
-        
-        switch(name) {
-            case 'email':
-                //Todo Email 정규표현식
-                break;
-            case 'password':
-                // Better Comments
-                // TODO Password 정규 표현식
-                // ? 
-                // *
-                // !
-            case 'passwordCheck':
-                // TODO Password PasswordCheck 값 비교
-                
+  const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    daumPostCodeopen({width : POST_WIDTH, height : POST_HEIGHT, onComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
+};
+  
+
+  //API Controller 객체 생성
+  const controller = new Controller();
+
+
+  const onSubmit : SubmitHandler<JoinFormInput> = async (data) => {
+    if(!duplicateValue.account) {
+      setError('account', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    }
+
+    // if(!duplicateValue.nickName) {
+    //   setError('nickName', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    // }
+
+    if(!duplicateValue.email) {
+      setError('email', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    }
+    const apiObj = {...data, ...addressObj};
+
+    const result = await controller.join(apiObj);
+    if(result.data.message === '회원가입 완료') {
+      alert(result.data.message);
+      navigate('/login');
+    }
+  };
+
+  const duplicateCheck = async(e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const { id } = e.target as HTMLButtonElement;
+    let apiResult = null;
+
+    switch(id) {
+      case 'account':
+        console.log(errors.account?.message);
+        if((errors.account?.message !== '중복확인을 해주세여' && errors.account) || !getValues('account')) {
+          return false;
         }
-    };
-    
 
-    const onHandleDuplicateCheck = (e: React.MouseEvent<HTMLButtonElement>) => {
+        apiResult = await controller.duplicateCheck(id, getValues('account'));
+        break;
+      case 'email':
+        if((errors.email?.message !== '중복확인을 해주세여' && errors.email) || !getValues('email')) {
+          return false;
+        }
 
-    };
+        apiResult = await controller.duplicateCheck(id, getValues('email'));
+        break;
+      case 'phone':
+        if((errors.phone?.message !== '중복확인을 해주세여' && errors.phone) || !getValues('phone')) {
+          return false;
+        }
 
-    const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log("실행");
-        console.log(form);
-        controller.join(form);
-    };
+        apiResult = await controller.duplicateCheck(id, getValues('phone'));
+        break;
 
+      case 'nickName':
+        if((errors.nickName?.message !== '중복확인을 해주세여' && errors.nickName) || !getValues('nickName')) {
+          return false;
+        }
 
-    return (
-        <div className={style.joinContainer} >
-            <h1 className={style.joinTitle}>회원가입</h1>
-            <div className={style.joinDivider}>
-                <span className={style.requiredTag}>필수입력사항</span>
-            </div>
-            <div className={style.joinForm}>
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>아이디</label>
-                    <input className={style.joinInput} type="text" name='account' value={account} placeholder='아이디를 입력해주세요' onChange={onChange} />
-                    <button className={style.joinButton}>중복확인</button>
-                </div>
+        apiResult = await controller.duplicateCheck(id, getValues('nickName'));
+        break;
+      default:
+        break;
+    }
+    console.log(apiResult);
+    if(apiResult?.data.data) {
+      setDuplicateValue({
+        ...duplicateValue,
+        [id] : true,
+      });
 
-                <div className={style.inputColumnWrapper}>
-                <label className={style.joinLabel}>비밀번호</label>
-                    <input className={style.joinInput} type="password" name='password' value={password} placeholder='비밀번호를 입력해주세요' onChange={onChange} />
-                    <div className={style.empty}></div>
-                </div>
+      switch(id) {
+        case 'account':
+          setError('account', {message: undefined});
+          break;
+        case 'nickName':
+          setError('nickName', {message: undefined});
+          break;
+        case 'email':
+          setError('email', {message: undefined});
+          break;
+        default:
+          break;
+      }
 
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>비밀번호확인</label>
-                    <input className={style.joinInput} type="password" name='passwordCheck' value={passwordCheck} placeholder='비밀번호를 한번 더 입력해주세요' onChange={onChange} />
-                    <div className={style.empty}></div>
-                </div>
+      alert('사용하실 수 있습니다');
+    }
+  }
 
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>이름</label>
-                    <input className={style.joinInput}type="text" name='name' value={name} placeholder='이름을 입력해주세요' onChange={onChange} />
-                    <div className={style.empty}></div>
-                </div>
-
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>닉네임</label>
-                    <input className={style.joinInput}type="text" name='nickName' value={nickName} placeholder='이름을 입력해주세요' onChange={onChange} />
-                    <button className={style.joinButton} onClick={onHandleDuplicateCheck}>중복확인</button>
-                </div>
-
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>이메일</label>
-                    <input className={style.joinInput} type="text" name='email' value={email} placeholder='예: petportal@gmail.com' onChange={onChange}/>
-                    <button className={style.joinButton}>중복확인</button>
-                </div>
-
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>휴대폰</label>
-                    <input className={style.joinInput} type="text" name='phone' value={phone} placeholder='슷자만 입력해주세요.' onChange={onChange}/>
-                    <div className={style.empty}></div>
-                </div>
-
-                <div className={style.inputColumnWrapper}>
-                    <label className={style.joinLabel}>주소</label>
-                    <input className={style.joinInput} type="text" placeholder='주소를 입력해주세요.' name='address' value={detailAddress || ''} onChange={onChange} disabled/>
-                    <button className={style.joinButton} onClick={onAddressClickHandle}>주소검색</button>
-                </div>
-
-                <div className={style.joinDivider}></div>
-                <button className={style.joinSubmitButton} onClick={onSubmit}>가입하기</button>
-            </div>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className={style.joinContainer}>
+      <h1 className={style.joinTitle}>회원가입</h1>
+      <div className={style.joinDivider}>
+        <span className={style.requiredTag}>필수입력사항</span>
+      </div>
+      <div className={style.joinForm}>
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>아이디</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('account',
+                { 
+                  required: {value: true, message: '값을 입력해주세요'},
+                  minLength: {value: 3, message: '3글자 ~ 12글자 사이의 값을 입력해주세요'},
+                  maxLength: {value: 12, message: '3글자 ~ 12글자 사이의 값을 입력해주세요'},
+                  pattern: /^[A-Za-z0-9]*$/i,
+                },
+              )}
+              className={style.joinInput}
+              type="text"
+              placeholder="아이디를 입력해주세요"
+            />
+            <p className={style.joinWarning}>{errors.account?.message}</p>
+          </div>
+          <button className={style.joinButton} id='account' name='account' onClick={duplicateCheck}>중복확인</button>
         </div>
-    );
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>비밀번호</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('password',
+                {
+                  required: {value: true, message: '값을 입력해주세요'},
+                  pattern: {
+                    value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/i,
+                    message: '대소문자숫자특수기호를 섞어 8자이상을 만들어주세요'
+                  },
+                }
+              )}
+              className={style.joinInput}
+              type="password"
+              placeholder="비밀번호를 입력해주세요"
+            />
+            <p className={style.joinWarning}>{errors.password?.message}</p>
+          </div>
+          <div className={style.empty}></div>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>비밀번호확인</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('passwordCheck',{
+                required: {value: true, message: '값을 입력해주세여'},
+                validate: (value : String) => value === getValues('password') || '비밀번호가 다릅니다',
+              }
+              )}
+              className={style.joinInput}
+              type="password"
+              placeholder="비밀번호를 한번 더 입력해주세요"
+            />
+            <p className={style.joinWarning}>{errors.passwordCheck?.message}</p>
+          </div>
+          <div className={style.empty}></div>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>이름</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('name', 
+              {
+                required: true,
+                minLength: {
+                  value: 1,
+                  message: '1글자 이상 30자 이하로 입력해주세요',
+                },
+                maxLength: {
+                  value: 30,
+                  message : '1글자 이상 30자 이하로 입력해주세요',
+                }
+              })}
+              className={style.joinInput}
+              type="text"
+              placeholder="이름을 입력해주세요"
+            />
+            <p className={style.joinWarning}>{errors.name?.message}</p>
+          </div>
+          <div className={style.empty}></div>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>닉네임</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('nickName',
+              {
+                required: true,
+                minLength: {
+                  value: 1,
+                  message: '1글자 이상 30자 이하로 입력해주세요',
+                },
+                maxLength: {
+                  value: 30,
+                  message : '1글자 이상 30자 이하로 입력해주세요',
+                }
+              })}
+              className={style.joinInput}
+              type="text"
+              placeholder="닉네임을 입력해주세요"
+            />
+            <p className={style.joinWarning}>{errors.nickName?.message}</p>
+          </div>
+          <button className={style.joinButton} id='nickName' onClick={duplicateCheck}>중복확인</button>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>이메일</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('email',
+                {
+                  required: {
+                    value: true,
+                    message: '값을 입력해주세요',
+                  },
+                  pattern: {
+                    value: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+                    message: '이메일 형태로 입력해주세요'
+                  },
+                },
+              )}
+              className={style.joinInput}
+              type="text"
+              placeholder="예: petportal@gmail.com"
+            />
+            <p className={style.joinWarning}>{errors.email?.message}</p>
+          </div>
+          <button className={style.joinButton} id='email' onClick={duplicateCheck}>중복확인</button>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>휴대폰</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('phone',
+                {
+                  required: {
+                    value: true,
+                    message: '값을 입력해주세요',
+                  },
+                  pattern: {
+                    value: /^\d{11}$/i,
+                    message: '번호 11자리를 입력해주세요'
+                  },
+                },
+              )}
+              className={style.joinInput}
+              type="text"
+              placeholder="슷자만 입력해주세요."
+            />
+            <p className={style.joinWarning}>{errors.phone?.message}</p>
+          </div>
+          <div className={style.empty}></div>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>주소</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('address',
+                {
+                  required: {
+                    value: true,
+                    message: '주소를 입력해주세요',
+                  }
+                }
+              )}
+              className={style.joinInput}
+              type="text"
+              placeholder="주소를 입력해주세요."
+              disabled
+            />
+            <p className={style.joinWarning}>{errors.address?.message}</p>
+          </div>
+          <button className={style.joinButton} onClick={onAddressClickHandle}>주소검색</button>
+        </div>
+
+        <div className={style.inputColumnWrapper}>
+          <label className={style.joinLabel}>상세주소</label>
+          <div className={style.joinInputWrapper}>
+            <input
+              {...register('address4',
+                {
+                  required: true,
+                  minLength: 1,
+                }
+              )}
+              className={style.joinInput}
+              type="text"
+              placeholder="상세주소를 입력해주세요."
+            />
+            <p className={style.joinWarning}>{errors.address4?.message}</p>
+          </div>
+          <div className={style.empty}></div>
+        </div>
+
+        <div className={style.joinDivider}></div>
+        <button className={style.joinSubmitButton} type='submit'>가입하기</button>
+      </div>
+    </form>
+  );
 }
 

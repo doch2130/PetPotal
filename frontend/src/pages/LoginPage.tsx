@@ -3,8 +3,50 @@ import style from './LoginPage.module.css';
 import naver from '../assets/icon/naver.png';
 import google from '../assets/icon/google.png';
 import AouthButton from '../components/aouth/AouthButton';
+import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
+import axios from "axios";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const loginId = useRef<HTMLInputElement>(null);
+  const loginPw = useRef<HTMLInputElement>(null);
+
+
+  const onSubmit = () => {
+    if(loginId.current === null || loginId.current.value === '') {
+      alert('아이디를 입력해주세요');
+      return false;
+    } else if (loginPw.current === null || loginPw.current.value === '') {
+      alert('비밀번호를 입력해주세요');
+      return false;
+    }
+
+    const account = loginId.current.value;
+    const password = loginPw.current.value;
+
+    axios({
+      method: 'post',
+      url: 'http://localhost:3010/api/users/signIn',
+      data: {
+        account,
+        password,
+      }
+    }).then((res) => {
+      console.log('로그인 결과 : ', res.data);
+    })
+  }
+
+  const onSubmitEnter = (e: React.KeyboardEvent) => {
+    if(e.key === 'Enter' || e.keyCode === 13) {
+      onSubmit();
+    }
+  }
+
+  const moveRegister = () => {
+    navigate('/memberjoin');
+  }
+
   return (
     <div className={style.wrap}>
       <div className={style.row}>
@@ -12,10 +54,10 @@ export default function LoginPage() {
           <form>
             <h2>로그인</h2>
             <div className={style.loginInputWrap}>
-              <input type='text' name='id' placeholder='아이디를 입력해주세요' />
+              <input type='text' name='id' placeholder='아이디를 입력해주세요' ref={loginId} defaultValue='' onKeyDown={onSubmitEnter} />
             </div>
             <div className={style.loginInputWrap}>
-              <input type='password' name='pw' placeholder='비밀번호를 입력해주세요' />
+              <input type='password' name='pw' placeholder='비밀번호를 입력해주세요' ref={loginPw} defaultValue='' onKeyDown={onSubmitEnter} />
             </div>
             <div className={style.findAccountWrap}>
               <p>
@@ -25,12 +67,12 @@ export default function LoginPage() {
               </p>
             </div>
             <div className={style.loginButtonWrap}>
-              <button type='button' className={style.loginButton}>
+              <button type='button' className={style.loginButton} onClick={onSubmit}>
                 <span>로그인</span>
               </button>
             </div>
             <div className={style.loginButtonWrap}>
-              <button type='button' className={style.registerButton}>
+              <button type='button' className={style.registerButton} onClick={moveRegister}>
                 <span>회원가입</span>
               </button>
             </div>
@@ -56,7 +98,6 @@ export default function LoginPage() {
               </button>
             </div> */}
 
-            {/* test */}
             <AouthButton styleName={style.naverLoginButton} image={naver} imageAlt='Naver AOuth' text='네이버 로그인' />
             <AouthButton styleName={style.googleLoginButton} image={google} imageAlt='Google AOuth' text='구글 로그인' />
 

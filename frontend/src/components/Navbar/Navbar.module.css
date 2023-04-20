@@ -3,8 +3,15 @@
 header {
     position: relative;
     margin-bottom: 150px;
+    /* color: #FFF; */
+    color: #000;
 }
 
+header a {
+    /* color: #FFF; */
+    color: #000;
+    text-decoration: none;
+}
 
 .navbarContainer {
     position: fixed;
@@ -13,6 +20,8 @@ header {
     right: 0;
     z-index: 1000;
     width: 100%;
+    /* background-color: #BB8F4F; */
+    background-color: #FFF;
 }
 
 
@@ -47,8 +56,8 @@ header {
     font-size: 4rem;
 }
 
-.navbarLogo a {
-    text-decoration: none;
+.navbarLogo a:hover {
+    color: #00AF41;
 }
 
 .searchForm {
@@ -64,14 +73,23 @@ header {
     border: 1px solid black;
     border-radius: 0.3em;
     font-size: 1rem;
+    padding: 0px 10px;
 }
 
 .searchBtn {
     background-color: transparent;
     border: 0;
     position: absolute;
-    top: 9px;
-    right: 0%;
+    /* top: 9px; */
+    /* right: 0%; */
+    top: 2.5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.searchBtn img {
+    width: 30px;
+    height: 30px;
 }
 
 .headerItem {
@@ -93,8 +111,7 @@ header {
     display: block;
     font-size: 1.1rem; 
     font-weight: bold;
-    color: #555;
-    text-decoration: none;
+    /* color: #555; */
     text-align: center;
 }
 
@@ -104,6 +121,7 @@ header {
 
 .menuItemLink:hover {
     border-bottom: 2px solid #000;
+    color: #00AF41;
 }
 
 

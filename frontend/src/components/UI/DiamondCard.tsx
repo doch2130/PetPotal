@@ -1,7 +1,13 @@
 // import React from 'react'
 import style from './DiamondCard.module.css';
 
-export default function DiamondCard(props: any) {
+interface DiamondCardProps {
+  key: number;
+  iconImage: string;
+  children: React.ReactNode;
+}
+
+export default function DiamondCard(props: DiamondCardProps) {
   return (
     <div className={style.diamondCardWrap}>
       <div className={style.diamondCard}>

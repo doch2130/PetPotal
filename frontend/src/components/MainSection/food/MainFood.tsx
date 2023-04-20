@@ -44,26 +44,21 @@ const logoBrand = [
 export default function MainFood() {
   return (
     <div className={style.wrap}>
-      <div className={style.box}>
-        <div className={style.innerBox}>
-          <div className={style.boxFlex}>
-            <div className={style.boxLeft}>
-              <div>
-                <h1>The right food<br />For your<br />Pet</h1>
-              </div>
-            </div>
-            <div className={style.boxRight}>
-              <div>
-                <img src={DogFoodImg} alt='Dog Food Img' />
-              </div>
-            </div>
+      <div className={style.wrapTop}>
+        <div className={style.wrapCol}>
+          <h1>The right food<br />For your<br />Pet</h1>
+        </div>
+        <div className={style.wrapCol}>
+          <div>
+            <img src={DogFoodImg} alt='Dog Food Img' />
           </div>
-          <div className={style.boxBottomFlex}>
-            <div className={style.wrapLogo}>
-              { logoBrand.map((el) => <div className={style.logoBox + ' ' + style.logoBoxAnimation} key={el.id}><img src={el.img} alt={el.text} /></div>) }
-              { logoBrand.map((el) => <div className={style.logoBox + ' ' + style.logoBoxCloneAnimation} key={el.id}><img src={el.img} alt={el.text} /></div>) }
-            </div>
-          </div>
+        </div>
+      </div>
+
+      <div className={style.wrapBottom}>
+        <div className={style.wrapLogo}>
+          { logoBrand.map((el) => <div className={style.logoBox + ' ' + style.logoBoxAnimation} key={el.id}><img src={el.img} alt={el.text} /></div>) }
+          { logoBrand.map((el) => <div className={style.logoBox + ' ' + style.logoBoxCloneAnimation} key={el.id}><img src={el.img} alt={el.text} /></div>) }
         </div>
       </div>
     </div>

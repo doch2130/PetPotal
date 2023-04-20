@@ -12,8 +12,6 @@ export default function MainHome() {
       setImgChange(!imgChange);
     }, 5000);
 
-    // console.log("asd");
-
     return () => {
       clearTimeout(changeTimer);
     }
@@ -35,8 +33,9 @@ export default function MainHome() {
       </div>
       <div className={style.wrapCol}>
         <div className={style.wrapText}>
-          <h1>Lorem ipsum</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non velit earum, neque, accusantium aliquam nihil ullam eius quibusdam id animi delectus rem. Dicta deserunt voluptas, velit quia et molestias nostrum.</p>
+          <h1>당신 근처의 Pet Potal</h1>
+          {/* <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non velit earum, neque, accusantium aliquam nihil ullam eius quibusdam id animi delectus rem. Dicta deserunt voluptas, velit quia et molestias nostrum.</p> */}
+          <p>동네의 반려동물 서비스를 한 눈에 <br />원하는 서비스를 받아보세요!</p>
         </div>
       </div>
     </div>

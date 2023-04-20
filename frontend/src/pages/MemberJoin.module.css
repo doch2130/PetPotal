@@ -19,16 +19,20 @@
 .inputColumnWrapper {
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
-    align-items: center;
+    padding: 1rem 1rem 0 1rem;
+    align-items: baseline;
 }
 
 .joinLabel {
     flex-basis: 15%;
 }
 
-.joinInput {
+.joinInputWrapper {
     flex-basis: 63%;
+}
+
+.joinInput {
+    width: 100%;
     height: 46px;
     padding: 0px 11px 1px 15px;
     border-radius: 4px;
@@ -45,6 +49,11 @@
     background-color: white;
     color: rgb(95, 0, 128);
     border-radius: 4px;
+}
+
+.joinWarning {
+    color: red;
+    margin-top: 3px;
 }
 
 .empty {

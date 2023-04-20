@@ -1,14 +1,13 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
+import SearchIcon from '../../assets/icon/search.png';
 import style from './Navbar.module.css';
-import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const historyValue = useParams();
-  console.log(historyValue);
+  // console.log(historyValue);
   const searchSubmit = (e) => {
     e.preventDefault();
     navigate(`/search/${keyword}`);
@@ -54,8 +53,12 @@ export default function Navbar() {
                 type="search"
                 className={style.searchInput}
                 value={keyword || ''}
+                placeholder="검색어를 입력해주세요."
               />
-              <button className={style.searchBtn}>아이콘</button>
+              {/* <button className={style.searchBtn}>아이콘</button> */}
+              <button className={style.searchBtn}>
+                <img src={SearchIcon} alt="search icon" />
+              </button>
             </form>
             <ul className={style.headerItem}>
               <li>아이콘1</li>
