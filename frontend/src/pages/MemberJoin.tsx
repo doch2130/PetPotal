@@ -4,6 +4,7 @@ import Controller from '../api/controller';
 import React, { useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { useNavigate } from 'react-router-dom';
 
 interface JoinFormInput {
     account: String;
@@ -14,17 +15,18 @@ interface JoinFormInput {
     email: String;
     phone: String;
     address: String;
-    detailAddress: String;
+    address4: String;
 }
 
 
 export default function MemberJoin() {
+  const navigate = useNavigate();
   const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<JoinFormInput>({mode: 'onChange'});
   const [duplicateValue, setDuplicateValue] = useState({
     account: false,
-    nickName: false,
+    // nickName: false,
     email: false,
-    phone: false,
+    // phone: false,
   })
 
   const [addressObj, setAddressObj] = useState({
@@ -62,18 +64,24 @@ export default function MemberJoin() {
   const controller = new Controller();
 
 
-  const onSubmit : SubmitHandler<JoinFormInput> = (data) => {
-    console.log(data);
+  const onSubmit : SubmitHandler<JoinFormInput> = async (data) => {
     if(!duplicateValue.account) {
       setError('account', {message: '중복확인을 해주세여'}, {shouldFocus: true })
     }
 
-    if(!duplicateValue.nickName) {
-      setError('nickName', {message: '중복확인을 해주세야'}, {shouldFocus: true })
-    }
+    // if(!duplicateValue.nickName) {
+    //   setError('nickName', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    // }
 
     if(!duplicateValue.email) {
-      setError('email', {message: '중복확인을 해주세야'}, {shouldFocus: true })
+      setError('email', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    }
+    const apiObj = {...data, ...addressObj};
+
+    const result = await controller.join(apiObj);
+    if(result.data.message === '회원가입 완료') {
+      alert(result.data.message);
+      navigate('/login');
     }
   };
 
@@ -84,35 +92,60 @@ export default function MemberJoin() {
 
     switch(id) {
       case 'account':
-        if(errors.account || !getValues('account')) {
+        console.log(errors.account?.message);
+        if((errors.account?.message !== '중복확인을 해주세여' && errors.account) || !getValues('account')) {
           return false;
         }
 
         apiResult = await controller.duplicateCheck(id, getValues('account'));
         break;
       case 'email':
-        if(errors.email || !getValues('email')) {
+        if((errors.email?.message !== '중복확인을 해주세여' && errors.email) || !getValues('email')) {
           return false;
         }
 
         apiResult = await controller.duplicateCheck(id, getValues('email'));
         break;
       case 'phone':
-        if(errors.phone || !getValues('phone')) {
+        if((errors.phone?.message !== '중복확인을 해주세여' && errors.phone) || !getValues('phone')) {
           return false;
         }
 
         apiResult = await controller.duplicateCheck(id, getValues('phone'));
         break;
+
+      case 'nickName':
+        if((errors.nickName?.message !== '중복확인을 해주세여' && errors.nickName) || !getValues('nickName')) {
+          return false;
+        }
+
+        apiResult = await controller.duplicateCheck(id, getValues('nickName'));
+        break;
       default:
         break;
     }
-
+    console.log(apiResult);
     if(apiResult?.data.data) {
       setDuplicateValue({
         ...duplicateValue,
         [id] : true,
-      })
+      });
+
+      switch(id) {
+        case 'account':
+          setError('account', {message: undefined});
+          break;
+        case 'nickName':
+          setError('nickName', {message: undefined});
+          break;
+        case 'email':
+          setError('email', {message: undefined});
+          break;
+        default:
+          break;
+      }
+
+      alert('사용하실 수 있습니다');
     }
   }
 
@@ -231,7 +264,7 @@ export default function MemberJoin() {
             />
             <p className={style.joinWarning}>{errors.nickName?.message}</p>
           </div>
-          <button className={style.joinButton} id='nickNameDuplicateBtn'>중복확인</button>
+          <button className={style.joinButton} id='nickName' onClick={duplicateCheck}>중복확인</button>
         </div>
 
         <div className={style.inputColumnWrapper}>
@@ -256,7 +289,7 @@ export default function MemberJoin() {
             />
             <p className={style.joinWarning}>{errors.email?.message}</p>
           </div>
-          <button className={style.joinButton} id='emailDuplicateBtn'>중복확인</button>
+          <button className={style.joinButton} id='email' onClick={duplicateCheck}>중복확인</button>
         </div>
 
         <div className={style.inputColumnWrapper}>
@@ -310,7 +343,7 @@ export default function MemberJoin() {
           <label className={style.joinLabel}>상세주소</label>
           <div className={style.joinInputWrapper}>
             <input
-              {...register('detailAddress',
+              {...register('address4',
                 {
                   required: true,
                   minLength: 1,
@@ -320,7 +353,7 @@ export default function MemberJoin() {
               type="text"
               placeholder="상세주소를 입력해주세요."
             />
-            <p className={style.joinWarning}>{errors.detailAddress?.message}</p>
+            <p className={style.joinWarning}>{errors.address4?.message}</p>
           </div>
           <div className={style.empty}></div>
         </div>
