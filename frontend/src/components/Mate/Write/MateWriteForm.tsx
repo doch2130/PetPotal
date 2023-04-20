@@ -1,7 +1,7 @@
 // import React from 'react'
 import style from './MateWriteForm.module.css';
 import { useForm } from 'react-hook-form';
-import MateWriteTextEdit from './MateWriteTextEdit';
+import MateWriteTextEditor from './MateWriteTextEditor';
 
 interface MateWriteFormInput {
   title: string;
@@ -18,6 +18,7 @@ interface MateWriteFormInput {
 
 export default function MateWriteForm() {
   const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
+
   return (
     <form className={style.wrap}>
       <div className={style.wrapRow}>
@@ -258,16 +259,32 @@ export default function MateWriteForm() {
         </div>
       </div>
 
-      <div className={style.wrapRow + ' ' + style.wrapTextEdit}>
+      <div className={style.wrapRow + ' ' + style.wrapRowTextEditor}>
         <div className={style.wrapCol}>
           <h2>세부내용</h2>
-          <MateWriteTextEdit />
+          <div className={style.wrapTextEditor}>
+            <MateWriteTextEditor
+            sentences={'EX)\r\n날짜 : 2023-04-17\r\n시간 : 16시 ~ 17시\r\n\r\n주요 내용 :\r\n안녕하세요. 저희 반려동물 산책해주실 분 구합니다.'} />
+          </div>
         </div>
       </div>
 
-      
+      <div className={style.wrapRow + ' ' + style.wrapRowTextEditor}>
+        <div className={style.wrapCol}>
+          <h2>주의사항</h2>
+          <div className={style.wrapTextEditor}>
+            <MateWriteTextEditor
+            sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} />
+          </div>
+        </div>
+      </div>
 
-      
+      <div className={style.wrapRow + ' ' + style.wrapRowMap}>
+        <div className={style.wrapCol}>
+          <h2>상세 위치</h2>
+          <div></div>
+        </div>
+      </div>
 
     </form>
   )
