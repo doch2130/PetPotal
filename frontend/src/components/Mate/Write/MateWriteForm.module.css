@@ -1,0 +1,140 @@
+.wrap {
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  min-height: 600px;
+  line-height: normal;
+  max-width: 850px;
+  margin: auto;
+  padding: 10px 0px;
+}
+
+.wrapRow {
+  margin: 10px 0px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.wrapCol {
+  /* flex: 1 0; */
+}
+
+.wrapRow label {
+  font-size: 1.4rem;
+  margin: 0px 2rem;
+}
+
+.wrapRow input[type="text"] {
+  width: 350px;
+  height: 25px;
+  font-size: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.wrapRow:not(:nth-of-type(1)) [type="text"] {
+  width: 180px;
+}
+
+.wrapRow .wrapCol select {
+  width: 200px;
+}
+
+
+@media (min-width: 660px) {
+  .wrapCol {
+    min-width: 490px;
+  }
+}
+
+.writeType label:nth-of-type(1) {
+  margin: 0px 2rem;
+}
+
+.writeType label {
+  margin: 0px 5px;
+}
+
+.writeType input:nth-of-type(2) {
+  margin-left: 1rem;
+}
+
+.wrapRow input[type="number"] {
+  width: 180px;
+  height: 25px;
+  font-size: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.amount span {
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.mateWriteWraning {
+  color: red;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+.wrapPet {
+  margin-top: 30px;
+}
+
+.wrapPet h2 {
+  font-size: 1.4rem;
+  margin: 0px 2rem;
+}
+
+.wrapPetGender label:not(:nth-of-type(1)) {
+  margin: 0 5px;
+}
+
+.wrapPetGender input:nth-of-type(2) {
+  margin-left: 1rem;
+}
+
+.wrapRow .wrapCol select {
+  /* width: 350px; */
+  height: 35px;
+  font-size: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.wrapPetWeight span {
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.wrapIsNeutered label:nth-of-type(1) {
+  margin-right: 1rem;
+}
+
+.wrapIsNeutered label:not(:nth-of-type(1)) {
+  margin: 0 5px;
+}
+
+.wrapIsNeutered input:not(:nth-of-type(1)) {
+  margin-left: 1rem;
+}
+
+.wrapTextEdit {
+  margin-top: 30px;
+}
+
+.wrapTextEdit .wrapCol {
+  margin: 0px 2rem;
+}
+
+.wrapTextEdit h2 {
+  font-size: 1.4rem;
+}

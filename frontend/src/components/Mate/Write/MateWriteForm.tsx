@@ -1,0 +1,274 @@
+// import React from 'react'
+import style from './MateWriteForm.module.css';
+import { useForm } from 'react-hook-form';
+import MateWriteTextEdit from './MateWriteTextEdit';
+
+interface MateWriteFormInput {
+  title: string;
+  writeType: string;
+  amount: string;
+  petName: string;
+  petGender: string;
+  petAge: string;
+  petSpecies: string;
+  petBreeds: string;
+  petWeight: string;
+  isNeutered: string;
+}
+
+export default function MateWriteForm() {
+  const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
+  return (
+    <form className={style.wrap}>
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol}>
+          <label htmlFor='title'>제목</label>
+          <input 
+            {...register('title',
+            {
+              required: {value: true, message: '제목을 입력해주세요'},
+            },
+            )}
+            id='title' type='text' placeholder='제목을 입력해주세요'
+          />
+          <p className={style.mateWriteWraning}>제목을 입력해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.title?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol + ' ' + style.writeType}>
+          <label>구분</label>
+          <input 
+            {...register("writeType",
+            {
+              required: {value: true, message: '글 구분을 선택해주세요' }
+            },
+            )}
+            type="radio" id='typeWanted' value="구함"
+          />
+          <label htmlFor='typeWanted'>구함</label>
+          <input 
+            {...register("writeType",
+            {
+              required: {value: true, message: '글 구분을 선택해주세요' }
+            },
+            )}
+            type="radio" id='typeSupport' value="지원"
+          />
+          <label htmlFor='typeSupport'>지원</label>
+          <p className={style.mateWriteWraning}>글 구분을 선택해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.writeType?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol + ' ' + style.amount}>
+        <label htmlFor='amount'>금액</label>
+          <input 
+            {...register('amount',
+            {
+              required: {value: true, message: '금액을 입력해주세요'},
+              pattern: {
+                value: /[0-9]$/,
+                message: '입력한 금액을 다시 확인해주세요'
+              },
+              min: {
+                value: 0,
+                message: '0이상의 숫자만 입력 가능합니다.'
+              }
+            },
+            )}
+            id='amount' type='number' placeholder='금액을 입력해주세요' min='0'
+          />
+          <span>원</span>
+          <p className={style.mateWriteWraning}>금액을 입력해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.amount?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow + ' ' + style.wrapPet}>
+        <div className={style.wrapCol}>
+          <h2>반려동물 정보</h2>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol}>
+          <label htmlFor='petName'>이름</label>
+          <input 
+            {...register('petName',
+            {
+              required: {value: true, message: '이름을 입력해주세요'},
+            },
+            )}
+            id='petName' type='text' placeholder='이름을 입력해주세요'
+          />
+          <p className={style.mateWriteWraning}>이름을 입력해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petName?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol + ' ' + style.wrapPetGender}>
+          <label>성별</label>
+          <input 
+            {...register("petGender",
+            {
+              required: {value: true, message: '성별을 선택해주세요' }
+            },
+            )}
+            type="radio" id='petGenderMan' value="수컷"
+          />
+          <label htmlFor='petGenderMan'>수컷</label>
+          <input 
+            {...register("petGender",
+            {
+              required: {value: true, message: '성별을 선택해주세요' }
+            },
+            )}
+            type="radio" id='petGenderWoman' value="암컷"
+          />
+          <label htmlFor='petGenderWoman'>암컷</label>
+          <p className={style.mateWriteWraning}>성별을 선택해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol}>
+          <label htmlFor='petAge'>나이</label>
+          <select
+            {...register("petAge",
+            { required: {value: true, message: '나이를 선택해주세요'}
+            },
+            )}
+            id='petAge'>
+            <option defaultValue="선택">나이를 선택해주세요</option>
+            <option defaultValue="알수없음">알수없음</option>
+            <option defaultValue="0">0</option>
+            <option defaultValue="1">1</option>
+            <option defaultValue="2">2</option>
+            <option defaultValue="3">3</option>
+            <option defaultValue="4">4</option>
+            <option defaultValue="5">5</option>
+            <option defaultValue="6">6</option>
+            <option defaultValue="7">7</option>
+            <option defaultValue="8">8</option>
+            <option defaultValue="9">9</option>
+            <option defaultValue="10">10</option>
+          </select>
+          <p className={style.mateWriteWraning}>나이를 선택해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petAge?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol}>
+          <label htmlFor='petSpecies'>종류</label>
+          <select
+            {...register("petSpecies",
+            { required: {value: true, message: '종류를 선택해주세요'}
+            },
+            )}
+            id='petSpecies'>
+            <option defaultValue="선택">종류를 선택해주세요</option>
+            <option defaultValue="강아지">강아지</option>
+            <option defaultValue="고양이">고양이</option>
+            <option defaultValue="기타">기타</option>
+          </select>
+          <p className={style.mateWriteWraning}>종류를 선택해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petSpecies?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol}>
+          <label htmlFor='petBreeds'>품종</label>
+          <input 
+            {...register('petBreeds',
+            {
+              required: {value: true, message: '품종을 입력해주세요'},
+            },
+            )}
+            id='petBreeds' type='text' placeholder='품종을 입력해주세요'
+          />
+          <p className={style.mateWriteWraning}>품종을 입력해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petBreeds?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol + ' ' + style.wrapPetWeight}>
+          <label htmlFor='petWeight'>무게</label>
+          <input 
+            {...register('petWeight',
+            {
+              required: {value: true, message: '무게를 입력해주세요'},
+              pattern: {
+                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,5}$/,
+                message: '입력한 무게를 다시 확인해주세요'
+              },
+              min: {
+                value: 0,
+                message: '0이상의 숫자만 입력 가능합니다.'
+              }
+            },
+            )}
+            id='petWeight' type='text' placeholder='무게를 입력해주세요'
+          />
+          <span>KG</span>
+          <p className={style.mateWriteWraning}>무게를 입력해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petWeight?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow}>
+        <div className={style.wrapCol + ' ' + style.wrapIsNeutered}>
+          <label>중성화</label>
+          <input 
+            {...register("isNeutered",
+            {
+              required: {value: true, message: '중성화 여부를 선택해주세요' }
+            },
+            )}
+            type="radio" id='isNeuteredTrue' value="예"
+          />
+          <label htmlFor='isNeuteredTrue'>예</label>
+          <input 
+            {...register("isNeutered",
+            {
+              required: {value: true, message: '중성화 여부를 선택해주세요' }
+            },
+            )}
+            type="radio" id='isNeuteredFalse' value="아니오"
+          />
+          <label htmlFor='isNeuteredFalse'>아니오</label>
+          <input 
+            {...register("isNeutered",
+            {
+              required: {value: true, message: '중성화 여부를 선택해주세요' }
+            },
+            )}
+            type="radio" id='isNeuteredUnknown' value="모름"
+          />
+          <label htmlFor='isNeuteredUnknown'>모름</label>
+          <p className={style.mateWriteWraning}>중성화 여부를 선택해주세요</p>
+          <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
+        </div>
+      </div>
+
+      <div className={style.wrapRow + ' ' + style.wrapTextEdit}>
+        <div className={style.wrapCol}>
+          <h2>세부내용</h2>
+          <MateWriteTextEdit />
+        </div>
+      </div>
+
+      
+
+      
+
+    </form>
+  )
+}
