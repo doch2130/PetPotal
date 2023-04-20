@@ -38,6 +38,7 @@ router.post("/signIn", (req, res, next) => {
 router.post("/signUp", UsersController.insertUser)
 
 router.post("/duplicateAccount", UsersController.findByAccount);
+router.post("/duplicateNickName", UsersController.findByNickName);
 router.post("/duplicateEmail", UsersController.findByEmail);
 router.post("/duplicatePhone", UsersController.findByPhone);
 

@@ -8,9 +8,15 @@
     await redisClient.disconnect();
 
     if(standardToken == inputToken) {
+        // console.log("redisToken:\n", standardToken);
+        // console.log("inputToken:\n", inputToken);
+        console.log("token이 일치합니다.");
         return true;
     }
     else {
+        // console.log("redisToken:\n", standardToken);
+        // console.log("inputToken:\n", inputToken);
+        console.error("token이 일치하지 않습니다.");
         return false;
     }
 }

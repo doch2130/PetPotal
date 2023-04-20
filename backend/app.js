@@ -2,8 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const multer = require('multer');
+
 const passport = require('passport');
 const basicAuth = require('./middleware/basicAuth');
 
@@ -22,11 +21,12 @@ const corsOptions = {
 
 app.use(morgan('dev'));
 app.use(cors(corsOptions));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+
 
 app.use(
   session({ secret: 'pettotal', resave: true, saveUninitialized: false })

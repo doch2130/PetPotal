@@ -1,5 +1,3 @@
-const redis = require("redis");
-
 const Animals = require("../models/Animals");
 const CheckToken = require("../middleware/CheckToken");
 const CurrentDate = require("../middleware/CurrentDate");
@@ -17,13 +15,16 @@ const ConvertAnimalsCategory2 = (animalsCategory2) => {
     return result;
 }
 
-exports.insertAnimal = async(request, result) => {   
+exports.insertAnimal = async(request, result) => {
     let inputToken = request.headers.token;
     let checkTokenResult = await CheckToken.CheckToken(1, request.headers.account, inputToken);
 
     let currentTimeStamp = CurrentDate.CurrentTimeStamp();
     let convertedCategory2 = ConvertAnimalsCategory2(request.body.animalsCategory2);
-    
+    // console.log(request.body);
+    // console.log(request.file);
+    // console.log(request.files);
+
     if(checkTokenResult == true) {
         await Animals.create({
             animalsName: request.body.animalsName,
@@ -31,7 +32,7 @@ exports.insertAnimal = async(request, result) => {
             animalsAge: parseInt(request.body.animalsAge),
             animalsCategory1: parseInt(request.body.animalsCategory1),
             animalsCategory2: convertedCategory2,
-            animalsPhotos: request.body.animalsPhotos,
+            // animalsPhotos: request.body.animalsPhotos
             animalsRegistDate: currentTimeStamp,
             animalsModifyDate: currentTimeStamp,
             animalsUsersIndexNumber: parseInt(request.body.animalsUsersIndexNumber),

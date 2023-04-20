@@ -49,8 +49,7 @@ module.exports = () => {
                         // 로그인 토큰은 redis db 1에 저장
                         // redis config url format
                         // redis[s]://[[username][:password]@][host][:port][/db-number]
-                        redisConfig.url += 1; 
-                        const redisClient = redis.createClient(redisConfig);
+                        const redisClient = redis.createClient(redisConfig[1]);
                         await redisClient.connect();
                         await redisClient.set(account, token);
                         await redisClient.expireAt(account, parseInt((+new Date)/1000) + 86400);
