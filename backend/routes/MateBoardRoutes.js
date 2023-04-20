@@ -3,7 +3,8 @@ const router = express.Router();
 
 const MateBoardController = require("../controller/MateBoardController");
 
-router.post("/insertMateBoard", MateBoardController.insertMateBoard);
-router.get("/findByUsersIndexNumber/:usersIndexNumber", MateBoardController.findByUsersIndexNumber);
+router.post("/insertContent", MateBoardController.insertMateBoard);
+router.get("/findAllContent", MateBoardController.findAllMateBoard);
+router.get("/findByUser/:usersIndexNumber", MateBoardController.findByUsersIndexNumber);
 
 module.exports = router;

@@ -4,7 +4,7 @@ const router = express.Router();
 
 const AnimalsController = require("../controller/AnimalsController");
 
-router.post("/insertAnimal", AnimalsController.insertAnimal);
-router.get("/findByUsersIndexNumber/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);
+router.post("/insertContent", AnimalsController.insertAnimal);
+router.get("/findByUser/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);
 
 module.exports = router;
