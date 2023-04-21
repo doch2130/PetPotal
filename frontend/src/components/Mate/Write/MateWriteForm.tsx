@@ -19,19 +19,23 @@ interface MateWriteFormInput {
 
 export default function MateWriteForm() {
   const navigate = useNavigate();
-  const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
+  const { register, setValue, watch, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
   // const {getValues, register, handleSubmit, formState: { isSubmitting, errors }} = useForm({mode: 'onChange'});
+
+  const wrtieType = watch("writeType");
 
   const onSubmit = () => {
     console.log('submit Test');
-    if((getValues('petAge').includes('선택'))) {
-      console.log('나이를 선택해주세요');
-      return false;
-    }
-
-    if((getValues('petSpecies').includes('선택'))) {
-      console.log('종류를 선택해주세요');
-      return false;
+    if(wrtieType === '구함') {
+      if((getValues('petAge').includes('선택'))) {
+        console.log('나이를 선택해주세요');
+        return false;
+      }
+  
+      if((getValues('petSpecies').includes('선택'))) {
+        console.log('종류를 선택해주세요');
+        return false;
+      }
     }
 
     return false;
@@ -112,6 +116,7 @@ export default function MateWriteForm() {
             <p className={style.mateWriteWraning}>{errors.amount?.message}</p>
           </div>
         </div>
+{wrtieType === '구함' ? <>
 
         <div className={style.wrapRow + ' ' + style.wrapPet}>
           <div className={style.wrapCol}>
@@ -282,6 +287,8 @@ export default function MateWriteForm() {
             <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
           </div>
         </div>
+    </>: null}
+
 
         <div className={style.wrapRow + ' ' + style.wrapRowTextEditor}>
           <div className={style.wrapCol}>
