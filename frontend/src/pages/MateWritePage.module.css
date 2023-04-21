@@ -37,24 +37,3 @@
   margin: 0px 3px;
 }
 
-.buttonGroup {
-  max-width: 850px;
-  text-align: right;
-  margin: 1rem auto 2rem;
-}
-
-.buttonGroup button {
-  background-color: #4AD645;
-  color: #FFF;
-  border: none;
-  border-radius: 10px;
-  width: 90px;
-  height: 45px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  margin-left: 1rem;
-}
-
-.buttonGroup button:hover {
-  background-color: #00AF41;
-}

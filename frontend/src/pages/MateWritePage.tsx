@@ -18,10 +18,6 @@ export default function MateWritePage() {
         </PictureBox>
         <FileUploadButton />
         <MateWriteForm />
-        <div className={style.buttonGroup}>
-          <button type='button'>취소</button>
-          <button type='button'>등록</button>
-        </div>
       </div>
     </div>
   )
