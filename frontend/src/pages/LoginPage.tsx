@@ -14,6 +14,7 @@ export default function LoginPage() {
   const loginPw = useRef<HTMLInputElement>(null);
   const controller = new Controller();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userInfo, setUserInfo] = useRecoilState<UserTypes[]>(userState);
 
   const onSubmit = useCallback(async ():Promise<boolean> => {
@@ -34,10 +35,9 @@ export default function LoginPage() {
     }
 
     const result = await controller.login(data);
-    console.log('result : ', result);
-    console.log('result : ', result.data);
-
-    console.log('userInfo : ', userInfo);
+    // console.log('result : ', result);
+    // console.log('result : ', result.data);
+    // console.log('userInfo : ', userInfo);
 
     // setUserInfo([...userInfo, result.data]);
     setUserInfo([result.data]);
@@ -47,55 +47,16 @@ export default function LoginPage() {
   }, []);
 
   const onSubmitEnter = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if(e.key === 'Enter' || e.keyCode === 13) {
+    (e: React.KeyboardEvent<HTMLInputElement>):void => {
+    // if(e.key === 'Enter' || e.keyCode === 13) {
+    if(e.key === 'Enter') {
       onSubmit();
     }
   }, [onSubmit]);
 
-  const moveRegister = useCallback((): void => {
+  const moveRegister = useCallback(():void => {
     navigate('/memberjoin');
   }, [navigate]);
-
-  // const onSubmit = async ():Promise<boolean> => {
-  //   if(loginId.current === null || loginId.current.value === '') {
-  //     alert('아이디를 입력해주세요');
-  //     return false;
-  //   } else if (loginPw.current === null || loginPw.current.value === '') {
-  //     alert('비밀번호를 입력해주세요');
-  //     return false;
-  //   }
-
-  //   const account = loginId.current.value;
-  //   const password = loginPw.current.value;
-
-  //   const data = {
-  //     account,
-  //     password
-  //   }
-
-  //   const result = await controller.login(data);
-  //   console.log('result : ', result);
-  //   console.log('result : ', result.data);
-
-  //   console.log('userInfo : ', userInfo);
-
-  //   // setUserInfo([...userInfo, result.data]);
-  //   setUserInfo([result.data]);
-  //   return true;
-
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }
-
-  // const onSubmitEnter = (e: React.KeyboardEvent) => {
-  //   if(e.key === 'Enter' || e.keyCode === 13) {
-  //     onSubmit();
-  //   }
-  // }
-
-  // const moveRegister = () => {
-  //   navigate('/memberjoin');
-  // }
 
   return (
     <div className={style.wrap}>
