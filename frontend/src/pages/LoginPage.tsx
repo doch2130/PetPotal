@@ -36,11 +36,18 @@ export default function LoginPage() {
 
     const result = await controller.login(data);
     // console.log('result : ', result);
+    // console.log('result : ', result.status);
     // console.log('result : ', result.data);
     // console.log('userInfo : ', userInfo);
 
+    if(result.data.responseCode !== 200) {
+      alert('로그인 정보가 일치하지 않습니다');
+      return false;
+    }
+
     // setUserInfo([...userInfo, result.data]);
     setUserInfo([result.data]);
+    navigate('/');
     return true;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
