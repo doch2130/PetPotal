@@ -6,16 +6,25 @@ const Animals = sequelize.define("Animals", {
         animalsIndexNumber: {
             type: DataTypes.BIGINT, 
             primaryKey: true, 
-            autoIncrement: true
+            autoIncrement: true,
         },
         animalsName: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         animalsGender: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        animalsNeutered: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
         },
         animalsAge: {
             type: DataTypes.INTEGER
+        },
+        animalsWeight: {
+            type: DataTypes.FLOAT
         },
         animalsCategory1: {
             type: DataTypes.INTEGER

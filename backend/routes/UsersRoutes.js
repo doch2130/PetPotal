@@ -21,11 +21,14 @@ router.post("/signIn", (req, res, next) => {
             });
         }
         else {
-            res.cookie(
-                "token", users,
-            {
+            res.cookie("token", users, {
                 httpOnly: true,
-                expires: new Date(Date.now() + 86400)
+                // expires: new Date(Date.now() + 86400),
+                maxAge: 1000 * 60 * 60 * 24 * 1
+            })
+            res.cookie("account", req.body.account, {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * 1
             })
             res.send({
                 responseCode: 200,

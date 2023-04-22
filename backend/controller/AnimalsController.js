@@ -1,6 +1,7 @@
 const Animals = require("../models/Animals");
 const CheckToken = require("../middleware/CheckToken");
 const CurrentDate = require("../middleware/CurrentDate");
+const MulterFileHandler = require("../middleware/MulterFileHandler");
 
 const ConvertAnimalsCategory2 = (animalsCategory2) => {
     let result = "";
@@ -24,12 +25,16 @@ exports.insertAnimal = async(request, result) => {
     // console.log(request.body);
     // console.log(request.file);
     // console.log(request.files);
+    // MulterFileHandler.HandlerMethod01("animals", request);
+    // MulterFileHandler.HandlerMethod02("animals", request);
 
     if(checkTokenResult == true) {
         await Animals.create({
             animalsName: request.body.animalsName,
             animalsGender: parseInt(request.body.animalsGender),
+            animalsNeutered: request.body.animalsNeutered,            
             animalsAge: parseInt(request.body.animalsAge),
+            animalsWeight: parseInt(request.body.animalsWeight),            
             animalsCategory1: parseInt(request.body.animalsCategory1),
             animalsCategory2: convertedCategory2,
             // animalsPhotos: request.body.animalsPhotos
