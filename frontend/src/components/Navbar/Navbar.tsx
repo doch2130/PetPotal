@@ -2,14 +2,29 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import SearchIcon from '../../assets/icon/search.png';
 import style from './Navbar.module.css';
+// import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
+import { UserTypes, userState } from '../../recoil/user';
 
 export default function Navbar() {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const historyValue = useParams();
+
+  // const [userInfo, setUserInfo] = useRecoilState<UserTypes[]>(userState);
+
+  const userInfo = useRecoilValue<UserTypes[]>(userState);
+
+  console.log('userInfo : ', userInfo);
+
   // console.log(historyValue);
-  const searchSubmit = (e) => {
+  const searchSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+    if(keyword === '') {
+      alert('검색어를 입력해주세요');
+      return ;
+    }
+
     navigate(`/search/${keyword}`);
     /**
      * 2023.04.11 gkfrjt
@@ -19,12 +34,17 @@ export default function Navbar() {
      */
   };
 
-  const handleKeyword = (e) => {
-    setKeyword(e.target.value);
+  const handleKeyword = (e:React.ChangeEvent<HTMLInputElement>):void => {
+    // const target = e.target;
+    // setKeyword(target.value);
+    setKeyword(e.target?.value);
   };
 
-  useEffect(() => {
-    setKeyword(historyValue.keyword);
+  useEffect(():void => {
+    const historyKeyword = historyValue.keyword;
+
+    if(historyKeyword) setKeyword(historyKeyword);
+    // setKeyword(historyValue.keyword);
   }, [historyValue]);
 
   return (
@@ -33,13 +53,28 @@ export default function Navbar() {
         <section className={style.navbarWrapper}>
           <div className={style.navbarTop}>
             <ul className={style.topInner}>
+              {userInfo[0].account === '' ?
+              <>
+                <li>
+                  <Link to={'/memberjoin'}>회원가입</Link>
+                </li>
+                <li>
+                  <Link to={'/login'}>로그인</Link>
+                </li>
+              </>
+              : 
+              <>
+                <li>
+                  <Link to={'/mypage'}>마이페이지</Link>
+                </li>
+                <li>
+                  <Link to={'/logout'}>로그아웃</Link>
+                </li>
+              </>
+              }
               <li>
-                <Link to={'/memberjoin'}>회원가입</Link>
+                <Link to='/'>고객센터</Link>
               </li>
-              <li>
-                <Link to={'/login'}>로그인</Link>
-              </li>
-              <li>고객센터</li>
             </ul>
           </div>
 
@@ -70,34 +105,22 @@ export default function Navbar() {
           <nav className={style.navbarBottom}>
             <ul className={style.menu}>
               <li className={style.menuItem}>
-                <a href="#" className={style.menuItemLink}>
-                  메이트
-                </a>
+                <Link to="/mate" className={style.menuItemLink}>메이트</Link>
               </li>
               <li className={style.menuItem}>
-                <a href="#" className={style.menuItemLink}>
-                  병원
-                </a>
+                <Link to="#" className={style.menuItemLink}>병원</Link>
               </li>
               <li className={style.menuItem}>
-                <a href="#" className={style.menuItemLink}>
-                  미용
-                </a>
+                <Link to="#" className={style.menuItemLink}>미용</Link>
               </li>
               <li className={style.menuItem}>
-                <a href="#" className={style.menuItemLink}>
-                  호텔링
-                </a>
+                <Link to="#" className={style.menuItemLink}>호텔링</Link>
               </li>
               <li className={style.menuItem}>
-                <a href="#" className={style.menuItemLink}>
-                  숙박
-                </a>
+                <Link to="#" className={style.menuItemLink}>숙박</Link>
               </li>
               <li className={style.menuItem}>
-                <a href="#" className={style.menuItemLink}>
-                  음식
-                </a>
+                <Link to="#" className={style.menuItemLink}>음식</Link>
               </li>
             </ul>
           </nav>

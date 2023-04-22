@@ -43,6 +43,10 @@ header a {
     margin-left: 1rem;
 }
 
+.topInner a:hover {
+    color: #00AF41;
+}
+
 .navbarMiddle {
     display: flex;
     justify-content: space-between;
