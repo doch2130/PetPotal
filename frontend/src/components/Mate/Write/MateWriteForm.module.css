@@ -35,7 +35,7 @@
   padding: 5px 10px;
 }
 
-.wrapRow:not(:nth-of-type(1)) [type="text"] {
+.wrapRow:not(:nth-of-type(1)) input[type="text"] {
   width: 180px;
 }
 
@@ -127,14 +127,54 @@
   margin-left: 1rem;
 }
 
-.wrapTextEdit {
-  margin-top: 30px;
+.wrapRowTextEditor {
+  margin-top: 15px;
 }
 
-.wrapTextEdit .wrapCol {
+.wrapRowTextEditor .wrapCol {
   margin: 0px 2rem;
 }
 
-.wrapTextEdit h2 {
+.wrapRowTextEditor h2 {
   font-size: 1.4rem;
+}
+
+.wrapTextEditor {
+  margin: 10px 0px; 
+}
+
+.wrapRowMap .wrapCol {
+  margin: 0px 2rem;
+}
+
+.wrapRowMap h2 {
+  font-size: 1.4rem;
+}
+
+.wrapRowMap .wrapCol div {
+  background-color: #d4d4d4;
+  width: 100%;
+  height: 250px;
+}
+
+.buttonGroup {
+  max-width: 850px;
+  text-align: right;
+  margin: 1rem auto 2rem;
+}
+
+.buttonGroup button {
+  background-color: #4AD645;
+  color: #FFF;
+  border: none;
+  border-radius: 10px;
+  width: 90px;
+  height: 45px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.buttonGroup button:hover {
+  background-color: #00AF41;
 }

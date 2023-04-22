@@ -1,19 +1,23 @@
-// import React from 'react'
 import style from './LoginPage.module.css';
+import Controller from '../api/controller';
 import naver from '../assets/icon/naver.png';
 import google from '../assets/icon/google.png';
 import AouthButton from '../components/aouth/AouthButton';
 import { useNavigate } from 'react-router-dom';
-import { useRef } from 'react';
-import axios from "axios";
+import { useCallback, useRef } from 'react';
+import { useRecoilState } from "recoil";
+import { UserTypes, userState } from '../recoil/user';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const loginId = useRef<HTMLInputElement>(null);
   const loginPw = useRef<HTMLInputElement>(null);
+  const controller = new Controller();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userInfo, setUserInfo] = useRecoilState<UserTypes[]>(userState);
 
-  const onSubmit = () => {
+  const onSubmit = useCallback(async ():Promise<boolean> => {
     if(loginId.current === null || loginId.current.value === '') {
       alert('아이디를 입력해주세요');
       return false;
@@ -25,27 +29,41 @@ export default function LoginPage() {
     const account = loginId.current.value;
     const password = loginPw.current.value;
 
-    axios({
-      method: 'post',
-      url: 'http://localhost:3010/api/users/signIn',
-      data: {
-        account,
-        password,
-      }
-    }).then((res) => {
-      console.log('로그인 결과 : ', res.data);
-    })
-  }
+    const data = {
+      account,
+      password
+    }
 
-  const onSubmitEnter = (e: React.KeyboardEvent) => {
-    if(e.key === 'Enter' || e.keyCode === 13) {
+    const result = await controller.login(data);
+    // console.log('result : ', result);
+    // console.log('result : ', result.status);
+    // console.log('result : ', result.data);
+    // console.log('userInfo : ', userInfo);
+
+    if(result.data.responseCode !== 200) {
+      alert('로그인 정보가 일치하지 않습니다');
+      return false;
+    }
+
+    // setUserInfo([...userInfo, result.data]);
+    setUserInfo([result.data]);
+    navigate('/');
+    return true;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSubmitEnter = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>):void => {
+    // if(e.key === 'Enter' || e.keyCode === 13) {
+    if(e.key === 'Enter') {
       onSubmit();
     }
-  }
+  }, [onSubmit]);
 
-  const moveRegister = () => {
+  const moveRegister = useCallback(():void => {
     navigate('/memberjoin');
-  }
+  }, [navigate]);
 
   return (
     <div className={style.wrap}>
@@ -81,26 +99,8 @@ export default function LoginPage() {
           <hr className={style.loginLine} />
 
           <div className={style.oauthLoginWrap}>
-            {/* <div>
-              <button type='button' className={style.naverLoginButton}>
-                <img src={naver} alt='Naver AOuth' />
-                <div>
-                  <span>네이버 로그인</span>
-                </div>
-              </button>
-            </div>
-            <div>
-              <button type='button' className={style.googleLoginButton}>
-                <img src={google} alt='Google AOuth' />
-                <div>
-                  <span>구글 로그인</span>
-                </div>
-              </button>
-            </div> */}
-
             <AouthButton styleName={style.naverLoginButton} image={naver} imageAlt='Naver AOuth' text='네이버 로그인' />
             <AouthButton styleName={style.googleLoginButton} image={google} imageAlt='Google AOuth' text='구글 로그인' />
-
           </div>
         </div>
       </div>
