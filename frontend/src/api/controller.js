@@ -4,6 +4,7 @@ export default class Controller {
   constructor() {
     this.httpClient = axios.create({
       baseURL: 'http://localhost:3010/api/',
+      withCredentials: true,
     });
   }
 
@@ -34,5 +35,9 @@ export default class Controller {
     return this.httpClient.post(`users/duplicate${apiType}`, {
       [type]: value,
     });
+  }
+
+  async login(object) {
+    return this.httpClient.post(`users/signIn`, object);
   }
 }
