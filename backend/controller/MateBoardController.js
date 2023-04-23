@@ -58,11 +58,22 @@ exports.findAllMateBoard = async(request, result) => {
     const checkTokenResult = await CheckToken.CheckToken(1, request.headers.account, inputToken);
 
     if(checkTokenResult === true) {
+        let pageNumber = request.params.pageNumber;
+        let offset = 0;
+
+        if(pageNumber > 1) {
+            offset = 10 * (pageNumber - 1);
+        }
+
         await MateBoard.findAll({
+        // await MateBoard.findAndCountAll({ // .findAndCountAll() 사용시 결과값으로 rows 개수를 결과에 포함하여 출력한다.
             // attributes: ["animalsUsersIndexNumber"],
             // where: { 
             //     usersIndexNumber: request.params.usersIndexNumber
             // }
+            offset: offset,
+            limit: 10,
+            order: [["mateBoardRegistDate", "DESC"]]
         }).then((response) => {
             if(response == null) {
                 result.send({
