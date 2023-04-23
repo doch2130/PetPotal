@@ -1,7 +1,8 @@
+const multer = require("multer");
+
 const Animals = require("../models/Animals");
 const CheckToken = require("../middleware/CheckToken");
 const CurrentDate = require("../middleware/CurrentDate");
-const MulterFileHandler = require("../middleware/MulterFileHandler");
 
 const ConvertAnimalsCategory2 = (animalsCategory2) => {
     let result = "";
@@ -25,9 +26,15 @@ exports.insertAnimal = async(request, result) => {
     // console.log(request.body);
     // console.log(request.file);
     // console.log(request.files)
-    console.log(`사용자 ${request.headers.account} 가 insertAnimal을 요청합니다.`);
+    // console.log(`사용자 ${request.headers.account} 가 insertAnimal을 요청합니다.`);
+    // console.log("multer:\n", request.files);
 
     if(checkTokenResult == true) {
+        let animalsPhotosList = new Array(request.files.length);
+        for(let i = 0; i < request.files.length; i++) {
+            animalsPhotosList[i] = request.files[i].filename;
+        }
+
         await Animals.create({
             animalsName: request.body.animalsName,
             animalsGender: parseInt(request.body.animalsGender),
@@ -36,7 +43,7 @@ exports.insertAnimal = async(request, result) => {
             animalsWeight: parseInt(request.body.animalsWeight),            
             animalsCategory1: parseInt(request.body.animalsCategory1),
             animalsCategory2: convertedCategory2,
-            // animalsPhotos: request.body.animalsPhotos
+            animalsPhotos: animalsPhotosList.toString(),
             animalsRegistDate: currentTimeStamp,
             animalsModifyDate: currentTimeStamp,
             animalsUsersIndexNumber: parseInt(request.body.animalsUsersIndexNumber),

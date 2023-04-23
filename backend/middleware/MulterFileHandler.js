@@ -42,5 +42,5 @@ const MultiFileHandler = (dirName) => {
 
 module.exports = { 
     BasicHandler, 
-    SingleFileHandler,MultiFileHandler
+    SingleFileHandler, MultiFileHandler
 }
