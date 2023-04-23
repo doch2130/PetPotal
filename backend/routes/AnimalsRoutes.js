@@ -8,26 +8,15 @@ const multer = require('multer');
 const AnimalsController = require("../controller/AnimalsController");
 const MulterFileHandler = require("../middleware/MulterFileHandler");
 
-// const upload = multer();
-// const upload = multer({ dest: "./data/" })
-// const upload = multer({
-//     storage: multer.diskStorage({
-//         destination(req, file, res) {
-//             res(null, `./data/animals/`)
-//         },
-//         filename(req, file, res) {
-//             const ext = path.extname(file.originalname);
-//             res(null, `${req.headers.account}_${file.fieldname}_${Date.now()}${ext}`);
-//         }
-//     })
-// });
-const upload = MulterFileHandler.HandlerMethod02("animals");
+// single file handling
+// const upload = MulterFileHandler.SingleFileHandler("animals");
+// const uploadHandler01 = upload.single("animalsPhotos");
 
-const uploadHandler01 = upload.single("animalsPhotos");
+const upload = MulterFileHandler.MultiFileHandler("animals");
+const uploadHandler = upload.array("animalsPhotos", 5);
 
 
-
-router.post("/insertContent", uploadHandler01, AnimalsController.insertAnimal);
+router.post("/insertContent", uploadHandler, AnimalsController.insertAnimal);
 router.get("/findByUser/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);
 
 module.exports = router;

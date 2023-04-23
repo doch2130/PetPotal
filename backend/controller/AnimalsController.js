@@ -24,9 +24,8 @@ exports.insertAnimal = async(request, result) => {
     let convertedCategory2 = ConvertAnimalsCategory2(request.body.animalsCategory2);
     // console.log(request.body);
     // console.log(request.file);
-    // console.log(request.files);
-    // MulterFileHandler.HandlerMethod01("animals", request);
-    // MulterFileHandler.HandlerMethod02("animals", request);
+    // console.log(request.files)
+    console.log(`사용자 ${request.headers.account} 가 insertAnimal을 요청합니다.`);
 
     if(checkTokenResult == true) {
         await Animals.create({
@@ -44,12 +43,15 @@ exports.insertAnimal = async(request, result) => {
         })
         .then(response => {
             if(response == null) {
+                // console.error(`사용자 ${request.headers.account} 의 insertAnimal 수행을 실패했습니다.`);
+                console.error("error message:\n", response);
                 result.send({
                     responseCode: 400,
                     message: "insertAnimal Failed"
                 })
             }
             else {
+                // console.log(`사용자 ${request.headers.account} 의 insertAnimal 수행이 완료되었습니다.`);
                 result.send({
                     responseCode: 200,
                     message: "insertAnimal Coplete"
@@ -57,7 +59,8 @@ exports.insertAnimal = async(request, result) => {
             }
         })
         .catch(err => {
-            console.error("error\n", err);
+            // console.error(`사용자 ${request.headers.account} 의 insertAnimal 요청에 실패했습니다.`);
+            console.error("error message:\n", err);
             result.send({
                 responseCode: 400,
                 message: "insertAnimal data request failed"
@@ -65,9 +68,10 @@ exports.insertAnimal = async(request, result) => {
         })
     }
     else {
+        // console.error(`사용자 ${request.headers.account}의 요청에 실패했습니다.`);
         result.send({
             responseCode: 400,
-            message: "Incorrect Key"
+            message: "Incorrect Auth Key"
         })
     }  
 };
@@ -100,7 +104,7 @@ exports.findByUsersIndexNumber = async(request, result) => {
     else {
         result.send({
             responseCode: 400,
-            message: "Incorrect Key"
+            message: "Incorrect Auth Key"
         })
     }
 };
