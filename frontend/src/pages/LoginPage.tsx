@@ -2,7 +2,7 @@ import style from './LoginPage.module.css';
 import Controller from '../api/controller';
 import naver from '../assets/icon/naver.png';
 import google from '../assets/icon/google.png';
-import AouthButton from '../components/aouth/AouthButton';
+import AouthButton from '../components/Aouth/AouthButton';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useRef } from 'react';
 import { useRecoilState } from "recoil";
