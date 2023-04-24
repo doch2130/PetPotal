@@ -3,7 +3,7 @@
   border: 1px solid #000000;
   border-radius: 10px;
   min-height: 600px;
-  line-height: normal;
+  /* line-height: normal; */
   max-width: 850px;
   margin: auto;
   padding: 10px 0px;

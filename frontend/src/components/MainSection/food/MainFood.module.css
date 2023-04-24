@@ -7,7 +7,7 @@
 }
 
 .wrapTop {
-  line-height: normal;
+  /* line-height: normal; */
   display: flex;
   flex-wrap: wrap;
   width: 100%;

@@ -20,7 +20,7 @@
 .wrapLeft {
   max-width: 500px;
   margin-left: auto;
-  line-height: normal;
+  /* line-height: normal; */
 }
 
 .wrapLeft h1 {
