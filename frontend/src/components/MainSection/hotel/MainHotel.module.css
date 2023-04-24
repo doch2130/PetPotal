@@ -7,7 +7,7 @@
 
 .wrapCol {
   flex: 1 0;
-  line-height: normal;
+  /* line-height: normal; */
   min-width: 520px;
 }
 
