@@ -9,10 +9,18 @@ export default function MateWritePage() {
   const [imgFile, setImgFile] = useState<File[]>([]);
   const [imgUrl, setImgUrl] = useState<string[]>([]);
 
+  const slideRef = useRef<any>([]);
+  const [currentIdx, setCurrentIdx] = useState<number>(0);
+
   const imgFileHandler = (e:ChangeEvent<HTMLInputElement>):void => {
     const files:any = e.target.files;
 
     if(files === null || files.length === 0) {
+      return ;
+    }
+
+    if(files.length > 5) {
+      alert('사진은 5개 이하만 등록 가능합니다.');
       return ;
     }
 
@@ -22,11 +30,22 @@ export default function MateWritePage() {
         URL.revokeObjectURL(el);
       });
       setImgUrl([]);
-    }
+      setCurrentIdx(0);
+      // slideRef.current[0].style.transform = `translateX(0px)`;
+      console.log('currentIdx : ', currentIdx);
+      console.log('slideRef : ', slideRef);
+      // slideRef.current.filter((el:any) => el !== null);
 
-    if(files.length > 5) {
-      alert('사진은 5개 이하만 등록 가능합니다.');
-      return ;
+      slideRef.current.forEach((el:any) => {
+        console.log('el : ', el);
+        console.log('el : ', typeof el);
+
+        if(el !== null) {
+          el.style.transition = "none";
+          el.style.transform = `translateX(0px)`;
+        }
+
+      });
     }
 
     const tempUrlList = [];
@@ -78,41 +97,61 @@ export default function MateWritePage() {
     }
   }, [mouseUpClientX]);
 
-  const slideRef = useRef<any>([]);
-  const [currentIdx, setCurrentIdx] = useState(0);
+  // const slideRef = useRef<any>([]);
+  // const [currentIdx, setCurrentIdx] = useState(0);
 
   const handleNextBtn = ():void => {
     // console.log('slideRef ', slideRef);
+
+    if(imgFile.length === 1) {
+      return ;
+    }
+
     if(currentIdx === imgFile.length-1) {
       setCurrentIdx(0);
       // console.log('max length');
       slideRef.current.forEach((el:any) => {
-        el.style.transition = "all 0.5s ease-in-out";
-        el.style.transform = `translateX(0px)`;
+        if(el !== null) {
+          el.style.transition = "all 0.5s ease-in-out";
+          el.style.transform = `translateX(0px)`;
+        }
+        
       });
     } else {
       setCurrentIdx((prev) => prev + 1);
       slideRef.current.forEach((el:any) => {
-        el.style.transition = "all 0.5s ease-in-out";
-        el.style.transform = `translateX(-${300 * (currentIdx + 1)}px)`;
+        if(el !== null) {
+          el.style.transition = "all 0.5s ease-in-out";
+          el.style.transform = `translateX(-${300 * (currentIdx + 1)}px)`;
+        }
+
       });
     }
   }
 
   const handlePrevBtn = ():void => {
     // console.log('slideRef ', slideRef);
+
+    if(imgFile.length === 1) {
+      return ;
+    }
+
     if(currentIdx === 0) {
       setCurrentIdx(imgFile.length-1);
       // console.log('max length');
       slideRef.current.forEach((el:any) => {
-        el.style.transition = "all 0.5s ease-in-out";
-        el.style.transform = `translateX(-${300 * (imgFile.length-1)}px)`;
+        if(el !== null) {
+          el.style.transition = "all 0.5s ease-in-out";
+          el.style.transform = `translateX(-${300 * (imgFile.length-1)}px)`;
+        }
       });
     } else {
       setCurrentIdx((prev) => prev - 1);
       slideRef.current.forEach((el:any) => {
-        el.style.transition = "all 0.5s ease-in-out";
-        el.style.transform = `translateX(-${300 * (currentIdx-1)}px)`;
+        if(el !== null) {
+          el.style.transition = "all 0.5s ease-in-out";
+          el.style.transform = `translateX(-${300 * (currentIdx-1)}px)`;
+        }
       });
     }
   }
@@ -134,11 +173,13 @@ export default function MateWritePage() {
                 </div>
                 );
               })}
-            <div className={style.pictureCount}>
-              <span>{currentIdx+1}</span>
-              <span>/</span>
-              <span>{imgFile.length}</span>
-            </div>
+              {imgFile.length > 0 &&
+              <div className={style.pictureCount}>
+                <span>{currentIdx+1}</span>
+                <span>/</span>
+                <span>{imgFile.length}</span>
+              </div>
+              }
         </PictureBox>
         </div>
         <FileUploadButton onLoadFileHandler={imgFileHandler} />
