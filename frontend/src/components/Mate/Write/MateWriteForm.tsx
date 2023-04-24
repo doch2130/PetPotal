@@ -1,44 +1,64 @@
-// import React from 'react'
-import style from './MateWriteForm.module.css';
 import { useForm } from 'react-hook-form';
-import MateWriteTextEditor from './MateWriteTextEditor';
 import { useNavigate } from 'react-router-dom';
+import Controller from '../../../api/controller';
+import MateWriteTextEditor from './MateWriteTextEditor';
+import style from './MateWriteForm.module.css';
+
+interface propsData {
+  imgFile: Array<File>;
+}
 
 interface MateWriteFormInput {
   title: string;
   writeType: string;
-  amount: string;
+  amount: Number;
   petName: string;
   petGender: string;
   petAge: string;
   petSpecies: string;
   petBreeds: string;
-  petWeight: string;
+  petWeight: Number;
   isNeutered: string;
 }
 
-export default function MateWriteForm() {
+export default function MateWriteForm(props:propsData) {
+  const { imgFile } = props;
   const navigate = useNavigate();
   const { register, setValue, watch, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
   // const {getValues, register, handleSubmit, formState: { isSubmitting, errors }} = useForm({mode: 'onChange'});
-
   const wrtieType = watch("writeType");
+  const controller = new Controller();
 
-  const onSubmit = () => {
+  
+
+  const onSubmit = async (data:MateWriteFormInput) => {
     console.log('submit Test');
+    console.log('data : ', data);
     if(wrtieType === '구함') {
       if((getValues('petAge').includes('선택'))) {
-        console.log('나이를 선택해주세요');
-        return false;
+        setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
+        return ;
       }
   
       if((getValues('petSpecies').includes('선택'))) {
-        console.log('종류를 선택해주세요');
-        return false;
+        setError('petSpecies', {message: '종류를 선택해주세요'}, {shouldFocus: true });
+        return ;
       }
     }
 
-    return false;
+    const updateData = {
+      data,
+      viewImgFile: imgFile,
+    }
+
+    console.log('updateData : ', updateData);
+
+    if(window.confirm('작성한 내용으로 등록하시겠습니까?')) {
+      const result = await controller.mateWrite(updateData);
+      console.log('result : ', result);
+    }
+
+    return ;
   }
 
   const handleSubmitCancle = () => {
@@ -61,7 +81,7 @@ export default function MateWriteForm() {
               )}
               id='title' type='text' placeholder='제목을 입력해주세요'
             />
-            <p className={style.mateWriteWraning}>제목을 입력해주세요</p>
+            {/* <p className={style.mateWriteWraning}>제목을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.title?.message}</p>
           </div>
         </div>
@@ -87,7 +107,7 @@ export default function MateWriteForm() {
               type="radio" id='typeSupport' value="지원"
             />
             <label htmlFor='typeSupport'>지원</label>
-            <p className={style.mateWriteWraning}>글 구분을 선택해주세요</p>
+            {/* <p className={style.mateWriteWraning}>글 구분을 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.writeType?.message}</p>
           </div>
         </div>
@@ -112,12 +132,12 @@ export default function MateWriteForm() {
               id='amount' type='number' placeholder='금액을 입력해주세요' min='0'
             />
             <span>원</span>
-            <p className={style.mateWriteWraning}>금액을 입력해주세요</p>
+            {/* <p className={style.mateWriteWraning}>금액을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.amount?.message}</p>
           </div>
         </div>
-{wrtieType === '구함' ? <>
 
+      {wrtieType === '구함' ? <>
         <div className={style.wrapRow + ' ' + style.wrapPet}>
           <div className={style.wrapCol}>
             <h2>반려동물 정보</h2>
@@ -135,7 +155,7 @@ export default function MateWriteForm() {
               )}
               id='petName' type='text' placeholder='이름을 입력해주세요'
             />
-            <p className={style.mateWriteWraning}>이름을 입력해주세요</p>
+            {/* <p className={style.mateWriteWraning}>이름을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petName?.message}</p>
           </div>
         </div>
@@ -161,7 +181,7 @@ export default function MateWriteForm() {
               type="radio" id='petGenderWoman' value="암컷"
             />
             <label htmlFor='petGenderWoman'>암컷</label>
-            <p className={style.mateWriteWraning}>성별을 선택해주세요</p>
+            {/* <p className={style.mateWriteWraning}>성별을 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
           </div>
         </div>
@@ -188,7 +208,7 @@ export default function MateWriteForm() {
               <option defaultValue="9">9</option>
               <option defaultValue="10">10</option>
             </select>
-            <p className={style.mateWriteWraning}>나이를 선택해주세요</p>
+            {/* <p className={style.mateWriteWraning}>나이를 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petAge?.message}</p>
           </div>
         </div>
@@ -207,7 +227,7 @@ export default function MateWriteForm() {
               <option defaultValue="고양이">고양이</option>
               <option defaultValue="기타">기타</option>
             </select>
-            <p className={style.mateWriteWraning}>종류를 선택해주세요</p>
+            {/* <p className={style.mateWriteWraning}>종류를 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petSpecies?.message}</p>
           </div>
         </div>
@@ -223,7 +243,7 @@ export default function MateWriteForm() {
               )}
               id='petBreeds' type='text' placeholder='품종을 입력해주세요'
             />
-            <p className={style.mateWriteWraning}>품종을 입력해주세요</p>
+            {/* <p className={style.mateWriteWraning}>품종을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petBreeds?.message}</p>
           </div>
         </div>
@@ -248,7 +268,7 @@ export default function MateWriteForm() {
               id='petWeight' type='text' placeholder='무게를 입력해주세요'
             />
             <span>KG</span>
-            <p className={style.mateWriteWraning}>무게를 입력해주세요</p>
+            {/* <p className={style.mateWriteWraning}>무게를 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petWeight?.message}</p>
           </div>
         </div>
@@ -283,8 +303,8 @@ export default function MateWriteForm() {
               type="radio" id='isNeuteredUnknown' value="모름"
             />
             <label htmlFor='isNeuteredUnknown'>모름</label>
-            <p className={style.mateWriteWraning}>중성화 여부를 선택해주세요</p>
-            <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
+            {/* <p className={style.mateWriteWraning}>중성화 여부를 선택해주세요</p> */}
+            <p className={style.mateWriteWraning}>{errors.isNeutered?.message}</p>
           </div>
         </div>
     </>: null}

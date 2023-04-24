@@ -40,4 +40,8 @@ export default class Controller {
   async login(object) {
     return this.httpClient.post(`users/signIn`, object);
   }
+
+  async mateWrite(object) {
+    return this.httpClient.post(`mateBoard/insertContent`, object);
+  }
 }

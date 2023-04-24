@@ -1,8 +1,8 @@
-import style from './MateWriteTextEditor.module.css';
+import { useState } from 'react';
+import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState } from 'draft-js';
-import { useState } from 'react';
+import style from './MateWriteTextEditor.module.css';
 
 
 

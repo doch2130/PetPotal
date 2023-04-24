@@ -1,11 +1,11 @@
-import { ChangeEventHandler } from 'react';
+import React, { ChangeEventHandler } from 'react';
 import style from './FileUploadButton.module.css';
 
 interface propsData {
   onLoadFileHandler: Function;
 }
 
-export default function FileUploadButton(props:propsData) {
+const FileUploadButton = (props:propsData) => {
   const {onLoadFileHandler} = props;
 
   return (
@@ -15,3 +15,5 @@ export default function FileUploadButton(props:propsData) {
     </div>
   )
 }
+
+export default React.memo(FileUploadButton);
