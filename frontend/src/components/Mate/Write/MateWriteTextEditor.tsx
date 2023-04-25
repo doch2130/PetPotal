@@ -5,6 +5,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import style from './MateWriteTextEditor.module.css';
 
 
+// 일단 안쓰는것으로 결정, npm 삭제했음
 
 
 export default function MateWriteTextEditor(props:any) {

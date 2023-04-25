@@ -1,9 +1,5 @@
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-// import ImageResize from 'quill-image-resize';
-// Quill.register('modules/ImageResize', ImageResize);
-// import { ImageResize } from 'quill-image-resize-module-ts';
-// import { ImageDrop } from 'quill-image-drop-module-ts';
 import ImageResize from '@looop/quill-image-resize-module-react';
 Quill.register('modules/ImageResize', ImageResize);
 
