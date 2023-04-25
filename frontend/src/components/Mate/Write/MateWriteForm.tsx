@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Controller from '../../../api/controller';
-import MateWriteTextEditor from './MateWriteTextEditor';
+import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import style from './MateWriteForm.module.css';
 
 interface propsData {
@@ -19,6 +19,8 @@ interface MateWriteFormInput {
   petBreeds: string;
   petWeight: Number;
   isNeutered: string;
+  detailContent: string;
+  cautionContent: string;
 }
 
 export default function MateWriteForm(props:propsData) {
@@ -314,8 +316,9 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>세부내용</h2>
             <div className={style.wrapTextEditor}>
-              <MateWriteTextEditor
-              sentences={'EX)\r\n날짜 : 2023-04-17\r\n시간 : 16시 ~ 17시\r\n\r\n주요 내용 :\r\n안녕하세요. 저희 반려동물 산책해주실 분 구합니다.'} />
+              {/* <MateWriteTextEditor */}
+              {/* sentences={'EX)\r\n날짜 : 2023-04-17\r\n시간 : 16시 ~ 17시\r\n\r\n주요 내용 :\r\n안녕하세요. 저희 반려동물 산책해주실 분 구합니다.'} /> */}
+              <MateWriteTextEditorQuil />
             </div>
           </div>
         </div>
@@ -324,8 +327,9 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>주의사항</h2>
             <div className={style.wrapTextEditor}>
-              <MateWriteTextEditor
-              sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} />
+              {/* <MateWriteTextEditor
+              sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} /> */}
+              <MateWriteTextEditorQuil />
             </div>
           </div>
         </div>
