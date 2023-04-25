@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Controller from '../../../api/controller';
 import MateWriteTextEditor from './MateWriteTextEditor';
 import style from './MateWriteForm.module.css';
+import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 
 interface propsData {
   imgFile: Array<File>;
@@ -19,6 +20,8 @@ interface MateWriteFormInput {
   petBreeds: string;
   petWeight: Number;
   isNeutered: string;
+  detailContent: string;
+  cautionContent: string;
 }
 
 export default function MateWriteForm(props:propsData) {
@@ -324,8 +327,9 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>주의사항</h2>
             <div className={style.wrapTextEditor}>
-              <MateWriteTextEditor
-              sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} />
+              {/* <MateWriteTextEditor
+              sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} /> */}
+              <MateWriteTextEditorQuil />
             </div>
           </div>
         </div>
