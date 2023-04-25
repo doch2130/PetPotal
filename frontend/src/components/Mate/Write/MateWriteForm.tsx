@@ -318,7 +318,7 @@ export default function MateWriteForm(props:propsData) {
             <div className={style.wrapTextEditor}>
               {/* <MateWriteTextEditor */}
               {/* sentences={'EX)\r\n날짜 : 2023-04-17\r\n시간 : 16시 ~ 17시\r\n\r\n주요 내용 :\r\n안녕하세요. 저희 반려동물 산책해주실 분 구합니다.'} /> */}
-              <MateWriteTextEditorQuil />
+              <MateWriteTextEditorQuil placeholderText='EX)&#13;&#10;날짜 : 2023-04-17&#13;&#10;시간 : 16시 ~ 17시&#13;&#10;주요 내용 :&#13;&#10;안녕하세요. 저희 반려동물 산책해주실 분 구합니다.' />
             </div>
           </div>
         </div>
@@ -329,7 +329,7 @@ export default function MateWriteForm(props:propsData) {
             <div className={style.wrapTextEditor}>
               {/* <MateWriteTextEditor
               sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} /> */}
-              <MateWriteTextEditorQuil />
+              <MateWriteTextEditorQuil placeholderText='EX)&#13;&#10;입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.' />
             </div>
           </div>
         </div>
