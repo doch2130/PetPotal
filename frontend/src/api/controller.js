@@ -41,6 +41,10 @@ export default class Controller {
     return this.httpClient.post(`users/signIn`, object);
   }
 
+  async mateWriteTextEditorImage(object) {
+    return this.httpClient.post('mateBoard/textEditorImgFileUpload', object);
+  }
+
   async mateWrite(object) {
     return this.httpClient.post(`mateBoard/insertContent`, object);
   }
