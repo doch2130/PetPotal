@@ -36,7 +36,7 @@ export default function LoginPage() {
     }
 
     const result = await controller.login(data);
-    // console.log('result : ', result);
+    console.log('result : ', result);
     // console.log('result : ', result.status);
     // console.log('result : ', result.data);
     // console.log('userInfo : ', userInfo);

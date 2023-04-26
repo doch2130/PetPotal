@@ -4,6 +4,7 @@ import MateWritePreview from '../components/Mate/Write/MateWritePreview';
 import style from './MateWritePage.module.css';
 
 export default function MateWritePage() {
+  // 미리보기 이미지 파일
   const [imgFile, setImgFile] = useState<File[]>([]);
 
   return (
