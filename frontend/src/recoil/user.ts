@@ -1,10 +1,9 @@
 import { atom } from "recoil";
 
 export interface UserTypes {
-  // id: number;
-  account: string;
-  message: string;
-  responseCode: number;
+  account: String;
+  message: String;
+  responseCode: Number;
 }
 
 export const userState = atom<UserTypes[]>({

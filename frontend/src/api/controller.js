@@ -8,6 +8,11 @@ export default class Controller {
     });
   }
 
+  // 로그인 상태 체크
+  async auth() {
+    return this.httpClient.post(`users/auth`);
+  }
+
   async join(object) {
     return this.httpClient.post(`users/signup`, object);
   }
@@ -39,6 +44,10 @@ export default class Controller {
 
   async login(object) {
     return this.httpClient.post(`users/signIn`, object);
+  }
+
+  async mateWriteTextEditorImage(object) {
+    return this.httpClient.post('mateBoard/textEditorImgFileUpload', object);
   }
 
   async mateWrite(object) {

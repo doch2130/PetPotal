@@ -9,18 +9,18 @@ interface propsData {
 }
 
 interface MateWriteFormInput {
-  title: string;
-  writeType: string;
+  title: String;
+  writeType: String;
   amount: Number;
-  petName: string;
-  petGender: string;
-  petAge: string;
-  petSpecies: string;
-  petBreeds: string;
+  petName: String;
+  petGender: String;
+  petAge: String;
+  petSpecies: String;
+  petBreeds: String;
   petWeight: Number;
-  isNeutered: string;
-  detailContent: string;
-  cautionContent: string;
+  isNeutered: String;
+  detailContent: String;
+  cautionContent: String;
 }
 
 export default function MateWriteForm(props:propsData) {
@@ -31,10 +31,7 @@ export default function MateWriteForm(props:propsData) {
   const wrtieType = watch("writeType");
   const controller = new Controller();
 
-  
-
   const onSubmit = async (data:MateWriteFormInput) => {
-    console.log('submit Test');
     console.log('data : ', data);
     if(wrtieType === '구함') {
       if((getValues('petAge').includes('선택'))) {
@@ -83,7 +80,6 @@ export default function MateWriteForm(props:propsData) {
               )}
               id='title' type='text' placeholder='제목을 입력해주세요'
             />
-            {/* <p className={style.mateWriteWraning}>제목을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.title?.message}</p>
           </div>
         </div>
@@ -109,7 +105,6 @@ export default function MateWriteForm(props:propsData) {
               type="radio" id='typeSupport' value="지원"
             />
             <label htmlFor='typeSupport'>지원</label>
-            {/* <p className={style.mateWriteWraning}>글 구분을 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.writeType?.message}</p>
           </div>
         </div>
@@ -134,7 +129,6 @@ export default function MateWriteForm(props:propsData) {
               id='amount' type='number' placeholder='금액을 입력해주세요' min='0'
             />
             <span>원</span>
-            {/* <p className={style.mateWriteWraning}>금액을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.amount?.message}</p>
           </div>
         </div>
@@ -157,7 +151,6 @@ export default function MateWriteForm(props:propsData) {
               )}
               id='petName' type='text' placeholder='이름을 입력해주세요'
             />
-            {/* <p className={style.mateWriteWraning}>이름을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petName?.message}</p>
           </div>
         </div>
@@ -183,7 +176,6 @@ export default function MateWriteForm(props:propsData) {
               type="radio" id='petGenderWoman' value="암컷"
             />
             <label htmlFor='petGenderWoman'>암컷</label>
-            {/* <p className={style.mateWriteWraning}>성별을 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
           </div>
         </div>
@@ -210,7 +202,6 @@ export default function MateWriteForm(props:propsData) {
               <option defaultValue="9">9</option>
               <option defaultValue="10">10</option>
             </select>
-            {/* <p className={style.mateWriteWraning}>나이를 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petAge?.message}</p>
           </div>
         </div>
@@ -229,7 +220,6 @@ export default function MateWriteForm(props:propsData) {
               <option defaultValue="고양이">고양이</option>
               <option defaultValue="기타">기타</option>
             </select>
-            {/* <p className={style.mateWriteWraning}>종류를 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petSpecies?.message}</p>
           </div>
         </div>
@@ -245,7 +235,6 @@ export default function MateWriteForm(props:propsData) {
               )}
               id='petBreeds' type='text' placeholder='품종을 입력해주세요'
             />
-            {/* <p className={style.mateWriteWraning}>품종을 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petBreeds?.message}</p>
           </div>
         </div>
@@ -270,7 +259,6 @@ export default function MateWriteForm(props:propsData) {
               id='petWeight' type='text' placeholder='무게를 입력해주세요'
             />
             <span>KG</span>
-            {/* <p className={style.mateWriteWraning}>무게를 입력해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.petWeight?.message}</p>
           </div>
         </div>
@@ -305,7 +293,6 @@ export default function MateWriteForm(props:propsData) {
               type="radio" id='isNeuteredUnknown' value="모름"
             />
             <label htmlFor='isNeuteredUnknown'>모름</label>
-            {/* <p className={style.mateWriteWraning}>중성화 여부를 선택해주세요</p> */}
             <p className={style.mateWriteWraning}>{errors.isNeutered?.message}</p>
           </div>
         </div>
@@ -316,9 +303,7 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>세부내용</h2>
             <div className={style.wrapTextEditor}>
-              {/* <MateWriteTextEditor */}
-              {/* sentences={'EX)\r\n날짜 : 2023-04-17\r\n시간 : 16시 ~ 17시\r\n\r\n주요 내용 :\r\n안녕하세요. 저희 반려동물 산책해주실 분 구합니다.'} /> */}
-              <MateWriteTextEditorQuil placeholderText='EX)&#13;&#10;날짜 : 2023-04-17&#13;&#10;시간 : 16시 ~ 17시&#13;&#10;주요 내용 :&#13;&#10;안녕하세요. 저희 반려동물 산책해주실 분 구합니다.' />
+              <MateWriteTextEditorQuil setValueHandler={setValue} name='detailContent' placeholderText='EX)&#13;&#10;날짜 : 2023-04-17&#13;&#10;시간 : 16시 ~ 17시&#13;&#10;주요 내용 :&#13;&#10;안녕하세요. 저희 반려동물 산책해주실 분 구합니다.' />
             </div>
           </div>
         </div>
@@ -327,9 +312,7 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>주의사항</h2>
             <div className={style.wrapTextEditor}>
-              {/* <MateWriteTextEditor
-              sentences={'EX)\r\n입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.'} /> */}
-              <MateWriteTextEditorQuil placeholderText='EX)&#13;&#10;입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.' />
+              <MateWriteTextEditorQuil setValueHandler={setValue} name='cautionContent' placeholderText='EX)&#13;&#10;입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.' />
             </div>
           </div>
         </div>
