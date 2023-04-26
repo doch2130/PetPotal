@@ -44,6 +44,27 @@ exports.findByAccount = (request, result) => {
         where: { account: request.body.account }
     }).then((response) => {
         if(response == null) {
+            // account가 중복이 아닌경우
+            result.send({
+                responseCode: 200,
+                data: true
+            })
+        }
+        else {
+            result.send({
+                responseCode: 304,
+                data: false
+            })
+        }
+    })
+}
+
+exports.findByNickName = (request, result) => {
+    Users.findOne({
+        attributes: ["nickName"],
+        where: { account: request.body.nickName }
+    }).then((response) => {
+        if(response == null) {
             result.send({
                 responseCode: 200,
                 data: true

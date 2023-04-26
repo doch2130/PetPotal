@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
 
+const Animals = require("../models/Animals");
+
 const Users = sequelize.define("Users", 
     {
         usersIndexNumber: {
@@ -36,6 +38,9 @@ const Users = sequelize.define("Users",
             type: DataTypes.STRING
         },
         address3: {
+            type: DataTypes.STRING
+        },
+        address4: {
             type: DataTypes.STRING
         },
         lat: {
