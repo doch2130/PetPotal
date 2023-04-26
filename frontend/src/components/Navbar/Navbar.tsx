@@ -15,7 +15,7 @@ export default function Navbar() {
 
   const userInfo = useRecoilValue<UserTypes[]>(userState);
 
-  console.log('userInfo : ', userInfo);
+  // console.log('userInfo : ', userInfo);
 
   // console.log(historyValue);
   const searchSubmit = (e: { preventDefault: () => void; }) => {

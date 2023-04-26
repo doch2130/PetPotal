@@ -1,12 +1,13 @@
-import style from './LoginPage.module.css';
-import Controller from '../api/controller';
-import naver from '../assets/icon/naver.png';
-import google from '../assets/icon/google.png';
-import AouthButton from '../components/Aouth/AouthButton';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useRef } from 'react';
 import { useRecoilState } from "recoil";
 import { UserTypes, userState } from '../recoil/user';
+import Controller from '../api/controller';
+import naver from '../assets/icon/naver.png';
+import google from '../assets/icon/google.png';
+import AouthButton from '../components/Aouth/AouthButton';
+import style from './LoginPage.module.css';
+
 
 export default function LoginPage() {
   const navigate = useNavigate();

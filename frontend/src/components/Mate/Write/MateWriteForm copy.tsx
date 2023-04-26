@@ -1,7 +1,6 @@
-// import React from 'react'
-import style from './MateWriteForm.module.css';
 import { useForm } from 'react-hook-form';
 import MateWriteFormRow from './MateWriteFormRow';
+import style from './MateWriteForm.module.css';
 
 interface MateWriteFormInput {
   title: string;
