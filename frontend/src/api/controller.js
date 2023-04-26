@@ -8,6 +8,11 @@ export default class Controller {
     });
   }
 
+  // 로그인 상태 체크
+  async auth() {
+    return this.httpClient.post(`users/auth`);
+  }
+
   async join(object) {
     return this.httpClient.post(`users/signup`, object);
   }
