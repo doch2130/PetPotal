@@ -6,10 +6,10 @@ const morgan = require('morgan');
 const passport = require('passport');
 const basicAuth = require('./middleware/basicAuth');
 
-const Test01Route = require("./routes/Test01Routes");
-const UsersRoute = require("./routes/UsersRoutes");
-const AnimalsRoute = require("./routes/AnimalsRoutes");
-const MateBoardRoute = require("./routes/MateBoardRoutes");
+const Test01Route = require('./routes/Test01Routes');
+const UsersRoute = require('./routes/UsersRoutes');
+const AnimalsRoute = require('./routes/AnimalsRoutes');
+const MateBoardRoute = require('./routes/MateBoardRoutes');
 
 const app = express();
 const port = 3010;
@@ -27,7 +27,6 @@ app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 
-
 app.use(
   session({ secret: 'pettotal', resave: true, saveUninitialized: false })
 );
@@ -35,10 +34,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 basicAuth();
 
-app.use("/api/test01", Test01Route);
-app.use("/api/users", UsersRoute);
-app.use("/api/animals", AnimalsRoute);
-app.use("/api/mateBoard", MateBoardRoute);
+app.use('/static', express.static(__dirname + '/data/mateTextEditorImg'));
+app.use('/api/test01', Test01Route);
+app.use('/api/users', UsersRoute);
+app.use('/api/animals', AnimalsRoute);
+app.use('/api/mateBoard', MateBoardRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

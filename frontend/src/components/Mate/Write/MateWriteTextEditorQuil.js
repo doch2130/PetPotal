@@ -1,15 +1,61 @@
+// eslint-disable-next-line no-unused-vars
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from '@looop/quill-image-resize-module-react';
-import { useMemo } from 'react';
+import Controller from '../../../api/controller';
 Quill.register('modules/ImageResize', ImageResize);
 
 // typescript에서 모듈 관련하여 img 삽입 시 resize 기능에 문제가 발생
 // typescript resize를 해도 toolbar에서 문제가 발생하는 현상 확인되어 일단, js 파일로 진행
 
-export default function MateWriteTextEditorQuil({ placeholderText }) {
+export default function MateWriteTextEditorQuil({
+  placeholderText,
+  name,
+  setValueHandler,
+}) {
+  // eslint-disable-next-line no-unused-vars
+  const [imgTempList, setImgTempList] = useState([]);
+  const quillRef = useRef();
+  const controller = new Controller();
+
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.addEventListener('change', async () => {
+      const imgFile = input.files[0];
+      const formData = new FormData();
+      formData.append('imgFile', imgFile);
+
+      try {
+        const result = await controller.mateWriteTextEditorImage(formData);
+
+        if (result.status !== 200) {
+          alert('에러가 발생하였습니다. 새로고침 후 다시 시도해주세요!');
+        }
+        // console.log(result.data);
+
+        const imgUrl = result.data.imgUrl;
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+        editor.insertEmbed(range.index, 'image', imgUrl);
+
+        // console.log('fileName : ', result.data.fileName);
+        setImgTempList((prev) => [...prev, result.data.fileName]);
+        // setImgTemp(result.data.fileName);
+      } catch (error) {
+        alert('에러가 발생하였습니다. 새로고침 후 다시 시도해주세요!');
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onChangeContents = (e) => {
-    console.log(e);
+    // console.log(e);
+    setValueHandler(name, e);
   };
 
   const modules = useMemo(() => {
@@ -64,9 +110,11 @@ export default function MateWriteTextEditorQuil({ placeholderText }) {
           [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
           ['link', 'image'],
         ],
+        handlers: { image: imageHandler },
       },
       ImageResize: { modules: ['Resize'] },
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -75,8 +123,8 @@ export default function MateWriteTextEditorQuil({ placeholderText }) {
         onChange={onChangeContents}
         modules={modules}
         style={{ height: '200px' }}
-        // placeholder="EX) 입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다."
         placeholder={placeholderText || ''}
+        ref={quillRef}
       />
     </>
   );
