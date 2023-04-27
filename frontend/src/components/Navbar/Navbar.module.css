@@ -2,9 +2,11 @@
 
 header {
     position: relative;
-    margin-bottom: 150px;
+    /* margin-bottom: 150px; */
+    margin-bottom: 50px;
     /* color: #FFF; */
     color: #000;
+    min-height: 200px;
 }
 
 header a {
