@@ -24,7 +24,7 @@ function App() {
       // }
       // setUserInfo([result.data]);
       setTimeout(() => {
-        console.log('loading');
+        // console.log('loading');
         setIsLoading(true);
       }, 5000);
     }
@@ -39,12 +39,11 @@ function App() {
       <Outlet />
       <Footer />
       {/* {!isLoading ?
-      <LoadingPage />
-      :
+      <LoadingPage /> :
       <>
-      <Navbar />
-      <Outlet />
-      <Footer />
+        <Navbar />
+        <Outlet />
+        <Footer />
       </>
       } */}
     </div>
