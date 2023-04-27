@@ -6,13 +6,14 @@ const CurrentDate = require('../middleware/CurrentDate');
 
 const { SingleFileHandler } = require('../middleware/MulterFileHandler');
 
+/**
+ * Mate 게시글 작성 메서드
+ * @param {*} request 
+ * @param {*} result 
+ */
 exports.insertMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
-  let checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.account,
-    inputToken
-  );
+  let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
   if (checkTokenResult == true) {
@@ -58,11 +59,7 @@ exports.insertMateBoard = async (request, result) => {
 
 exports.findAllMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.account,
-    inputToken
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
   if (checkTokenResult === true) {
     let pageNumber = request.params.pageNumber;
@@ -104,11 +101,7 @@ exports.findAllMateBoard = async (request, result) => {
 
 exports.findByUsersIndexNumber = async (request, result) => {
   let inputToken = request.headers.token;
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.account,
-    inputToken
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
   if (checkTokenResult === true) {
     await MateBoard.findAll({
