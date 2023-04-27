@@ -16,36 +16,34 @@ function App() {
 
   useEffect(() => {
     const auth = async () => {
-      // const result = await controller.auth();
-      // const result = await axios.post('http://localhost:3010/api/auth');
-      // if(result.data.responseCode !== 200) {
-      //   alert('페이지 에러가 발생하였습니다. 새로고침 후 다시 이용해주세요.');
-      //   return ;
-      // }
-      // setUserInfo([result.data]);
-      setTimeout(() => {
-        // console.log('loading');
-        setIsLoading(true);
-      }, 5000);
+      setIsLoading(false);
+      const result = await controller.auth();
+      setUserInfo([result.data]);
+      setIsLoading(true);
+
+      // setTimeout(() => {
+      //   setIsLoading(true);
+      // }, 100);
     }
 
     auth();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   return (
     <div className="App">
-      <Navbar />
+      {/* <Navbar />
       <Outlet />
-      <Footer />
-      {/* {!isLoading ?
+      <Footer /> */}
+      {!isLoading ?
       <LoadingPage /> :
       <>
         <Navbar />
         <Outlet />
         <Footer />
       </>
-      } */}
+      }
     </div>
   );
 }

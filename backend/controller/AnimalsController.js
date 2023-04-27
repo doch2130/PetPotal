@@ -19,7 +19,7 @@ const ConvertAnimalsCategory2 = (animalsCategory2) => {
 
 exports.insertAnimal = async(request, result) => {
     let inputToken = request.headers.token;
-    let checkTokenResult = await CheckToken.CheckToken(1, request.headers.account, inputToken);
+    let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
     let currentTimeStamp = CurrentDate.CurrentTimeStamp();
     let convertedCategory2 = ConvertAnimalsCategory2(request.body.animalsCategory2);
@@ -85,8 +85,8 @@ exports.insertAnimal = async(request, result) => {
 
 exports.findByUsersIndexNumber = async(request, result) => {
     let inputToken = request.headers.token;
-    let checkTokenResult = await CheckToken.CheckToken(1, request.headers.account, inputToken);
-
+    let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+    
     if(checkTokenResult == true) {
         await Animals.findAll({
             // attributes: ["animalsUsersIndexNumber"],
