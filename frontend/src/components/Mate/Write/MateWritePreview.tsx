@@ -105,7 +105,6 @@ export default function MateWritePreview(props:propsData) {
           el.style.transition = 'none';
           el.style.transform = 'none';
         }
-
       });
     }
 
