@@ -1,6 +1,10 @@
- exports.CheckToken = async (dbNumber, account, inputToken) => {
+const jwt = require("jsonwebtoken") 
+ 
+ exports.CheckToken = async (dbNumber, inputToken) => {
     const redis = require("redis");
     const redisConfig = require("../config/redisClient.json");
+
+    let account = jwt.decode(inputToken).account;
     
     const redisClient = redis.createClient(redisConfig[dbNumber]);
     await redisClient.connect();
