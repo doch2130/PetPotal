@@ -1,15 +1,19 @@
 const redis = require('redis');
+const fs = require('fs');
 
 const MateBoard = require('../models/MateBoard');
 const CheckToken = require('../middleware/CheckToken');
 const CurrentDate = require('../middleware/CurrentDate');
 
-const { SingleFileHandler } = require('../middleware/MulterFileHandler');
+const {
+  SingleFileHandler,
+  MultiFileHandler,
+} = require('../middleware/MulterFileHandler');
 
 /**
  * Mate 게시글 작성 메서드
- * @param {*} request 
- * @param {*} result 
+ * @param {*} request
+ * @param {*} result
  */
 exports.insertMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
@@ -132,6 +136,14 @@ exports.findByUsersIndexNumber = async (request, result) => {
 
 exports.textEditorImgFileUpload = (req, res) => {
   try {
+    if (!fs.existsSync('./data')) {
+      fs.mkdirSync('./data');
+    }
+
+    if (!fs.existsSync('./data/mateTextEditorImg')) {
+      fs.mkdirSync('./data/mateTextEditorImg');
+    }
+
     SingleFileHandler('mateTextEditorImg').single('imgFile')(
       req,
       res,
@@ -147,6 +159,30 @@ exports.textEditorImgFileUpload = (req, res) => {
     );
   } catch (err) {
     console.log(err);
-    res.status(500).send({ error: '서버 오류' });
+    res.status(500).send({ error: '텍스트 에디터 서버 오류' });
+  }
+};
+
+exports.test = (req, res) => {
+  try {
+    if (!fs.existsSync('./data')) {
+      fs.mkdirSync('./data');
+    }
+    if (!fs.existsSync('./data/mateBoardImg')) {
+      fs.mkdirSync('./data/mateBoardImg');
+    }
+
+    MultiFileHandler('mateBoardImg').array('viewImgFile')(req, res, (err) => {
+      if (err) {
+        console.log('err : ', err);
+        res.status(400).send({ error: '파일 업로드 실패' });
+      } else {
+        // console.log(req.files);
+        res.send(true);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: '메이트 파일 업로드 오류' });
   }
 };
