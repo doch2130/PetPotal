@@ -51,6 +51,15 @@ export default class Controller {
   }
 
   async mateWrite(object) {
-    return this.httpClient.post(`mateBoard/insertContent`, object);
+    // return this.httpClient.post(`mateBoard/insertContent`, object);
+    return this.httpClient.post(`mateBoard/test`, object);
+    // return this.httpClient({
+    //   method: 'post',
+    //   url: 'mateBoard/test',
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data', // Content-Type을 반드시 이렇게 하여야 한다.
+    //   },
+    //   data: object,
+    // });
   }
 }

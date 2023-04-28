@@ -45,15 +45,14 @@ export default function MateWriteForm(props:propsData) {
       }
     }
 
-    const updateData = {
-      data,
-      viewImgFile: imgFile,
-    }
-
-    console.log('updateData : ', updateData);
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
+    imgFile.forEach((el) => {
+      formData.append('viewImgFile', el);
+    });
 
     if(window.confirm('작성한 내용으로 등록하시겠습니까?')) {
-      const result = await controller.mateWrite(updateData);
+      const result = await controller.mateWrite(formData);
       console.log('result : ', result);
     }
 

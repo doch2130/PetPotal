@@ -31,11 +31,13 @@ export default function MateWritePreview(props:propsData) {
   }, []);
 
   const handleNextBtn = ():void => {
-    if(imgFile.length === 1) {
+    // if(imgFile.length === 1) {
+    if(imgUrl.length === 1) {
       return ;
     }
 
-    if(currentIdx === imgFile.length-1) {
+    // if(currentIdx === imgFile.length-1) {
+    if(currentIdx === imgUrl.length-1) {
       setCurrentIdx(0);
       slideRef.current.forEach((el:any) => {
         if(el !== null) {
@@ -57,12 +59,14 @@ export default function MateWritePreview(props:propsData) {
   };
 
   const handlePrevBtn = ():void => {
-    if(imgFile.length === 1) {
+    // if(imgFile.length === 1) {
+    if(imgUrl.length === 1) {
       return ;
     }
 
     if(currentIdx === 0) {
-      setCurrentIdx(imgFile.length-1);
+      // setCurrentIdx(imgFile.length-1);
+      setCurrentIdx(imgUrl.length-1);
       slideRef.current.forEach((el:any) => {
         if(el !== null) {
           el.style.transition = "all 0.5s ease-in-out";
@@ -92,7 +96,8 @@ export default function MateWritePreview(props:propsData) {
       return ;
     }
 
-    if(imgFile.length > 0) {
+    // if(imgFile.length > 0) {
+    if(imgUrl.length > 0) {
       setImgFile([]);
       imgUrl.forEach((el) => {
         URL.revokeObjectURL(el);
@@ -109,27 +114,21 @@ export default function MateWritePreview(props:propsData) {
     }
 
     const tempUrlList = [];
-
     const obj:any = [];
+
     for (const key in files) {
       if(key === 'length' || key === 'item') continue;
 
       const currentImgUrl = URL.createObjectURL(files[key]);
-      files[key].url = currentImgUrl;
+      // files[key].url = currentImgUrl;
       obj.push(files[key]);
       tempUrlList.push(currentImgUrl);
     }
 
-    setImgUrl(tempUrlList as string[]);
+    setImgUrl(tempUrlList.sort().reverse() as string[]);
     setImgFile(obj.sort().reverse() as File[]);
+    // setImgFile(files.sort().reverse() as File[]);
 
-    // // Page 파일의 formData에 파일 리스트 추가
-    // onSetFormData((prev:any) => {
-    //   return {
-    //     ...prev,
-    //     imgFiles: obj.sort().reverse() as File[],
-    //   };
-    // });
   };
 
   useEffect(() => {
@@ -161,20 +160,20 @@ export default function MateWritePreview(props:propsData) {
     <>
       <div className={style.wrapPreview} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
         <PictureBox width='300px' height='300px'>
-            {imgFile.map((el:any, index:number) => {
-              return (
-              <div key={index} ref={(el) => slideRef.current[index] = el}>
-                <img src={el.url} alt={el.name} />
-              </div>
-              );
-            })}
-            {imgFile.length > 0 &&
-            <div className={style.pictureCount}>
-              <span>{currentIdx+1}</span>
-              <span>/</span>
-              <span>{imgFile.length}</span>
+          {imgUrl.map((el:any, index:number) => {
+            return (
+            <div key={index} ref={(el) => slideRef.current[index] = el}>
+              <img src={el} alt={el} />
             </div>
-            }
+            );
+          })}
+          {imgUrl.length > 0 &&
+          <div className={style.pictureCount}>
+            <span>{currentIdx+1}</span>
+            <span>/</span>
+            <span>{imgUrl.length}</span>
+          </div>
+          }
         </PictureBox>
       </div>
       <FileUploadButton onLoadFileHandler={imgFileHandler} />
