@@ -56,3 +56,11 @@ img {
   -moz-user-drag: none;
   -o-user-drag: none;
 }
+
+:root {
+	--main-bg-color: #FFF;
+	--main-font-color: #000;
+	--main-default-color: #4AD645;
+	--main-default-light-color: #7BFF9F;
+	--main-default-dark-color: #00AF41;
+}

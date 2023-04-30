@@ -177,5 +177,16 @@
 }
 
 .buttonGroup button:hover {
-  background-color: #00AF41;
+  /* background-color: #00AF41; */
+  background-color: var(--main-default-dark-color);
+}
+
+
+@media (max-width: 660px) {
+  form .wrapRow:nth-of-type(1) .wrapCol {
+    width: 100%;
+  }
+  form .wrapRow:nth-of-type(1) .wrapCol input {
+    width: 60%;
+  }
 }
