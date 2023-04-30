@@ -90,6 +90,11 @@
 .wrapPet h2 {
   font-size: 1.4rem;
   margin: 0px 2rem;
+  display: inline;
+}
+
+.wrapPet select {
+  font-size: 0.9rem !important;
 }
 
 .wrapPetGender label:not(:nth-of-type(1)) {
@@ -188,5 +193,15 @@
   }
   form .wrapRow:nth-of-type(1) .wrapCol input {
     width: 60%;
+  }
+}
+
+@media (max-width: 530px) {
+  .wrapPet h2 {
+    margin: 0 5px 0 2rem;
+  }
+  .wrapPet select {
+    width: 150px !important;
+    padding: 0px !important;
   }
 }
