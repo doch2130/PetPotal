@@ -131,3 +131,8 @@ header a {
 }
 
 
+@media (max-width: 660px) {
+    .navbarLogo {
+        font-size: 2rem;
+    }
+}
