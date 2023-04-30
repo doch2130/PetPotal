@@ -1,0 +1,21 @@
+.wrap {
+  min-height: 400px;
+  height: 50vh;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -50px;
+}
+
+.navWrap {
+  height: initial;
+  flex: 1 0;
+  width: 100px;
+  max-width: 200px;
+  border-right: 1px solid black;
+}
+
+.bodyWrap {
+  min-height: 330px;
+  padding-top: 1rem;
+  flex: auto;
+}

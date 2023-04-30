@@ -47,6 +47,12 @@ export default function Navbar() {
     // setKeyword(historyValue.keyword);
   }, [historyValue]);
 
+  const logoutHandler = () => {
+    if(window.confirm('로그아웃 하시겠습니까?')) {
+      console.log('로그아웃');
+    }
+  }
+
   return (
     <header>
       <article className={style.navbarContainer}>
@@ -65,10 +71,10 @@ export default function Navbar() {
               : 
               <>
                 <li>
-                  <Link to={'/mypage'}>마이페이지</Link>
+                  <Link to={'/mypage/info'}>마이페이지</Link>
                 </li>
                 <li>
-                  <Link to={'/logout'}>로그아웃</Link>
+                  <Link to={'#'} onClick={logoutHandler}>로그아웃</Link>
                 </li>
               </>
               }

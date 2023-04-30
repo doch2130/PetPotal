@@ -1,0 +1,28 @@
+.wrap {
+  padding-top: 1rem;
+  height: 100%;
+  width: 90%;
+  margin: auto;
+}
+
+.wrap h2 {
+  margin: auto;
+  font-size: 1.8rem;
+}
+
+.menu {
+  font-size: 1.3rem;
+  margin: 1rem auto;
+}
+
+.menu a {
+  color: #000;
+}
+
+.active a {
+  color: #2477AB;
+}
+
+.menu a:active {
+  color: #2477AB;
+}

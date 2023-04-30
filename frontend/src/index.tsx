@@ -11,6 +11,7 @@ import MainPage from './pages/MainPage';
 import Search from './components/Search/Search';
 import MemberJoin from './pages/MemberJoin';
 import LoginPage from './pages/LoginPage';
+import MyPage from './pages/MyPage';
 import MatePage from './pages/MatePage';
 import MateWritePage from './pages/MateWritePage';
 
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       {path: '/memberjoin', element: <MemberJoin />},
       {path: '/search/:keyword', element: <Search />},
       {path: '/login', element: <LoginPage />},
+      {path: '/mypage/:page', element: <MyPage />},
       {path: '/mate', element: <MatePage />},
       {path: '/mate/write', element: <MateWritePage />}
     ]
