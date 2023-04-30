@@ -136,6 +136,12 @@ export default function MateWriteForm(props:propsData) {
         <div className={style.wrapRow + ' ' + style.wrapPet}>
           <div className={style.wrapCol}>
             <h2>반려동물 정보</h2>
+            <select id='petInfoLoad'>
+              <option defaultValue="선택">반려동물 정보 가져오기</option>
+              <option defaultValue="1">1</option>
+              <option defaultValue="2">2</option>
+              <option defaultValue="3">3</option>
+            </select>
           </div>
         </div>
 
@@ -189,7 +195,7 @@ export default function MateWriteForm(props:propsData) {
               )}
               id='petAge'>
               <option defaultValue="선택">나이를 선택해주세요</option>
-              <option defaultValue="알수없음">알수없음</option>
+              <option defaultValue="0">알수없음</option>
               <option defaultValue="1">1</option>
               <option defaultValue="2">2</option>
               <option defaultValue="3">3</option>
