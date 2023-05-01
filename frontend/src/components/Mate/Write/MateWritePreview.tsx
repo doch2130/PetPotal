@@ -176,7 +176,7 @@ export default function MateWritePreview(props:propsData) {
           }
         </PictureBox>
       </div>
-      <FileUploadButton onLoadFileHandler={imgFileHandler} />
+      <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={true} />
     </>
   )
 }
