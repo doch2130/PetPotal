@@ -26,7 +26,6 @@ const confirmElement = document.getElementById('confirm') as HTMLDivElement;
 
 function Confirm() {
   const { confirmDataState, closeConfirm } = useConfirm();
-  console.log(confirmDataState);
   return (
     <>
     {confirmDataState.isOpen && (
