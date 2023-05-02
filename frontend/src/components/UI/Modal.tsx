@@ -1,46 +1,45 @@
-import ReactDOM from 'react-dom';
-import style from './Modal.module.css';
 import { MouseEventHandler } from 'react';
+import ReactDOM from 'react-dom';
+import { useModal } from '../../hooks/useModal';
+import style from './Modal.module.css';
 import close from '../../assets/icon/plus.png';
 
-interface propsData {
-  onClose: Function;
-  children: React.ReactNode;
-}
-
 const Backdrop = (props:any) => {
-  return <div className={style.backdrop} onClick={props.onClose} />;
+  return <div className={style.backdrop} onClick={props.onClose as MouseEventHandler} />;
 };
 
 const ModalOverlay = (props:any) => {
+  const { modalDataState } = props;
   return (
     <div className={style.modal}>
-      <div className={style.content}>{props.children}</div>
+      <div className={style.wrapClose} onClick={props.onClose as MouseEventHandler}>
+        <img src={close} alt='closeBtn' />
+      </div>
+      <div className={style.content}>{modalDataState.content}</div>
     </div>
   );
 };
 
 const modalElement = document.getElementById('modal') as HTMLDivElement;
 
-const Modal = (props:propsData) => {
+function Modal() {
+  const { modalDataState, closeModal } = useModal();
   return (
     <>
-      {ReactDOM.createPortal(
-        <Backdrop onClose={props.onClose} children={undefined} />,
-        modalElement
-      )}
-      {ReactDOM.createPortal(
-        <ModalOverlay>
-          <div className={style.wrapClose} onClick={props.onClose as MouseEventHandler}>
-            <img src={close} alt='closeBtn' />
-          </div>
-          {props.children}
-        </ModalOverlay>,
-        modalElement
-      )}
+    {modalDataState.isOpen && (
+      <>
+        {ReactDOM.createPortal(
+          <Backdrop onClose={closeModal} />,
+          modalElement
+        )}
+        {ReactDOM.createPortal(
+          <ModalOverlay onClose={closeModal} modalDataState={modalDataState} />,
+          modalElement
+        )}
+      </>
+    )}
     </>
   );
 };
 
 export default Modal;
-

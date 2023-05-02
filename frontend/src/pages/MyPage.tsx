@@ -7,16 +7,7 @@ import { useEffect, useState } from 'react';
 export default function MyPage() {
   const { page } = useParams<{ page: string}>();
   const [pageValue, setPageValue] = useState<String>('');
-  const [modalShow, setModalShow] = useState<Boolean>(false);
   
-  const modalOpen = () => {
-    setModalShow(true);
-  }
-
-  const modalClose = () => {
-    setModalShow(false);
-  }
-
   useEffect(() => {
     if(page !== undefined) setPageValue(page);
   }, [page]);
@@ -27,9 +18,7 @@ export default function MyPage() {
         <MyNavbar pageValue={pageValue} />
       </div>
       <div className={style.bodyWrap}>
-        {/* {pageValue === 'info' ? <MyInfo /> : null} */}
-        {pageValue === 'info' ?
-          <MyInfo modalShow={modalShow} onModalOpen={modalOpen} onModalClose={modalClose} /> : null}
+        {pageValue === 'info' ? <MyInfo /> : null}
         {pageValue === 'write' ? null : null}
         {pageValue === 'support' ? null : null}
         {pageValue === 'info' ? null : null}

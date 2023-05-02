@@ -8,6 +8,8 @@ import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import LoadingPage from './pages/LoadingPage';
+import Modal from './components/UI/Modal';
+import Alert from './components/UI/Alert';
 
 function App() {
   const [userInfo, setUserInfo] = useRecoilState<UserTypes[]>(userState);
@@ -20,10 +22,6 @@ function App() {
       const result = await controller.auth();
       setUserInfo([result.data]);
       setIsLoading(true);
-
-      // setTimeout(() => {
-      //   setIsLoading(true);
-      // }, 100);
     }
 
     auth();
@@ -33,15 +31,14 @@ function App() {
   
   return (
     <div className="App">
-      {/* <Navbar />
-      <Outlet />
-      <Footer /> */}
       {!isLoading ?
       <LoadingPage /> :
       <>
         <Navbar />
         <Outlet />
         <Footer />
+        <Modal />
+        <Alert />
       </>
       }
     </div>
