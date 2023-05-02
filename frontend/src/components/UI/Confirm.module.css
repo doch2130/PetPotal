@@ -4,22 +4,22 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 4000;
+  z-index: 3000;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.alert {
-  width: 400px;
-  height: 200px;
+.confirm {
+  width: 500px;
+  height: 100px;
   position: fixed;
   top: 20%;
   left: 50%;
-  z-index: 4500;
+  z-index: 3500;
   transform: translate(-50%, -20%);
   border: 1px solid #000000;
   border-radius: 5px;
   animation: slide-down 100ms ease-out forwards;
-  background-color: #b6b5b5;
+  background-color: #eedbdb;
 }
 
 @keyframes slide-down {

@@ -3,19 +3,26 @@ import MyInfoModifyModal from './MyInfoModifyModal';
 import style from './MyInfo.module.css';
 import { useModal } from '../../hooks/useModal';
 import { useAlert } from '../../hooks/useAlert';
+import { useConfirm } from '../../hooks/useConfirm';
 
 export default function MyInfo() {
   const { openModal, closeModal } = useModal();
   const { openAlert, closeAlert } = useAlert();
+  const { openConfirm, closeConfirm } = useConfirm();
 
   const leave = () => {
-    openAlert({
-      title: '',
-      content: ''
+    openConfirm({
+      title: 'confirm',
+      content: 'confirm 창',
+      callback: () => {
+        console.log("Yes!");
+      },
     });
-    // if(window.confirm('정말로 탈퇴하시겠습니까?')) {
-    //   console.log('탈퇴');
-    // }
+
+    openModal({
+      title: 'alert',
+      content: 'alert 창'
+    });
   }
 
   const ModalContent = () => (

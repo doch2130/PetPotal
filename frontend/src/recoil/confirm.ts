@@ -1,14 +1,14 @@
 import { atom } from "recoil";
 
-export interface ModalType {
+export interface ConfirmType {
   isOpen: boolean;
   title: string;
   content: JSX.Element | string;
   callback?: () => any;
 }
 
-export const modalState = atom<ModalType>({
-  key: "modalState",
+export const confirmState = atom<ConfirmType>({
+  key: "confirmState",
 
   default: {
     isOpen: false,
