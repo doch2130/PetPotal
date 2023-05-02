@@ -1,26 +1,32 @@
 import defaultImg from '../../assets/icon/people.png';
-import Modal from '../UI/Modal';
 import MyInfoModifyModal from './MyInfoModifyModal';
 import style from './MyInfo.module.css';
+import { useModal } from '../../hooks/useModal';
+import { useAlert } from '../../hooks/useAlert';
 
-interface propsData {
-  modalShow: Boolean;
-  onModalOpen: Function;
-  onModalClose: Function;
-}
+export default function MyInfo() {
+  const { openModal, closeModal } = useModal();
+  const { openAlert, closeAlert } = useAlert();
 
-export default function MyInfo(props:propsData) {
-  const { modalShow, onModalOpen, onModalClose} = props;
   const leave = () => {
-    if(window.confirm('정말로 탈퇴하시겠습니까?')) {
-      console.log('탈퇴');
-    }
+    openAlert({
+      title: '',
+      content: ''
+    });
+    // if(window.confirm('정말로 탈퇴하시겠습니까?')) {
+    //   console.log('탈퇴');
+    // }
   }
 
-  const modify = () => {
-    console.log('모달 켜기');
-    onModalOpen();
-  }
+  const ModalContent = () => (
+    <MyInfoModifyModal onClose={closeModal} />
+  );
+
+  const modalData = {
+    title: "Modal Title",
+    content: <ModalContent />,
+    callback: () => alert("Modal Callback()")
+  };
 
   return (
     <div className={style.wrap}>
@@ -40,13 +46,9 @@ export default function MyInfo(props:propsData) {
         </div>
       </div>
       <div className={style.buttonGroup}>
-        <button type='button' className={style.fullButton} onClick={modify}>수정</button>
+        <button type='button' className={style.fullButton} onClick={() => openModal(modalData)}>수정</button>
         <button type='button' className={style.fullButton} onClick={leave}>탈퇴</button>
       </div>
-      {modalShow &&
-      <Modal onClose={onModalClose}>
-        <MyInfoModifyModal onClose={onModalClose} />
-      </Modal>}
     </div>
   )
 }
