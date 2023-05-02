@@ -1,12 +1,12 @@
 import { atom } from "recoil";
 
-export interface UserTypes {
+export interface UserType {
   account: String;
   message: String;
   responseCode: Number;
 }
 
-export const userState = atom<UserTypes[]>({
+export const userState = atom<UserType[]>({
   key: "userInfo",
 
   default: [

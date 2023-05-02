@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useRef } from 'react';
 import { useRecoilState } from "recoil";
-import { UserTypes, userState } from '../recoil/user';
+import { UserType, userState } from '../recoil/user';
 import Controller from '../api/controller';
 import naver from '../assets/icon/naver.png';
 import google from '../assets/icon/google.png';
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const controller = new Controller();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userInfo, setUserInfo] = useRecoilState<UserTypes[]>(userState);
+  const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
 
   const onSubmit = useCallback(async ():Promise<boolean> => {
     if(loginId.current === null || loginId.current.value === '') {

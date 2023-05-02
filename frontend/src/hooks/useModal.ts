@@ -23,7 +23,7 @@ export const useModal = () => {
         isOpen: true,
         title: title,
         content: content,
-        callBack: callback
+        callback: callback
       }),
     [setModalDataState]
   );

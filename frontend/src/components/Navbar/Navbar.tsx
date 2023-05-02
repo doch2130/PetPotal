@@ -4,16 +4,15 @@ import SearchIcon from '../../assets/icon/search.png';
 import style from './Navbar.module.css';
 // import { useRecoilState, useRecoilValue } from "recoil";
 import { useRecoilValue } from "recoil";
-import { UserTypes, userState } from '../../recoil/user';
+import { UserType, userState } from '../../recoil/user';
 
 export default function Navbar() {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const historyValue = useParams();
 
-  // const [userInfo, setUserInfo] = useRecoilState<UserTypes[]>(userState);
-
-  const userInfo = useRecoilValue<UserTypes[]>(userState);
+  // const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
+  const userInfo = useRecoilValue<UserType[]>(userState);
 
   // console.log('userInfo : ', userInfo);
 
