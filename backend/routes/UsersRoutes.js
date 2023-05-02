@@ -13,23 +13,23 @@ const router = express.Router();
 const UsersController = require('../controller/UsersController');
 
 router.post('/signIn', (req, res, next) => {
-  passport.authenticate('local', function (err, users, info, status) {
+  passport.authenticate('local', function (err, users) {
     if (users === false) {
       res.send({
         responseCode: 404,
         message: 'Login Failed...',
       });
     } else {
-      res.cookie('token', users, {
+      res.cookie('token', users.token, {
         httpOnly: true,
         signed: true,
         // expires: new Date(Date.now() + 86400),
         maxAge: 1000 * 60 * 60 * 24 * 1,
       });
       res.send({
-        account: req.body.account,
         responseCode: 200,
         message: 'Login Success',
+        data: users
       });
     }
   })(req, res, next);
