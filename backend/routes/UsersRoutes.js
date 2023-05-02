@@ -43,4 +43,6 @@ router.post('/duplicatePhone', UsersController.findByPhone);
 
 router.post('/auth', UsersController.loginStatusCheck);
 
+// router.post('/mypage/userInfoGet', );
+
 module.exports = router;
