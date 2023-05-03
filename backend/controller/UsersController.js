@@ -183,7 +183,7 @@ exports.loginStatusCheck = async (req, res) => {
     }
 
     const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, token);
-    console.log('checkTokenResult : ', checkTokenResult);
+    // console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
       res.send({
