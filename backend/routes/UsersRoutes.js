@@ -12,12 +12,12 @@ router.post('/signIn', (req, res, next) => {
         message: 'Login Failed...',
       });
     } else {
-      // res.cookie('token', users.token, {
-      //   httpOnly: true,
-      //   signed: true,
-      //   // expires: new Date(Date.now() + 86400),
-      //   maxAge: 1000 * 60 * 60 * 24 * 1,
-      // });
+      res.cookie('token', users.token, {
+        httpOnly: true,
+        signed: true,
+        // expires: new Date(Date.now() + 86400),
+        maxAge: 1000 * 60 * 60 * 24 * 1,
+      });
       req.user = req.body.account;
       console.log(req.user);
       res.send({
