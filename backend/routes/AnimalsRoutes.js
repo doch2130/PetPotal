@@ -15,7 +15,6 @@ const MulterFileHandler = require("../middleware/MulterFileHandler");
 const upload = MulterFileHandler.MultiFileHandler("animals");
 const uploadHandler = upload.array("animalsPhotos", 5);
 
-
 router.post("/insertContent", uploadHandler, AnimalsController.insertAnimal);
 router.get("/findByUser/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);
 

@@ -17,6 +17,9 @@ const MateBoard = sequelize.define("MateBoard", {
         mateBoardContent2: {
             type: DataTypes.TEXT
         },
+        mateBoardPhotos: {
+            type: DataTypes.TEXT
+        },
         mateBoardCategory: {
             type: DataTypes.INTEGER
         },
