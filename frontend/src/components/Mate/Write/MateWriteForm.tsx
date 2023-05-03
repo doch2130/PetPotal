@@ -48,7 +48,8 @@ export default function MateWriteForm(props:propsData) {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
     imgFile.forEach((el) => {
-      formData.append('viewImgFile', el);
+      // formData.append('viewImgFile', el);
+      formData.append('mateBoardPhotos', el);
     });
 
     if(window.confirm('작성한 내용으로 등록하시겠습니까?')) {
