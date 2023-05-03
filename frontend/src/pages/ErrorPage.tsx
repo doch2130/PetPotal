@@ -5,7 +5,7 @@ export default function ErrorPage() {
 
     return (
         <div>
-            <h1>에러페이지</h1>
+            <h1>Error Page</h1>
             <p>
             <i>
             {(error as Error)?.message ||
