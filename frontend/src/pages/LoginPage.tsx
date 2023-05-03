@@ -39,6 +39,7 @@ export default function LoginPage() {
     // console.log('result : ', result);
     // console.log('result : ', result.status);
     // console.log('result : ', result.data);
+    // console.log('result : ', result.data.data);
     // console.log('userInfo : ', userInfo);
 
     if(result.data.responseCode !== 200) {
@@ -46,8 +47,19 @@ export default function LoginPage() {
       return false;
     }
 
-    // setUserInfo([...userInfo, result.data]);
-    setUserInfo([result.data]);
+    const updataData = [
+      {
+        account: result.data.data.account,
+        address1: result.data.data.address1,
+        address2: result.data.data.address2,
+        address3: result.data.data.address3,
+        message: result.data.message,
+        responseCode: result.data.responseCode,
+      }
+    ];
+
+    setUserInfo(updataData);
+
     navigate('/');
     return true;
 

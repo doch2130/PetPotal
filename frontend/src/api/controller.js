@@ -46,6 +46,10 @@ export default class Controller {
     return this.httpClient.post(`users/signIn`, object);
   }
 
+  async logout(object) {
+    return this.httpClient.post('users/signOut', object);
+  }
+
   // 메이트 글쓰기 - 미리보기 이미지 업로드
   async mateWriteTextEditorImage(object) {
     return this.httpClient.post('mateBoard/textEditorImgFileUpload', object);
