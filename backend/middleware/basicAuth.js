@@ -26,7 +26,7 @@ module.exports = () => {
     }, function verify(account, password, result) {
         Users.findOne({
             where: {
-                account: account
+                account: account,
             }
         }).then((response) => {
             if(response == null) {
@@ -55,9 +55,15 @@ module.exports = () => {
                         await redisClient.expireAt(account, parseInt((+new Date)/1000) + 86400);
                         await redisClient.disconnect();
 
-                        console.info("basicAuth success\nWelcome", response.dataValues.account);
+                        console.log("basicAuth success\nWelcome", response.dataValues.account);
                         console.log(`${account}'s token save in Redis`);
-                        return result(null, token);
+                        let data = {
+                            account: response.dataValues.account,
+                            address1: response.dataValues.address1,
+                            address2: response.dataValues.address2,
+                            address3: response.dataValues.address3
+                        }
+                        return result(null, data);
                     }
                     else {
                         console.error("basicAuth Failed...");
@@ -70,26 +76,4 @@ module.exports = () => {
             return result(null, err);
         })
     }));
-    // function verify(account, password, result) {
-        // mysql.query("SELECT * FROM Users u WHERE u.account = ?", [ account ], (err, row) => {
-        //     if(err) { return result(err); }
-    
-        //     if(row.length == 0) {
-        //         return result(null, "Invalid Account");
-        //     }
-        //     else {
-        //         crypto.pbkdf2(password, row[0].salt, 310000, 32, "sha256", (err, hashedPassword) => {
-        //             if(err) { return result(err); }
-        //             // if(!crypto.timingSafeEqual(row[0].password, hashedPassword.toString("base64"))) {
-        //             //     return result(null, "Invalid password");
-        //             // }
-        //             // return result(null, row);
-        //             if(row[0].password === hashedPassword.toString("base64")) {
-        //                 console.log("basicAuth success\nWelcome", row[0].account);
-        //                 return result(null, row);
-        //             }                    
-        //         });
-        //     }
-        // });
-    // }));
 }
