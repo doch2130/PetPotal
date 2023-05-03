@@ -57,8 +57,8 @@ export default class Controller {
 
   // 메이트 글쓰기
   async mateWrite(object) {
-    // return this.httpClient.post(`mateBoard/insertContent`, object);
-    return this.httpClient.post(`mateBoard/test`, object);
+    return this.httpClient.post(`mateBoard/insertContent`, object);
+    // return this.httpClient.post(`mateBoard/test`, object);
     // return this.httpClient({
     //   method: 'post',
     //   url: 'mateBoard/test',

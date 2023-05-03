@@ -2,20 +2,40 @@ const Users = require('../models/Users');
 const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
+const DeleteToken = require("../middleware/DeleteToken");
 
-exports.signOut = async (request, response, result) => {
-  request.logout((err) => {
-    if (err) {
-      return result(err);
-      // response.send(err);
-    } else {
-      response.clearCookie('petpotal');
-      response.clearCookie('token');
-      // response.redirect('/');
-      response.send(true);
+exports.signOut = async(request, response, result) => {
+  request.logout(async (err) => {
+    if(err) { 
+      return response.send({
+        responseCode: 400,
+        data: false,
+        message: err
+      })
     }
-  });
-};
+    else {
+      let inputToken = request.headers.token;
+      let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+      if(checkTokenResult == true) {
+        const deleteToken = await DeleteToken.DeleteToken(1, inputToken);
+        response.clearCookie("token");
+        response.clearCookie("petpotal");
+        // response.redirect("/");
+        return response.send({
+          responseCode: 200,
+          data: deleteToken
+        });
+      }
+      else {
+        return response.send({
+          responseCode: 200,
+          data: true,
+          message: "already signOut..."
+        });
+      }
+    }
+  })
+}
 
 exports.insertUser = async (request, response) => {
   let hashed = await Crypt.encrypt(request.body.password);
