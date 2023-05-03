@@ -14,8 +14,6 @@ export default function Navbar() {
 
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
 
-  // console.log('userInfo : ', userInfo);
-
   // console.log(historyValue);
   const searchSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -43,7 +41,7 @@ export default function Navbar() {
     const historyKeyword = historyValue.keyword;
 
     if(historyKeyword) setKeyword(historyKeyword);
-    // setKeyword(historyValue.keyword);
+
   }, [historyValue]);
 
   const logoutHandler = async () => {
