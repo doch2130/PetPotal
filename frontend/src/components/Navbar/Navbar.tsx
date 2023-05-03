@@ -2,17 +2,17 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import SearchIcon from '../../assets/icon/search.png';
 import style from './Navbar.module.css';
-// import { useRecoilState, useRecoilValue } from "recoil";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { UserType, userState } from '../../recoil/user';
+import Controller from '../../api/controller';
 
 export default function Navbar() {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const historyValue = useParams();
+  const controller = new Controller();
 
-  // const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
-  const userInfo = useRecoilValue<UserType[]>(userState);
+  const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
 
   // console.log('userInfo : ', userInfo);
 
@@ -46,9 +46,22 @@ export default function Navbar() {
     // setKeyword(historyValue.keyword);
   }, [historyValue]);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     if(window.confirm('로그아웃 하시겠습니까?')) {
-      console.log('로그아웃');
+      const result = await controller.logout('');
+      if(result.data === true) {
+        setUserInfo([{
+          account: '',
+          address1: '',
+          address2: '',
+          address3: '',
+          message: '',
+          responseCode: 0,
+        }]);
+        navigate('/');
+      } else {
+        alert('새로고침 후 다시 시도해주세요');
+      }
     }
   }
 
