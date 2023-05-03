@@ -1,4 +1,3 @@
-const express = require("express");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const crypto = require("crypto");
@@ -10,15 +9,16 @@ let redisConfig = require("../config/redisClient.json");
 const Users = require("../models/Users");
 
 
+passport.serializeUser((users, done) => {
+    console.log("serializeUser");
+    return done(null, users)
+});
+
+passport.deserializeUser((users, done) => {
+    return done(null, users);
+});
+
 module.exports = () => {
-    passport.serializeUser((users, done) => {
-        done(null, users)
-    });
-
-    passport.deserializeUser((users, done) => {
-        done(null, users);
-    });
-
     passport.use(new LocalStrategy({
         usernameField: "account",
         passwordField: "password",

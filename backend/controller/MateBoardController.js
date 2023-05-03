@@ -21,10 +21,16 @@ exports.insertMateBoard = async (request, result) => {
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
   if (checkTokenResult == true) {
+    let matePhotosList = new Array(request.files.length);
+    for(let i = 0; i < request.files.length; i++) {
+        matePhotosList[i] = request.files[i].filename;
+    }
+
     await MateBoard.create({
       mateBoardTitle: request.body.mateBoardTitle,
       mateBoardContent1: request.body.mateBoardContent1,
       mateBoardContent2: request.body.mateBoardContent2,
+      mateBoardPhotos: matePhotosList.toString(),
       mateBoardCategory: parseInt(request.body.mateBoardCategory),
       mateBoardRegistDate: currentTimeStamp,
       mateBoardModifyDate: currentTimeStamp,

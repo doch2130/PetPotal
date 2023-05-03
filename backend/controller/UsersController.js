@@ -3,7 +3,19 @@ const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
 
-exports.insertUser = async (request, result) => {
+exports.signOut = async (request, response, result) => {
+  request.logout((err) => {
+    if(err) { 
+      return result(err);
+    }
+    else {
+      response.clearCookie("petpotal");
+      response.redirect("/");
+    }
+  })
+}
+
+exports.insertUser = async (request, response) => {
   let hashed = await Crypt.encrypt(request.body.password);
   let salt = hashed.salt;
   let hashedPass = hashed.hashedpw;
@@ -26,31 +38,31 @@ exports.insertUser = async (request, result) => {
   });
 
   if (insertUser == null) {
-    result.send({
+    response.send({
       responseCode: 200,
       message: '회원가입 실패',
     });
   } else {
-    result.send({
+    response.send({
       responseCode: 200,
       message: '회원가입 완료',
     });
   }
 };
 
-exports.findByAccount = (request, result) => {
+exports.findByAccount = (request, response) => {
   Users.findOne({
     attributes: ['account'],
     where: { account: request.body.account },
-  }).then((response) => {
-    if (response == null) {
+  }).then((res) => {
+    if (res == null) {
       // account가 중복이 아닌경우
-      result.send({
+      response.send({
         responseCode: 200,
         data: true,
       });
     } else {
-      result.send({
+      response.send({
         responseCode: 304,
         data: false,
       });
@@ -58,18 +70,18 @@ exports.findByAccount = (request, result) => {
   });
 };
 
-exports.findByNickName = (request, result) => {
+exports.findByNickName = (request, response) => {
   Users.findOne({
     attributes: ['nickName'],
     where: { account: request.body.nickName },
-  }).then((response) => {
-    if (response == null) {
-      result.send({
+  }).then((res) => {
+    if (res == null) {
+      response.send({
         responseCode: 200,
         data: true,
       });
     } else {
-      result.send({
+      response.send({
         responseCode: 304,
         data: false,
       });

@@ -1,12 +1,11 @@
 const express = require('express');
-const session = require('express-session');
 const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const session = require("express-session");
+const passport = require("passport");
 
-const passport = require('passport');
-const basicAuth = require('./middleware/basicAuth');
-
+const basicAuth = require("./middleware/basicAuth");
 const Test01Route = require('./routes/Test01Routes');
 const UsersRoute = require('./routes/UsersRoutes');
 const AnimalsRoute = require('./routes/AnimalsRoutes');
@@ -29,7 +28,15 @@ app.use(express.json());
 // app.use(bodyParser.json());
 
 app.use(
-  session({ secret: 'pettotal', resave: true, saveUninitialized: false })
+  session({ 
+    name: "petpotal",
+    secret: 'pettotal',
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 1,
+    },
+    resave: true,
+    saveUninitialized: true
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
