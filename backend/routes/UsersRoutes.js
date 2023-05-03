@@ -12,6 +12,8 @@ router.post('/signIn', (req, res, next) => {
         message: 'Login Failed...',
       });
     } else {
+      // console.log(users);
+      // console.log(users.token);
       res.cookie('token', users.token, {
         httpOnly: true,
         signed: true,
@@ -23,7 +25,8 @@ router.post('/signIn', (req, res, next) => {
       res.send({
         responseCode: 200,
         message: 'Login Success',
-        data: users,
+        // data: users,
+        data: users.data,
       });
     }
   })(req, res, next);

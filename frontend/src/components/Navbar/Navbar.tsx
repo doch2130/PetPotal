@@ -47,6 +47,7 @@ export default function Navbar() {
   const logoutHandler = async () => {
     if(window.confirm('로그아웃 하시겠습니까?')) {
       const result = await controller.logout('');
+      // console.log(result);
       if(result.data === true) {
         setUserInfo([{
           account: '',
