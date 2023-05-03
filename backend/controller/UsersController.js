@@ -5,15 +5,17 @@ const CheckToken = require('../middleware/CheckToken');
 
 exports.signOut = async (request, response, result) => {
   request.logout((err) => {
-    if(err) { 
+    if (err) {
       return result(err);
+      // response.send(err);
+    } else {
+      response.clearCookie('petpotal');
+      response.clearCookie('token');
+      // response.redirect('/');
+      response.send(true);
     }
-    else {
-      response.clearCookie("petpotal");
-      response.redirect("/");
-    }
-  })
-}
+  });
+};
 
 exports.insertUser = async (request, response) => {
   let hashed = await Crypt.encrypt(request.body.password);
@@ -181,11 +183,14 @@ exports.loginStatusCheck = async (req, res) => {
     }
 
     const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, token);
-    // console.log('checkTokenResult : ', checkTokenResult);
+    console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
       res.send({
-        account: checkTokenResult.account,
+        account: checkTokenResult.decodeData.account,
+        address1: checkTokenResult.decodeData.address1,
+        address2: checkTokenResult.decodeData.address2,
+        address3: checkTokenResult.decodeData.address3,
         responseCode: 200,
         message: 'Login Success',
       });
