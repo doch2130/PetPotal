@@ -12,6 +12,8 @@ router.post('/signIn', (req, res, next) => {
         message: 'Login Failed...',
       });
     } else {
+      // console.log(users);
+      // console.log(users.token);
       res.cookie('token', users.token, {
         httpOnly: true,
         signed: true,
@@ -23,12 +25,13 @@ router.post('/signIn', (req, res, next) => {
       res.send({
         responseCode: 200,
         message: 'Login Success',
-        data: users
+        // data: users,
+        data: users.data,
       });
     }
   })(req, res, next);
 });
-router.post("/signOut", UsersController.signOut);
+router.post('/signOut', UsersController.signOut);
 router.post('/signUp', UsersController.insertUser);
 router.post('/duplicateAccount', UsersController.findByAccount);
 router.post('/duplicateNickName', UsersController.findByNickName);
@@ -37,12 +40,12 @@ router.post('/duplicatePhone', UsersController.findByPhone);
 
 router.post('/auth', UsersController.loginStatusCheck);
 
-router.get("/sessionGet", (req, res, next) => {
+router.get('/sessionGet', (req, res, next) => {
   res.json({
-    "req.session": req.session,
-    "req.user": req.user,
-    "req.passport": req._passport
-  })
-})
+    'req.session': req.session,
+    'req.user': req.user,
+    'req.passport': req._passport,
+  });
+});
 
 module.exports = router;

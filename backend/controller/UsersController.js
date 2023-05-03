@@ -203,11 +203,14 @@ exports.loginStatusCheck = async (req, res) => {
     }
 
     const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, token);
-    // console.log('checkTokenResult : ', checkTokenResult);
+    console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
       res.send({
-        account: checkTokenResult.account,
+        account: checkTokenResult.decodeData.account,
+        address1: checkTokenResult.decodeData.address1,
+        address2: checkTokenResult.decodeData.address2,
+        address3: checkTokenResult.decodeData.address3,
         responseCode: 200,
         message: 'Login Success',
       });

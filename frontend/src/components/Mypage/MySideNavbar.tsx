@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import style from './MyNavbar.module.css';
+import style from './MySideNavbar.module.css';
 
 interface propsData {
   pageValue: String;
 }
 
-export default function MyNavbar(props:propsData) {
+export default function MySideNavbar(props:propsData) {
   const { pageValue } = props;
 
   const menuDefault = style.menu;

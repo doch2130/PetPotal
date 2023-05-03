@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import MyInfo from '../components/Mypage/MyInfo';
-import MyNavbar from '../components/Mypage/MyNavbar';
+import MySideNavbar from '../components/Mypage/MySideNavbar';
 import style from './MyPage.module.css';
 import { useEffect, useState } from 'react';
 
@@ -15,7 +15,7 @@ export default function MyPage() {
   return (
     <div className={style.wrap}>
       <div className={style.navWrap}>
-        <MyNavbar pageValue={pageValue} />
+        <MySideNavbar pageValue={pageValue} />
       </div>
       <div className={style.bodyWrap}>
         {pageValue === 'info' ? <MyInfo /> : null}
