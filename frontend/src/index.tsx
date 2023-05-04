@@ -16,8 +16,6 @@ import MatePage from './pages/MatePage';
 import MateWritePage from './pages/MateWritePage';
 
 
-
-
 const router = createBrowserRouter([
   {
     path: '/',
@@ -30,7 +28,7 @@ const router = createBrowserRouter([
       {path: '/login', element: <LoginPage />},
       {path: '/mypage/:page', element: <MyPage />},
       {path: '/mate', element: <MatePage />},
-      {path: '/mate/write', element: <MateWritePage />}
+      {path: '/mate/write', element: <MateWritePage />},
     ]
   }
 ]);

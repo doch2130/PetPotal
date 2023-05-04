@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Outlet } from 'react-router-dom';
+import { Outlet, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserType, userState } from './recoil/user';
@@ -24,7 +24,7 @@ function App() {
       setIsLoading(true);
       try {
         const result = await controller.auth();
-        // console.log('result : ', result);
+        console.log('result : ', result);
         setUserInfo([result.data]);
       } catch (err) {
         setAuthError(true);
@@ -34,6 +34,8 @@ function App() {
     }
 
     auth();
+
+    
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
