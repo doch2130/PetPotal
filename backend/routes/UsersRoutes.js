@@ -27,6 +27,7 @@ router.post('/signIn', (req, res, next) => {
         message: 'Login Success',
         // data: users,
         data: users.data,
+        token: users.token,
       });
     }
   })(req, res, next);
