@@ -13,8 +13,20 @@ const tempData = {
   address2: '자이아파트 101동 1101호'
 }
 
+interface userData {
+  account: '',
+  name: '',
+  nickName: '',
+  phone: '',
+  email: '',
+  address: '',
+  address4: '',
+}
+
 interface propsData {
   onClose: Function;
+  setUserData: Function;
+  userData: userData;
 }
 
 export default function MyInfoModifyModal(props:propsData) {

@@ -11,7 +11,7 @@ const AlertOverlay = (props:any) => {
   const { alertDataState } = props;
   return (
     <div className={style.alert}>
-      <div className={style.content}>Alert 메시지{alertDataState.content}</div>
+      <div className={style.content}>{alertDataState.content}</div>
       <button type='button' onClick={props.onClose as MouseEventHandler}>확인</button>
     </div>
   );

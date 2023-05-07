@@ -7,6 +7,9 @@ import { useAlert } from '../../hooks/useAlert';
 import { useConfirm } from '../../hooks/useConfirm';
 import Controller from '../../api/controller';
 import { useCallback, useEffect, useState } from 'react';
+import { UserType, userState } from '../../recoil/user';
+import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 
 interface userData {
   account: '',
@@ -19,37 +22,71 @@ interface userData {
 }
 
 export default function MyInfo() {
+  const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
-  const { openAlert, closeAlert } = useAlert();
-  const { openConfirm, closeConfirm } = useConfirm();
-  const [userData, setUserData] = useState<userData>();
+  const { openAlert } = useAlert();
+  const { openConfirm } = useConfirm();
+  const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
   const controller = new Controller();
+  const [userData, setUserData] = useState<userData>({
+    account: '',
+    name: '',
+    nickName: '',
+    phone: '',
+    email: '',
+    address: '',
+    address4: '',
+  });
 
-  const leave = () => {
+  // 회원탈퇴
+  const memberWithdrawal = () => {
     openConfirm({
-      title: 'confirm',
-      content: 'confirm 창',
-      callback: () => {
-        console.log("Yes!");
-      },
-    });
+      title: '회원탈퇴',
+      content: '정말로 회원을 탈퇴하시겠습니까?',
+      callback: async () => {
+        openAlert({
+          title: '회원탈퇴 실패',
+          content: '에러가 발생하였습니다. 새로고침 후 다시 시도해주세요'
+        });
+        const result = await controller.withdrawal();
+        if(result.data.statusCode !== 200) {
+          openAlert({
+            title: '회원탈퇴 실패',
+            content: '에러가 발생하였습니다. 새로고침 후 다시 시도해주세요'
+          });
+          return ;
+        }
 
-    openModal({
-      title: 'alert',
-      content: 'alert 창'
+        openAlert({
+          title: '회원탈퇴 성공',
+          content: '회원탈퇴가 정상적으로 완료되었습니다'
+        });
+        setUserInfo([{
+          account: '',
+          address1: '',
+          address2: '',
+          address3: '',
+          message: '',
+          responseCode: 0,
+        }]);
+        navigate('/');
+      },
     });
   }
 
-  const ModalContent = () => (
-    <MyInfoModifyModal onClose={closeModal} />
-  );
+  // 회원수정 창 열기
+  const mermberModifyOpen = () => {
+    const ModalContent = () => (
+      <MyInfoModifyModal onClose={closeModal} userData={userData} setUserData={setUserData} />
+    );
 
-  const modalData = {
-    title: "Modal Title",
-    content: <ModalContent />,
-    callback: () => alert("Modal Callback()")
-  };
+    openModal({
+      title: "회원정보 수정",
+      content: <ModalContent />
+    });
+  }
 
+  // 회원정보 불러오기
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userInfoGet = useCallback(async () => {
     const result = await controller.mypageUserInfoGet();
@@ -58,6 +95,7 @@ export default function MyInfo() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 회원정보 불러오기
   useEffect(() => {
     // userInfoGet();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,8 +135,8 @@ export default function MyInfo() {
       </div> */}
 
       <div className={style.buttonGroup}>
-        <button type='button' className={style.fullButton} onClick={() => openModal(modalData)}>수정</button>
-        <button type='button' className={style.fullButton} onClick={leave}>탈퇴</button>
+        <button type='button' className={style.fullButton} onClick={mermberModifyOpen}>수정</button>
+        <button type='button' className={style.fullButton} onClick={memberWithdrawal}>탈퇴</button>
       </div>
     </div>
   )
