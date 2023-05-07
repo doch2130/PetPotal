@@ -89,7 +89,7 @@ export default function MyInfo() {
   // 회원정보 불러오기
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userInfoGet = useCallback(async () => {
-    const result = await controller.mypageUserInfoGet();
+    const result = await controller.myUserInfoLoad();
     result.data.address = result.data.address1 + ' ' + result.data.address2 + ' ' + result.data.address3;
     setUserData(result.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
