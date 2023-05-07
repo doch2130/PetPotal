@@ -25,7 +25,7 @@ function App() {
       try {
         const result = await controller.auth();
         // console.log('result : ', result);
-        setUserInfo([result]);
+        setUserInfo([result.data]);
       } catch (err) {
         setAuthError(true);
       } finally {
@@ -36,6 +36,10 @@ function App() {
     auth();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   console.log("userInfo : ", userInfo);
+  // }, [userInfo]);
   
   return (
     <div className="App">
