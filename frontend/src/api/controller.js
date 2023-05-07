@@ -68,8 +68,18 @@ export default class Controller {
   }
 
   // 마이 페이지 - 회원정보 가져오기
-  async mypageUserInfoGet(object) {
-    return this.httpClient.post('users/mypage/userInfoGet', object);
+  async myUserInfoLoad() {
+    return this.httpClient.post('users/mypage/userInfoLoad');
+  }
+
+  // 마이 페이지 - 펫 정보 가져오기
+  async myPetInfoLoad() {
+    return this.httpClient.post('users/mypage/petInfoLoad');
+  }
+
+  // 마이 페이지 - 펫 정보 삭제
+  async petDelete() {
+    return this.httpClient.delete('users/mypage/petDelete');
   }
 
   // 메이트 글쓰기 - 미리보기 이미지 업로드
