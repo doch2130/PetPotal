@@ -193,9 +193,12 @@ exports.loginStatusCheck = async (req, res) => {
 
     if (!token) {
       res.send({
-        account: '',
-        responseCode: 401,
-        message: 'Not Have Cookie',
+        data: {
+          account: '',
+          responseCode: 401,
+          message: 'Not Have Cookie',
+        },
+        token: '',
       });
       return;
     }
@@ -217,9 +220,12 @@ exports.loginStatusCheck = async (req, res) => {
       });
     } else {
       res.send({
-        account: '',
-        responseCode: 401,
-        message: 'Login Failed...',
+        data: {
+          account: '',
+          responseCode: 401,
+          message: 'Login Failed...',
+        },
+        token: '',
       });
     }
   } catch (err) {
