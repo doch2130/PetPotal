@@ -3,34 +3,70 @@
   height: 100%;
 }
 
+.fileUploadButtonWrap > div {
+  margin: 10px auto;
+  width: 250px;
+  height: 30px;
+}
+
+.fileUploadButtonWrap > div > label {
+  width: 250px;
+  height: 30px;
+}
+
+.fileUploadButtonWrap > div > label::after {
+  height: 30px;
+}
+
+.fileUploadButtonWrap > div > label:hover::after {
+  width: 250px;
+  height: 30px;
+}
+
 .wrapForm {
   width: 80%;
-  height: 420px;
-  margin: 2rem auto 1rem;
+  min-height: 400px;
+  margin: 10px auto;
 }
 
 .wrapForm div {
   width: 400px;
-  margin: 1rem auto;
+  margin: 10px auto;
 }
 
 .wrapForm label {
   display: inline-block;
-  width: 120px;
+  width: 110px;
   font-weight: 700;
 }
 
 .wrapForm input {
-  width: 250px;
+  width: 200px;
   height: 25px;
   border: 1px solid #000000;
   border-radius: 5px;
   padding-left: 5px;
 }
 
+.emptyButton {
+  height: 28px;
+  border: 1px solid var(--main-default-color);
+  background-color: var(--main-bg-color);
+  color: var(--main-font-color);
+  border-radius: 5px;
+  margin-left: 10px;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+.emptyButton:hover {
+  background-color: var(--main-default-dark-color);
+  color: #FFF;
+}
+
 .buttonGroup {
   text-align: center;
-  margin: 1rem auto 0 !important;
+  margin: auto !important;
 }
 
 .buttonGroup button {
@@ -42,13 +78,18 @@
   height: 40px;
   cursor: pointer;
   font-size: 1rem;
-  margin: 1rem 5px 0;
+  margin: 5px;
 }
 
 .buttonGroup button:hover {
   background-color: var(--main-default-dark-color);
 }
 
+.joinWarning {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 3px;
+}
 
 @media (max-width: 560px) {
   .wrapForm {
@@ -58,10 +99,14 @@
   }
   .wrapForm div {
     width: 100%;
-    margin: 1rem auto 0;
+    margin: 8px auto;
   }
 
   .wrapForm label {
     text-align: left;
+  }
+
+  .wrapForm .responsiveInput {
+    width: 130px;
   }
 }

@@ -232,3 +232,47 @@ exports.loginStatusCheck = async (req, res) => {
     console.log('loginStatusCheck Error : ', err);
   }
 };
+
+// mypage user info load test
+exports.test2 = async (req, res) => {
+  const inputToken = req.headers.token;
+  const checkTokenResult = await CheckToken.CheckTokenLoginStatus(
+    1,
+    inputToken
+  );
+  console.log(checkTokenResult);
+  if (checkTokenResult.status == true) {
+    Users.findOne({
+      attributes: [
+        'account',
+        'name',
+        'nickName',
+        'phone',
+        'email',
+        'address1',
+        'address2',
+        'address3',
+        'address4',
+      ],
+      where: { account: checkTokenResult.decodeData.account },
+    })
+      .then((response) => {
+        res.send({
+          responseCode: 200,
+          message: 'Success',
+          data: response,
+        });
+      })
+      .catch((err) => {
+        res.send({
+          responseCode: 500,
+          message: 'DB Error',
+        });
+      });
+  } else {
+    res.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
+  }
+};

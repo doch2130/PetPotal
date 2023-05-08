@@ -1,8 +1,11 @@
-import { ChangeEvent, MouseEventHandler } from 'react'
+import { ChangeEvent, MouseEventHandler, useEffect } from 'react'
 import style from './MyInfoModifyModal.module.css';
 import PictureBox from '../UI/PictureBox';
 import defaultImg from '../../assets/icon/people.png';
 import FileUploadButton from '../UI/FileUploadButton';
+import { useDaumPostcodePopup } from 'react-daum-postcode';
+import Controller from '../../api/controller';
+import { useForm, SubmitHandler} from 'react-hook-form';
 
 const tempData = {
   id: 'PetPotal',
@@ -13,25 +16,36 @@ const tempData = {
   address2: '자이아파트 101동 1101호'
 }
 
-interface userData {
-  account: '',
-  name: '',
-  nickName: '',
-  phone: '',
-  email: '',
-  address: '',
-  address4: '',
+interface userDataInterface {
+  account: String;
+  name: String;
+  nickName: String;
+  phone: String;
+  email: String;
+  address1: String;
+  address2: String;
+  address3: String;
+  address4: String;
+}
+
+interface userFormInput extends userDataInterface {
+  currentPassword: String;
+  changePassword: String;
+  address: String;
 }
 
 interface propsData {
   onClose: Function;
   setUserData: Function;
-  userData: userData;
+  userData: userDataInterface;
 }
 
 export default function MyInfoModifyModal(props:propsData) {
-  const { onClose } = props;
+  const { onClose, userData, setUserData } = props;
+  const controller = new Controller();
+  const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<userFormInput>({mode: 'onChange'});
 
+  // 프로필 이미지 변경
   const imgFileHandler = (e:ChangeEvent<HTMLInputElement>):void => {
     const files:any = e.target.files;
 
@@ -40,50 +54,210 @@ export default function MyInfoModifyModal(props:propsData) {
     }
   };
 
-  
+  const duplicateCheck = async(e: React.MouseEvent<HTMLButtonElement>) => {
+    // e.preventDefault();
+    // const { id } = e.target as HTMLButtonElement;
+    // console.log('id : ', id);
+    // const result = await controller.duplicateCheck(id, );
+    // console.log('result : ', result);
+
+    // 중복검사를 따로 만들지 말고 수정하기를 눌렀을 때 1차 검사가 진행되게 설정하는 방법은 어떤지 얘기해보기
+    // 1차 중복검사 => 2차 데이터 업데이트
+  }
+
+  //Daum Post 관련
+  const POSTCODE_URL = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+  const POST_WIDTH = 500;
+  const POST_HEIGHT = 500;
+
+  const daumPostCodeopen = useDaumPostcodePopup(POSTCODE_URL);
+
+  type Value = {sido: string, sigungu: string, zonecode: string, address: string};
+  const onComplete = (data : Value) => {
+    const fullAddress = `(${data.zonecode}) ${data.address}`;
+    setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+    setValue('address1', data.sido);
+    setValue('address2', data.sigungu);
+    setValue('address3', data.address);
+    // setAddressObj({
+    //     address1: data.sido,
+    //     address2: data.sigungu,
+    //     address3: data.address,
+    // });
+  };
+
+  const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    daumPostCodeopen({width : POST_WIDTH, height : POST_HEIGHT, onComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
+  };
+
+
+  const onSubmit : SubmitHandler<userFormInput> = async (data) => {
+    // if(!duplicateValue.nickName) {
+    //   setError('nickName', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    // }
+    console.log(data);
+    if(data.changePassword !== '') {
+      // 비밀번호 변경 실행
+
+      // 성공 시 userData 변경
+      // setUserData();
+
+      // 성공 시 recoil userData 변경 필요
+      // 주소???
+    }
+  };
+
+  useEffect(() => {
+    // 처음 창 열 때 userData => React hook form에 데이터 설정
+    setValue('account', userData.account);
+    setValue('name', userData.name);
+    setValue('nickName', userData.nickName);
+    setValue('phone', userData.phone);
+    setValue('email', userData.email);
+    const address = userData.address1 + ' ' + userData.address2 + ' ' + userData.address3;
+    setValue('address', address);
+    setValue('address1', userData.address1);
+    setValue('address2', userData.address2);
+    setValue('address3', userData.address3);
+    setValue('address4', userData.address4);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={style.wrap}>
-      <PictureBox width='150px' height='150px' >
+      <PictureBox width='100px' height='100px'>
         <img src={defaultImg} alt='defaultImage' />
       </PictureBox>
-      <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
-      <form className={style.wrapForm}>
+      <div className={style.fileUploadButtonWrap}>
+        <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
+      </div>
+      <form className={style.wrapForm} onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label>아이디</label>
-          <input type='text' defaultValue={tempData.id} readOnly disabled />
+          <input {...register('account')} type='text' readOnly disabled />
         </div>
         <div>
           <label>비밀번호</label>
-          <input type='password' defaultValue='' placeholder='현재 비밀번호를 입력하세요' />
+          <input 
+            {...register('currentPassword',
+              {
+                required: {value: true, message: '현재 비밀번호를 입력해주세요'},
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/i,
+                  message: '대소문자숫자특수기호를 섞어 8자이상을 만들어주세요'
+                },
+              }
+            )}
+            type='password' defaultValue='' placeholder='현재 비밀번호를 입력하세요' />
+          <p className={style.joinWarning}>{errors.currentPassword?.message}</p>
         </div>
         <div>
           <label>비밀번호 변경</label>
-          <input type='password' defaultValue='' placeholder='변경할 비밀번호를 입력하세요' />
+          <input 
+            {...register('changePassword',
+              {
+                required: false,
+                pattern: {
+                  value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/i,
+                  message: '대소문자숫자특수기호를 섞어 8자이상을 만들어주세요'
+                },
+              }
+            )}
+            type='password' defaultValue='' placeholder='변경할 비밀번호를 입력하세요' />
+          <p className={style.joinWarning}>{errors.changePassword?.message}</p>
         </div>
         <div>
           <label>이름</label>
-          <input type='text' defaultValue={tempData.name} placeholder='이름을 입력하세요' />
+          <input 
+            {...register('name', 
+              {
+                required: {value: true, message: '이름을 입력해주세요'},
+                minLength: {
+                  value: 1,
+                  message: '1글자 이상 30자 이하로 입력해주세요',
+                },
+                maxLength: {
+                  value: 30,
+                  message : '1글자 이상 30자 이하로 입력해주세요',
+                }
+              }
+            )}
+            type='text' placeholder='이름을 입력하세요' />
+          <p className={style.joinWarning}>{errors.name?.message}</p>
         </div>
         <div>
           <label>닉네임</label>
-          <input type='text' defaultValue={tempData.nickname} placeholder='닉네임을 입력하세요' />
+          <input 
+            {...register('nickName',
+              {
+                required: {value: true, message: '닉네임을 입력해주세요'},
+                minLength: {
+                  value: 1,
+                  message: '1글자 이상 30자 이하로 입력해주세요',
+                },
+                maxLength: {
+                  value: 30,
+                  message : '1글자 이상 30자 이하로 입력해주세요',
+                }
+              }
+            )}
+            type='text' placeholder='닉네임을 입력하세요' className={style.responsiveInput} />
+          <button type='button' className={style.emptyButton} id='NickName' onClick={duplicateCheck}>중복확인</button>
+          <p className={style.joinWarning}>{errors.nickName?.message}</p>
         </div>
         <div>
           <label>이메일</label>
-          <input type='text' defaultValue={tempData.email} readOnly disabled />
+          <input {...register('email')} type='text' readOnly disabled />
+        </div>
+        <div>
+          <label>휴대폰</label>
+          <input
+            {...register('phone',
+              {
+                required: {
+                  value: true,
+                  message: '값을 입력해주세요',
+                },
+                pattern: {
+                  value: /^\d{11}$/i,
+                  message: '번호 11자리를 입력해주세요'
+                },
+              },
+            )}
+            type="text" placeholder="슷자만 입력해주세요." />
+          <p className={style.joinWarning}>{errors.phone?.message}</p>
         </div>
         <div>
           <label>주소</label>
-          <input type='text' defaultValue={tempData.address} placeholder='주소를 입력하세요' />
+          <input 
+            {...register('address',
+              {
+                required: {
+                  value: true,
+                  message: '주소를 입력해주세요',
+                }
+              }
+            )}
+            type='text' placeholder='주소를 입력하세요' disabled readOnly className={style.responsiveInput} />
+          <button type='button' className={style.emptyButton} onClick={onAddressClickHandle}>주소검색</button>
+          <p className={style.joinWarning}>{errors.address?.message}</p>
         </div>
         <div>
           <label>상세주소</label>
-          <input type='text' defaultValue={tempData.address2} placeholder='상세주소를 입력하세요' />
+          <input 
+            {...register('address4',
+              {
+                required: true,
+                minLength: 1,
+              }
+            )}
+            type='text' placeholder='상세주소를 입력하세요' />
+          <p className={style.joinWarning}>{errors.address4?.message}</p>
         </div>
         <div className={style.buttonGroup}>
           <button type='button' onClick={onClose as MouseEventHandler}>취소</button>
-          <button type='button'>수정</button>
+          <button type='submit'>수정</button>
         </div>
       </form>
     </div>
