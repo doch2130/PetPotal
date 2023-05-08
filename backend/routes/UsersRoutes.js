@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('passport');
+const jwt = require("jsonwebtoken")
 const router = express.Router();
 
 const UsersController = require('../controller/UsersController');
@@ -12,22 +13,18 @@ router.post('/signIn', (req, res, next) => {
         message: 'Login Failed...',
       });
     } else {
-      // console.log(users);
-      // console.log(users.token);
-      res.cookie('token', users.token, {
+      console.log(jwt.verify(users, "testing"));
+      res.cookie('token', users, {
         httpOnly: true,
         signed: true,
         // expires: new Date(Date.now() + 86400),
         maxAge: 1000 * 60 * 60 * 24 * 1,
       });
       req.user = req.body.account;
-      console.log(req.user);
       res.send({
         responseCode: 200,
         message: 'Login Success',
-        // data: users,
-        data: users.data,
-        token: users.token,
+        data: users,
       });
     }
   })(req, res, next);
