@@ -1,0 +1,82 @@
+.wrap img {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapForm {
+  width: 80%;
+  height: 300px;
+  margin: 2rem auto 1rem;
+}
+
+.wrapForm div {
+  width: 400px;
+  margin: 1rem auto;
+}
+
+.wrapForm label {
+  display: inline-block;
+  width: 80px;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.wrapForm input[type='text'] {
+  width: 250px;
+  height: 25px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding-left: 5px;
+}
+
+.myPetGender label:not(:nth-of-type(1)) {
+  width: 60px;
+  margin-left: 5px;
+}
+
+.myPetAge select,
+.petSpecies select {
+  width: 258px;
+  height: 28px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 1px 2px 1px 5px;
+}
+
+.buttonGroup {
+  text-align: center;
+  margin: 1rem auto 0 !important;
+}
+
+.buttonGroup button {
+  color: white;
+  background-color: var(--main-default-color);
+  border: none;
+  border-radius: 10px;
+  width: 70px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 1rem 5px 0;
+}
+
+.buttonGroup button:hover {
+  background-color: var(--main-default-dark-color);
+}
+
+
+@media (max-width: 560px) {
+  .wrapForm {
+    width: 100%;
+    height: auto;
+    text-align: center;
+  }
+  .wrapForm div {
+    width: 100%;
+    margin: 1rem auto 0;
+  }
+
+  .wrapForm label {
+    text-align: left;
+  }
+}

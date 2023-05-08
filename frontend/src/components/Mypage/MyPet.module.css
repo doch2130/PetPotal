@@ -1,0 +1,47 @@
+.wrap {
+  background-color: #F0F0F0;
+  padding: 1rem;
+  max-width: 768px;
+  margin: auto;
+  min-height: 300px;
+}
+
+.topWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.topWrap > button {
+  width: 60px;
+  margin-right: 2rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  background: var(--main-default-color);
+  color: white;
+  cursor: pointer;
+}
+
+.topWrap > button:hover {
+  background-color: var(--main-default-dark-color);
+}
+
+.myPetWrap {
+  min-height: 200px;
+}
+
+.myPetEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.myPetEmpty > h2 {
+  margin: 0
+}
+
+.myPetList {
+  margin: 1rem 2rem;
+  min-height: 200px;
+}
