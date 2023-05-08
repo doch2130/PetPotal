@@ -5,6 +5,7 @@ import { alertState } from "../recoil/alert";
 type OpenAlertType = {
   title: string;
   content: JSX.Element | string;
+  type: string;
   callback?: () => any;
 };
 
@@ -18,10 +19,11 @@ export const useAlert = () => {
     [setAlertDataState]
   );
 
-  const openAlert = useCallback(({ title, content }: OpenAlertType) =>
+  const openAlert = useCallback(({ title, content, type }: OpenAlertType) =>
     setAlertDataState({
         isOpen: true,
         title: title,
+        type: type,
         content: content
       }),
     [setAlertDataState]
