@@ -1,6 +1,6 @@
 .wrap {
   background-color: #F0F0F0;
-  padding: 1rem;
+  padding: 1rem 0;
   max-width: 768px;
   margin: auto;
   min-height: 300px;
@@ -28,6 +28,8 @@
 
 .myPetWrap {
   min-height: 200px;
+  width: 91%;
+  margin: 1rem auto;
 }
 
 .myPetEmpty {
@@ -42,6 +44,6 @@
 }
 
 .myPetList {
-  margin: 1rem 2rem;
+  /* margin: 1rem 2rem; */
   min-height: 200px;
 }

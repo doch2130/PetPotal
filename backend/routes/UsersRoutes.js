@@ -49,4 +49,7 @@ router.get('/sessionGet', (req, res, next) => {
   });
 });
 
+// mypage user info load test
+router.post('/mypage/userInfoLoad', UsersController.test2);
+
 module.exports = router;

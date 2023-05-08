@@ -11,13 +11,15 @@ import { UserType, userState } from '../../recoil/user';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
-interface userData {
+interface userDataInterface {
   account: '',
   name: '',
   nickName: '',
   phone: '',
   email: '',
-  address: '',
+  address1: '',
+  address2: '',
+  address3: '',
   address4: '',
 }
 
@@ -28,13 +30,15 @@ export default function MyInfo() {
   const { openConfirm } = useConfirm();
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
   const controller = new Controller();
-  const [userData, setUserData] = useState<userData>({
+  const [userData, setUserData] = useState<userDataInterface>({
     account: '',
     name: '',
     nickName: '',
     phone: '',
     email: '',
-    address: '',
+    address1: '',
+    address2: '',
+    address3: '',
     address4: '',
   });
 
@@ -87,19 +91,25 @@ export default function MyInfo() {
   }
 
   // 회원정보 불러오기
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userInfoGet = useCallback(async () => {
     const result = await controller.myUserInfoLoad();
-    result.data.address = result.data.address1 + ' ' + result.data.address2 + ' ' + result.data.address3;
-    setUserData(result.data);
+    console.log('result : ', result);
+    if(result.data.responseCode !== 200) {
+      alert('에러가 발생했습니다');
+      return ;
+    }
+    setUserData(result.data.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 회원정보 불러오기
   useEffect(() => {
-    // userInfoGet();
+    userInfoGet();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    console.log('userData : ', userData);
+  }, [userData]);
 
   return (
     <div className={style.wrap}>

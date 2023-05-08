@@ -32,3 +32,81 @@
     transform: translate(-50%, -20%);
   }
 }
+
+.header {
+  text-align: center;
+  margin: 20px;
+}
+
+.header img {
+  width: 80px;
+  height: 80px;
+  border: 4px solid #e4f4da;
+  border-radius: 100px;
+  padding: 10px;
+}
+
+
+.header img {
+  stroke:#a5dc86; 
+  animation: dash 0.3s linear alternate 1;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 60;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 
+.header svg {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: ani 5s linear infinite;
+}
+
+@keyframes ani {
+  0% {
+    stroke-dashoffset: 500; 
+  }
+  50% {
+    stroke-dashoffset: 0;  
+  }
+  100% {
+    stroke-dashoffset: -500;
+  }
+} */
+
+path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawArrow 2s ease-in-out forwards;
+}
+@keyframes drawArrow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+
+.movingcircle {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  transform: rotate(-90deg);
+  animation: ani 5s linear infinite;
+}
+
+@keyframes ani {
+  0% {
+    stroke-dashoffset: 500;  /*500지점부터 svg가 나타남*/
+  }
+  50% {
+    stroke-dashoffset: 0;   /*0지점부터 svg가 나타남*/
+  }
+  100% {
+    stroke-dashoffset: -500; /*-500지점부터 svg가 나타남*/
+  }
+}
