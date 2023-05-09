@@ -1,31 +1,19 @@
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
-const redis = require('redis');
 
 const jwtKey = 'testing';
-const Crypt = require("../middleware/Crypt");
-let redisConfig = require('../config/redisClient.json');
-const Users = require('../models/Users');
-
-passport.serializeUser((users, done) => {
-  console.log('serializeUser');
-  return done(null, users);
-});
-
-passport.deserializeUser((users, done) => {
-  return done(null, users);
-});
+const Crypt = require("../Crypt");
+const SaveData = require("../redis/SaveData");
+let redisConfig = require('../../config/redisClient.json');
+const Users = require('../../models/Users');
 
 module.exports = () => {
-  passport.use(
-    new LocalStrategy(
-      {
+  passport.use(new LocalStrategy({
         usernameField: 'account',
         passwordField: 'password',
         session: true,
-      },
-      function verify(account, password, result) {
+      }, function verify(account, password, result) {
         Users.findOne({
           where: {
             account: account,
@@ -51,25 +39,23 @@ module.exports = () => {
                   }
                 );
 
-                const redisClient = redis.createClient(redisConfig[1]);
-                    await redisClient.connect();
-                    await redisClient.set(account, token);
-                    await redisClient.expireAt(
-                      account,
-                      parseInt(+new Date() / 1000) + 86400
-                    );
-                    await redisClient.disconnect();
+                const data = {
+                  account: account,
+                  token: token
+                }
 
-                    console.log(
-                      'basicAuth success\nWelcome',
-                      response.dataValues.account
-                    );
-                    console.log(`${account}'s token save in Redis`);
-                    let data = token;
-                    return result(null, data);
+                await SaveData.SaveData(redisConfig[1], data)
+                .then(() => { 
+                  console.log('LocalAuth success\nWelcome',response.dataValues.account)
+                })
+                .catch(() => {
+                  console.error("failed saveData");
+                })                
+                return result(null, data);
+                
               } else {
                 console.error('basicAuth Failed...');
-                return result(null, null);
+                return result(null, false);
               }
             }
           })

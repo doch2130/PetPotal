@@ -4,36 +4,39 @@ const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
 const DeleteToken = require('../middleware/DeleteToken');
 
-exports.signOut = async (request, response, result) => {
+exports.signOut = (request, response, result) => {
   request.logout(async (err) => {
-    if (err) {
+    if(err) {
       return response.send({
         responseCode: 400,
         data: false,
         message: err,
       });
     } else {
-      let inputToken = request.headers.token;
-      let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
-      if (checkTokenResult == true) {
-        const deleteToken = await DeleteToken.DeleteToken(1, inputToken);
-        response.clearCookie('token');
-        response.clearCookie('petpotal');
-        // response.redirect("/");
-        return response.send({
-          responseCode: 200,
-          data: deleteToken,
-        });
+      const existToken = request.headers.token;
+      // console.log("existToken:", existToken);
+      const checkTokenResult = await CheckToken.CheckToken(1, existToken);
+      if(checkTokenResult) {
+        await DeleteToken.DeleteToken(1, existToken);
+        request.session.destroy(() => {
+          response.clearCookie("token");
+          response.clearCookie("petpotal");
+          response.status(200).send({
+            responseCode: 200,
+            message: "Success SignOut"
+          })
+        })
       } else {
-        return response.send({
-          responseCode: 200,
-          data: true,
-          message: 'already signOut...',
-        });
+        response.status(403).send({
+          responseCode: 403,
+          message: "Already SignOut",
+          error: err
+        })
       }
     }
-  });
-};
+  })
+}
+  
 
 exports.insertUser = async (request, response) => {
   let hashed = await Crypt.encrypt(request.body.password);
@@ -202,8 +205,9 @@ exports.loginStatusCheck = async (req, res) => {
       });
       return;
     }
+    console.log("req:\n", req.session);
 
-    const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, token);
+    const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, req.user.toekn, token);
     // console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
