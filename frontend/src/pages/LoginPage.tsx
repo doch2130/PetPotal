@@ -7,6 +7,7 @@ import naver from '../assets/icon/naver.png';
 import google from '../assets/icon/google.png';
 import AouthButton from '../components/Aouth/AouthButton';
 import style from './LoginPage.module.css';
+import { useAlert } from '../hooks/useAlert';
 
 
 export default function LoginPage() {
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const loginId = useRef<HTMLInputElement>(null);
   const loginPw = useRef<HTMLInputElement>(null);
   const controller = new Controller();
+  const { openAlert } = useAlert();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
@@ -43,7 +45,11 @@ export default function LoginPage() {
     // console.log('userInfo : ', userInfo);
 
     if(result.data.responseCode !== 200) {
-      alert('로그인 정보가 일치하지 않습니다');
+      openAlert({
+        title: '로그인 실패',
+        type: 'error',
+        content: '로그인 정보가 일치하지 않습니다'
+      });
       return false;
     }
 

@@ -104,6 +104,7 @@
   margin: auto;
   font-size: 1.4rem;
   white-space: pre-wrap;
+  text-align: center;
 }
 
 .footer {
@@ -129,6 +130,8 @@
   background-color: #2b78c0;
 }
 
-.footer button:active {
-  border: 3px solid #b1cae3;
+.footer button:active,
+.footer button:focus {
+  /* border: 3px solid #b1cae3; */
+  border: 3px solid #000;
 }
