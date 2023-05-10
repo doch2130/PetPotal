@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import defaultImg from '../../assets/icon/people.png';
+import defaultImg from '../../assets/profile/default.png';
 import MyInfoModifyModal from './MyInfoModifyModal';
 import style from './MyInfo.module.css';
 import { useModal } from '../../hooks/useModal';
@@ -42,6 +42,8 @@ export default function MyInfo() {
     address4: '',
   });
 
+  const [profileImage, setProfileImage] = useState<string>(defaultImg);
+
   // 회원탈퇴
   const memberWithdrawal = () => {
     openConfirm({
@@ -54,7 +56,7 @@ export default function MyInfo() {
           content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
         });
         const result = await controller.withdrawal();
-        if(result.data.statusCode !== 200) {
+        if(result.data.responseCode !== 200) {
           openAlert({
             title: '회원탈퇴 실패',
             type: 'error',
@@ -84,7 +86,8 @@ export default function MyInfo() {
   // 회원수정 창 열기
   const mermberModifyOpen = () => {
     const ModalContent = () => (
-      <MyInfoModifyModal onClose={closeModal} userData={userData} setUserData={setUserData} />
+      <MyInfoModifyModal onClose={closeModal} userData={userData} setUserData={setUserData}
+        profileImage={profileImage} setProfileImage={setProfileImage} />
     );
 
     openModal({
@@ -120,33 +123,17 @@ export default function MyInfo() {
       <div className={style.myInfoWrap}>
         <div className={style.myInfoLeft}>
           <div className={style.myImageWrap}>
-            <img src={defaultImg} alt='myImage' />
+            <img src={profileImage} alt='MyProfileImage' />
           </div>
         </div>
         <div className={style.myInfoRight}>
-          <p>test1</p>
-          <p>테스트닉네임</p>
-          <p>010-1234-5678</p>
-          <p>서울시 중구 중림동</p>
-          <p>744-55 자이아파트 101동</p>
+          <p>{userData.account}</p>
+          <p>{userData.nickName}</p>
+          <p>{userData.phone}</p>
+          <p>{userData.address1 + ' ' + userData.address2 + ' ' + userData.address3}</p>
+          <p>{userData.address4}</p>
         </div>
       </div>
-
-      {/* <div className={style.myInfoWrap}>
-        <div className={style.myInfoLeft}>
-          <div className={style.myImageWrap}>
-            <img src={defaultImg} alt='myImage' />
-          </div>
-        </div>
-        <div className={style.myInfoRight}>
-          <p>{userData?.account}</p>
-          <p>{userData?.nickName}</p>
-          <p>{userData?.phone}</p>
-          <p>{userData?.address}</p>
-          <p>{userData?.address4}</p>
-        </div>
-      </div> */}
-
       <div className={style.buttonGroup}>
         <button type='button' className={style.fullButton} onClick={mermberModifyOpen}>수정</button>
         <button type='button' className={style.fullButton} onClick={memberWithdrawal}>탈퇴</button>
