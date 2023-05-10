@@ -1,7 +1,7 @@
-import { ChangeEvent, MouseEventHandler, useEffect } from 'react'
+import { ChangeEvent, MouseEventHandler, useEffect, useState } from 'react'
 import style from './MyInfoModifyModal.module.css';
 import PictureBox from '../UI/PictureBox';
-import defaultImg from '../../assets/icon/people.png';
+// import defaultImg from '../../assets/profile/default.png';
 import FileUploadButton from '../UI/FileUploadButton';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import Controller from '../../api/controller';
@@ -38,10 +38,12 @@ interface propsData {
   onClose: Function;
   setUserData: Function;
   userData: userDataInterface;
+  profileImage: string;
+  setProfileImage: Function;
 }
 
 export default function MyInfoModifyModal(props:propsData) {
-  const { onClose, userData, setUserData } = props;
+  const { onClose, userData, setUserData, profileImage, setProfileImage } = props;
   const controller = new Controller();
   const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<userFormInput>({mode: 'onChange'});
 
@@ -79,11 +81,6 @@ export default function MyInfoModifyModal(props:propsData) {
     setValue('address1', data.sido);
     setValue('address2', data.sigungu);
     setValue('address3', data.address);
-    // setAddressObj({
-    //     address1: data.sido,
-    //     address2: data.sigungu,
-    //     address3: data.address,
-    // });
   };
 
   const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -127,7 +124,7 @@ export default function MyInfoModifyModal(props:propsData) {
   return (
     <div className={style.wrap}>
       <PictureBox width='100px' height='100px'>
-        <img src={defaultImg} alt='defaultImage' />
+        <img src={profileImage} alt='MyProfileImage' />
       </PictureBox>
       <div className={style.fileUploadButtonWrap}>
         <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
@@ -145,7 +142,7 @@ export default function MyInfoModifyModal(props:propsData) {
                 required: {value: true, message: '현재 비밀번호를 입력해주세요'},
                 pattern: {
                   value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/i,
-                  message: '대소문자숫자특수기호를 섞어 8자이상을 만들어주세요'
+                  message: '현재 비밀번호를 입력해주세요'
                 },
               }
             )}

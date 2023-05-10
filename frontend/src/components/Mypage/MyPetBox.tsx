@@ -24,7 +24,7 @@ export default function MyPetBox() {
           content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
         });
         const result = await controller.petDelete();
-        if(result.data.statusCode !== 200) {
+        if(result.data.responseCode !== 200) {
           openAlert({
             title: '삭제 실패',
             type: 'error',

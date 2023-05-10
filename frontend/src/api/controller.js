@@ -55,13 +55,15 @@ export default class Controller {
 
   async logout() {
     const result = await this.httpClient.post('users/signOut');
-    axios.defaults.headers.common['token'] = ``;
+    if (result.data.responseCode === 200) {
+      axios.defaults.headers.common['token'] = ``;
+    }
     return result;
   }
 
   async withdrawal() {
     const result = await this.httpClient.delete('users/withdrawal');
-    if (result.data.statusCode === 200) {
+    if (result.data.responseCode === 200) {
       axios.defaults.headers.common['token'] = ``;
     }
     return result;
