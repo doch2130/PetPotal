@@ -87,5 +87,6 @@
 .buttonGroup button:active,
 .buttonGroup button:focus {
   /* border: 3px solid #b1cae3; */
-  border: 3px solid #000;
+  /* border: 3px solid #000; */
+  border: 3px solid #0969da;
 }
