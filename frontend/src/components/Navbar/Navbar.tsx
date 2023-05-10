@@ -5,12 +5,16 @@ import style from './Navbar.module.css';
 import { useRecoilState } from "recoil";
 import { UserType, userState } from '../../recoil/user';
 import Controller from '../../api/controller';
+import { useAlert } from '../../hooks/useAlert';
+import { useConfirm } from '../../hooks/useConfirm';
 
 export default function Navbar() {
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
   const historyValue = useParams();
   const controller = new Controller();
+  const { openAlert } = useAlert();
+  const { openConfirm, closeConfirm } = useConfirm();
 
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
 
@@ -18,7 +22,12 @@ export default function Navbar() {
   const searchSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     if(keyword === '') {
-      alert('검색어를 입력해주세요');
+      // alert('검색어를 입력해주세요');
+      openAlert({
+        title: '검색어 경고',
+        type: 'error',
+        content: '검색어를 입력해주세요'
+      });
       return ;
     }
 
@@ -45,23 +54,41 @@ export default function Navbar() {
   }, [historyValue]);
 
   const logoutHandler = async () => {
-    if(window.confirm('로그아웃 하시겠습니까?')) {
-      const result = await controller.logout();
-      console.log(result);
-      if(result.data.data === true) {
-        setUserInfo([{
-          account: '',
-          address1: '',
-          address2: '',
-          address3: '',
-          message: '',
-          responseCode: 0,
-        }]);
-        navigate('/');
-      } else {
-        alert('새로고침 후 다시 시도해주세요');
+    openConfirm({
+      title: '로그아웃',
+      content: '로그아웃 하시겠습니까?',
+      callback: async () => {
+        openAlert({
+          title: '로그아웃 실패',
+          type: 'error',
+          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
+        });
+        const result = await controller.logout();
+        if(result.data.data === true) {
+          closeConfirm();
+          openAlert({
+            title: '로그아웃 성공',
+            type: 'success',
+            content: '정상적으로 로그아웃 되었습니다'
+          });
+          setUserInfo([{
+            account: '',
+            address1: '',
+            address2: '',
+            address3: '',
+            message: '',
+            responseCode: 0,
+          }]);
+          navigate('/');
+        } else {
+          openAlert({
+            title: '로그아웃 실패',
+            type: 'error',
+            content: '새로고침 후 다시 시도해주세요'
+          });
+        }
       }
-    }
+    });
   }
 
   return (

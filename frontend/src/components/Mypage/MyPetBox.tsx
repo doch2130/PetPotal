@@ -8,7 +8,7 @@ import { useModal } from '../../hooks/useModal';
 
 export default function MyPetBox() {
   const { openModal, closeModal } = useModal();
-  const { openConfirm } = useConfirm();
+  const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
   const controller = new Controller();
 
@@ -33,6 +33,7 @@ export default function MyPetBox() {
           return ;
         }
 
+        closeConfirm();
         openAlert({
           title: '반려동물 정보 삭제 성공',
           type: 'success',

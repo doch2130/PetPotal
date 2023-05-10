@@ -27,7 +27,7 @@ export default function MyInfo() {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const { openAlert } = useAlert();
-  const { openConfirm } = useConfirm();
+  const { openConfirm, closeConfirm } = useConfirm();
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
   const controller = new Controller();
   const [userData, setUserData] = useState<userDataInterface>({
@@ -65,6 +65,7 @@ export default function MyInfo() {
           return ;
         }
 
+        closeConfirm();
         openAlert({
           title: '회원탈퇴 성공',
           type: 'success',
