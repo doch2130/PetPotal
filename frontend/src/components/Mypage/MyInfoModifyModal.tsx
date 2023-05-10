@@ -6,15 +6,8 @@ import FileUploadButton from '../UI/FileUploadButton';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import Controller from '../../api/controller';
 import { useForm, SubmitHandler} from 'react-hook-form';
-
-const tempData = {
-  id: 'PetPotal',
-  name: '펫포탈',
-  nickname: '펫포탈관리자',
-  email: 'petpotal@gmail.com',
-  address: '서울시 중구 만리동',
-  address2: '자이아파트 101동 1101호'
-}
+import { useAlert } from '../../hooks/useAlert';
+import { useConfirm } from '../../hooks/useConfirm';
 
 interface userDataInterface {
   account: String;
@@ -46,25 +39,55 @@ export default function MyInfoModifyModal(props:propsData) {
   const { onClose, userData, setUserData, profileImage, setProfileImage } = props;
   const controller = new Controller();
   const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<userFormInput>({mode: 'onChange'});
+  const { openAlert } = useAlert();
+  const { openConfirm, closeConfirm } = useConfirm();
+  const duplicateValue = useState({
+    isNickName: true,
+    nickName: userData.nickName,
+  });
 
   // 프로필 이미지 변경
-  const imgFileHandler = (e:ChangeEvent<HTMLInputElement>):void => {
+  const imgFileHandler = async (e:ChangeEvent<HTMLInputElement>):Promise<void> => {
     const files:any = e.target.files;
 
     if(files === null || files.length === 0) {
       return ;
     }
+    console.log(files);
+    const result = await controller.userProfileModify(files);
+    console.log('imgFileHandler result :', result);
+    return ;
   };
 
-  const duplicateCheck = async(e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault();
-    // const { id } = e.target as HTMLButtonElement;
-    // console.log('id : ', id);
-    // const result = await controller.duplicateCheck(id, );
-    // console.log('result : ', result);
+  const duplicateCheckHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
+    if(userData.nickName === getValues('nickName')) {
+      openAlert({
+        title: '닉네임 중복 검사',
+        type: 'error',
+        // type: 'success',
+        content: '기존과 동일한 닉네임입니다.',
+      });
+      return ;
+    }
 
-    // 중복검사를 따로 만들지 말고 수정하기를 눌렀을 때 1차 검사가 진행되게 설정하는 방법은 어떤지 얘기해보기
-    // 1차 중복검사 => 2차 데이터 업데이트
+    const { id } = e.target as HTMLButtonElement;
+    const result = await controller.duplicateCheck(id, getValues('nickName'));
+    if(result.data.responseCode !== 200) {
+      openAlert({
+        title: '닉네임 중복 검사',
+        type: 'error',
+        content: '중복된 닉네임입니다',
+      });
+      return ;
+    }
+    setError('nickName', {message: ''});
+    duplicateValue[0].isNickName = true;
+    duplicateValue[0].nickName = getValues('nickName');
+    openAlert({
+      title: '닉네임 중복 검사',
+      type: 'success',
+      content: '사용할 수 있는 닉네임입니다',
+    });
   }
 
   //Daum Post 관련
@@ -74,13 +97,13 @@ export default function MyInfoModifyModal(props:propsData) {
 
   const daumPostCodeopen = useDaumPostcodePopup(POSTCODE_URL);
 
-  type Value = {sido: string, sigungu: string, zonecode: string, address: string};
+  type Value = {sido: string, sigungu: string, roadname: string, zonecode: string, address: string};
   const onComplete = (data : Value) => {
     const fullAddress = `(${data.zonecode}) ${data.address}`;
     setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
     setValue('address1', data.sido);
     setValue('address2', data.sigungu);
-    setValue('address3', data.address);
+    setValue('address3', data.roadname);
   };
 
   const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -88,21 +111,77 @@ export default function MyInfoModifyModal(props:propsData) {
     daumPostCodeopen({width : POST_WIDTH, height : POST_HEIGHT, onComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
   };
 
-
   const onSubmit : SubmitHandler<userFormInput> = async (data) => {
-    // if(!duplicateValue.nickName) {
-    //   setError('nickName', {message: '중복확인을 해주세여'}, {shouldFocus: true })
-    // }
     console.log(data);
-    if(data.changePassword !== '') {
-      // 비밀번호 변경 실행
 
-      // 성공 시 userData 변경
-      // setUserData();
-
-      // 성공 시 recoil userData 변경 필요
-      // 주소???
+    if(!duplicateValue[0].isNickName) {
+      setError('nickName', {message: '중복확인을 해주세요'}, {shouldFocus: true });
+      return ;
     }
+
+    if(duplicateValue[0].nickName !== data.nickName) {
+      duplicateValue[0].isNickName = false;
+      setError('nickName', {message: '중복확인을 다시 해주세요'}, {shouldFocus: true });
+      return ;
+    }
+
+    openConfirm({
+      title: '회원정보 수정',
+      content: '해당 정보로 수정하시겠습니까?',
+      callback: async () => {
+        try {
+          const result = await controller.userInfoModify(data);
+          // console.log('result : ', result);
+
+          if(result.data.responseCode === 401) {
+            openAlert({
+              title: '회원정보 수정 실패',
+              type: 'error',
+              content: '현재 비밀번호가 일치하지 않습니다',
+            });
+            return ;
+          }
+
+          if(result.data.responseCode !== 200) {
+            openAlert({
+              title: '회원정보 수정 실패',
+              type: 'error',
+              content: '회원정보 수정 중 에러가 발생했습니다\r\n다시 시도해주세요',
+            });
+            return ;
+          }
+
+          closeConfirm();
+          openAlert({
+            title: '회원정보 수정 성공',
+            type: 'success',
+            content: '회원정보가 수정되었습니다',
+          });
+
+          setUserData({
+            account: data.account,
+            name: data.name,
+            nickName: data.nickName,
+            phone: data.phone,
+            email: data.email,
+            address1: data.address1,
+            address2: data.address2,
+            address3: data.address3,
+            address4: data.address4,
+          });
+
+          onClose();
+
+        } catch (err) {
+          openAlert({
+            title: '회원정보 수정 실패',
+            type: 'error',
+            content: '회원정보 수정에 실패했습니다. 다시 시도해주세요',
+          });
+          return ;
+        }
+      }
+    });
   };
 
   useEffect(() => {
@@ -200,7 +279,7 @@ export default function MyInfoModifyModal(props:propsData) {
               }
             )}
             type='text' placeholder='닉네임을 입력하세요' className={style.responsiveInput} />
-          <button type='button' className={style.emptyButton} id='NickName' onClick={duplicateCheck}>중복확인</button>
+          <button type='button' className={style.emptyButton} id='nickName' onClick={duplicateCheckHandler}>중복확인</button>
           <p className={style.joinWarning}>{errors.nickName?.message}</p>
         </div>
         <div>
