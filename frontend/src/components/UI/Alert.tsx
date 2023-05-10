@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useAlert } from '../../hooks/useAlert';
 import style from './Alert.module.css';
@@ -9,6 +9,12 @@ const Backdrop = () => {
 
 const AlertOverlay = (props:any) => {
   const { alertDataState } = props;
+  const checkButton = useRef<HTMLButtonElement>(null);
+
+  useLayoutEffect(() => {
+    checkButton.current?.focus();
+  }, []);
+
   return (
     <div className={style.alert}>
       <div className={style.header}>
@@ -29,7 +35,7 @@ const AlertOverlay = (props:any) => {
         {alertDataState.content}
       </div>
       <div className={style.footer}>
-        <button type='button' onClick={props.onClose as MouseEventHandler}>확인</button>
+        <button ref={checkButton} type='button' onClick={props.onClose as MouseEventHandler}>확인</button>
       </div>
     </div>
   );

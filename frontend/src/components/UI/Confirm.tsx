@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import style from './Confirm.module.css';
 import { useConfirm } from '../../hooks/useConfirm';
@@ -10,6 +10,12 @@ const Backdrop = () => {
 
 const ConfirmOverlay = (props:any) => {
   const { confirmDataState } = props;
+  const checkButton = useRef<HTMLButtonElement>(null);
+
+  useLayoutEffect(() => {
+    checkButton.current?.focus();
+  }, []);
+
   return (
     <div className={style.confirm}>
       <div className={style.header}>
@@ -20,7 +26,7 @@ const ConfirmOverlay = (props:any) => {
       </div>
       <div className={style.buttonGroup}>
         <button type='button' onClick={props.onClose as MouseEventHandler}>취소</button>
-        <button type='button' onClick={confirmDataState.callback as MouseEventHandler}>확인</button>
+        <button ref={checkButton} type='button' onClick={confirmDataState.callback as MouseEventHandler}>확인</button>
       </div>
     </div>
   );
