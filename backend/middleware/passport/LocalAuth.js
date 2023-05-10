@@ -17,25 +17,23 @@ module.exports = () => {
         Users.findOne({
           where: {
             account: account,
+            usersStatus: parseInt(1)
           },
         })
           .then(async (response) => {
             if (response == null) {
               return result(null, null);
             } else {
-              const hashedPass = await Crypt.decrypt(response.dataValues.salt, password)
+              const hashedPass = await Crypt.decrypt(response.dataValues.salt, password);
               if(response.dataValues.password === hashedPass) {
                 const token = jwt.sign(
                   {
                     account: response.dataValues.account,
-                    address1: response.dataValues.address1,
-                    address2: response.dataValues.address2,
-                    address3: response.dataValues.address3,
                   },
                   jwtKey,
                   { 
                     algorithm: 'HS256',
-                    expiresIn: 60 * 60 * 24,
+                    expiresIn: 60 * 60 * 24 * 1,
                   }
                 );
 

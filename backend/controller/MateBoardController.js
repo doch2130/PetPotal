@@ -1,4 +1,4 @@
-const redis = require('redis');
+// const redis = require('redis');
 const fs = require('fs');
 
 const MateBoard = require('../models/MateBoard');
@@ -41,13 +41,14 @@ exports.insertMateBoard = async (request, result) => {
       .then((response) => {
         if (response == null) {
           result.send({
-            responseCode: 304,
+            responseCode: 403,
+            data: false,
             message: 'no result',
           });
         } else {
           result.send({
             responseCode: 200,
-            data: response,
+            data: true,
           });
         }
       })

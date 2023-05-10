@@ -1,10 +1,33 @@
 const Users = require('../models/Users');
+const passport = require('passport');
+
 const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
 const DeleteToken = require('../middleware/DeleteToken');
 
-exports.signOut = (request, response, result) => {
+/**
+ * @desc 로그인 수행시간 반영
+ * @param {String} account - 로그인을 수행할 계정
+ */
+exports.signInTimeUpdate = (account) => {
+  const lastLoginDate = CurrentDate.CurrentTimeStamp();
+  Users.update(
+    { lastLoginDate: lastLoginDate },
+    { where: { account: account}, },
+  ).then(() => {
+    // console.log("signInTimeUpdate Complete");
+  }).catch((error) => {
+    console.error("signInTimeUpdate Fail\n", error);
+  })
+}
+
+/**
+ * @desc 로그아웃을 수행하는 메서드 세션을 폐기하고, 사용자의 cookie를 제거한다.
+ * @param {*} request - request.headers.token Request Header에 token 삽입
+ * @param {*} response 
+ */
+exports.signOut = (request, response) => {
   request.logout(async (err) => {
     if(err) {
       return response.send({
@@ -27,23 +50,31 @@ exports.signOut = (request, response, result) => {
           })
         })
       } else {
-        response.status(403).send({
-          responseCode: 403,
-          message: "Already SignOut",
-          error: err
+        request.session.destroy(() => {
+          response.clearCookie("token");
+          response.clearCookie("petpotal");
+          response.status(403).send({
+            responseCode: 403,
+            message: "Already SignOut or Invalid Key",
+            error: err
+          });       
         })
       }
     }
   })
-}
-  
+};
 
-exports.insertUser = async (request, response) => {
+/**
+ * 회원가입을 수행하는 메서드
+ * @param {*} request - Request Body에 데이터 삽입 프론트에서 x-www-url-form-urlencoded 형식으로 요청(var urlencoded = new URLSearchParams();)
+ * @param {*} response 
+ */
+exports.insertUsers = async (request, response) => {
   let hashed = await Crypt.encrypt(request.body.password);
   let salt = hashed.salt;
   let hashedPass = hashed.hashedpw;
 
-  let currentTimeStamp = CurrentDate.CurrentTimeStamp();
+  const currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
   const insertUser = await Users.create({
     account: request.body.account,
@@ -56,6 +87,7 @@ exports.insertUser = async (request, response) => {
     address1: request.body.address1,
     address2: request.body.address2,
     address3: request.body.address3,
+    address4: request.body.address4,
     joinDate: currentTimeStamp,
     modifiedDate: currentTimeStamp,
   });
@@ -73,6 +105,12 @@ exports.insertUser = async (request, response) => {
   }
 };
 
+/**
+ * 아이디 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
+ * @param {*} request 
+ * @param {*} response 
+ * @returns { boolean }
+ */
 exports.findByAccount = (request, response) => {
   Users.findOne({
     attributes: ['account'],
@@ -93,10 +131,16 @@ exports.findByAccount = (request, response) => {
   });
 };
 
+/**
+ * 닉네임 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
+ * @param {*} request 
+ * @param {*} response 
+ * @returns { boolean }
+ */
 exports.findByNickName = (request, response) => {
   Users.findOne({
     attributes: ['nickName'],
-    where: { account: request.body.nickName },
+    where: { nickName: request.body.nickName },
   }).then((res) => {
     if (res == null) {
       response.send({
@@ -112,18 +156,24 @@ exports.findByNickName = (request, response) => {
   });
 };
 
-exports.findByEmail = (request, result) => {
+/**
+ * 이메일 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
+ * @param {*} request 
+ * @param {*} response 
+ * @returns { boolean }
+ */
+exports.findByEmail = (request, response) => {
   Users.findOne({
     attributes: ['email'],
-    where: { account: request.body.email },
-  }).then((response) => {
-    if (response == null) {
-      result.send({
+    where: { email: request.body.email },
+  }).then((res) => {
+    if (res == null) {
+      response.status(200).send({
         responseCode: 200,
         data: true,
       });
     } else {
-      result.send({
+      response.status(200).send({
         responseCode: 304,
         data: false,
       });
@@ -131,24 +181,211 @@ exports.findByEmail = (request, result) => {
   });
 };
 
-exports.findByPhone = (request, result) => {
+/**
+ * 전화번호 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
+ * @param {*} request 
+ * @param {*} response 
+ * @returns { boolean }
+ */
+exports.findByPhone = (request, response) => {
   Users.findOne({
     attributes: ['phone'],
-    where: { account: request.body.phone },
-  }).then((response) => {
-    if (response == null) {
-      result.send({
+    where: { phone: request.body.phone },
+  }).then((res) => {
+    if (res == null) {
+      response.status(200).send({
         responseCode: 200,
         data: true,
       });
     } else {
-      result.send({
+      response.status(304).send({
         responseCode: 304,
         data: false,
       });
     }
   });
 };
+
+/**
+ * 아이디를 통해 해당 사용자의 정보를 조회하는 메서드  
+ * [아이디, 이름, 닉네임, 전화번호, 이메일, 주소] 정보를 조회
+ * @param {String} request 
+ * @param {*} response 
+ */
+exports.findUsersInfo = async (request, response) => {
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  
+  if(checkTokenResult) {
+    Users.findOne({
+      attributes: ["account", "name", "nickName", "phone", "email", "address1", "address2", "address3", "address4"],
+      where: { account: request.body.account }
+    }).then((res) => {
+      response.status(200).send({
+        responseCode: 200,
+        message: "Success",
+        data: res
+      })
+    }).catch((err) => {
+      response.status(400).send({
+        responseCode: 400,
+        message: "Failed",
+        data: err
+      })
+    })
+  }
+  else {
+    response.status(500).send({
+      responseCode: 500,
+      message: "Invalid Key",
+      data: false
+    })
+  }
+  
+};
+
+/**
+ * 회원정보를 변경하는 메서드
+ * @param {*} request 
+ * @param {*} response 
+ */
+exports.updateUsers = async (request, response) => {
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  const currentTimeStamp = CurrentDate.CurrentTimeStamp();
+  let newHashed, newSalt, newHashedPass;
+
+  if(checkTokenResult == true) {
+    if(
+      (request.body.changePassword === undefined || request.body.changePassword == "")
+      &&
+      (request.body.password != undefined || request.body.password != "")
+      ) {  
+      Users.findOne({
+        attributes: ['salt'],
+        where: { account: request.body.account },
+      }).then(async(res) => {
+        // console.log(res.dataValues.salt);
+        const hashedPass = await Crypt.decrypt(res.dataValues.salt, request.body.password);
+        Users.update(
+          {
+            name: request.body.name,
+            nickName: request.body.nickName,
+            address1: request.body.address1,
+            address2: request.body.address2,
+            address3: request.body.address3,
+            address4: request.body.addresss4,
+            modifiedDate: currentTimeStamp
+          },
+          {
+            where: {
+              account: request.body.account,
+              password: hashedPass
+            }
+          }
+        ).then(() => {
+          response.status(200).send({
+            responseCode: 200,
+            message: "Modified Complete(not change pass)",
+            data: true
+          })
+        }).catch((err) => {
+          response.status(500).send({
+            responseCode: 500,
+            message: "Modified Fail",
+            data: false,
+            error: err
+          })
+        })
+      }).catch((err) => {
+        console.error(err);
+      })
+    }
+    else if(request.body.changePassword === null && request.body.password != null) {
+      newHashed = await Crypt.encrypt(request.body.changePassword);
+      newSalt = newHashed.salt;
+      newHashedPass = newHashed.hashedpw;  
+      Users.update(
+        {
+          password: newHashedPass,
+          salt: newSalt,
+          name: request.body.name,
+          nickName: request.body.nickName,
+          address1: request.body.address1,
+          address2: request.body.address2,
+          address3: request.body.address3,
+          address4: request.body.addresss4,
+          modifiedDate: currentTimeStamp
+        },
+        {
+          where: {
+            account: request.body.account
+          }
+        }
+      ).then((res) => {
+        response.status(200).send({
+          responseCode: 200,
+          message: "Modified Complete(apply new pass)",
+          data: true
+        })
+      }).catch((err) => {
+        response.status(500).send({
+          responseCode: 500,
+          message: "Modified Fail",
+          data: false
+        })
+      })  
+    }
+  } else {
+    response.status(403).send({
+      responseCode: 403,
+      message: "Invalid Key",
+      data: false
+    })
+  }
+};
+
+/**
+ * 회원탈퇴를 신청하는 메서드 
+ * @param {*} request 
+ * @param {*} response 
+ */
+exports.dormancyUsers = async (request, response) => {
+  const currentTimeStamp = CurrentDate.CurrentTimeStamp();
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+
+  if(checkTokenResult == true) {
+    Users.update(
+      {
+        modifiedDate: currentTimeStamp,
+        usersStatus: parseInt(3)
+      },
+      {
+        where: {
+          account: request.body.account
+        }
+      }
+    )
+    .then(() => {
+      response.status(200).send({
+        responseCode: 200,
+        data: true
+      })
+    })
+    .catch(() => {
+      response.status(502).send({
+        responseCode: 502,
+        data: false
+      })
+    })
+  }
+  else {
+    response.status(400).send({
+      responseCode: 400,
+      data: false,
+      message: "Invalid Key"
+    })
+  }
+  
+}
 
 /*
 회원가입 메서드 no sequelize

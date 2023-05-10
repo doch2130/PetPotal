@@ -1,15 +1,15 @@
 const express = require('express');
 const passport = require('passport');
-const router = express.Router();
 
+const router = express.Router();
 const UsersController = require('../controller/UsersController');
 const { signInState, noSignInState } = require("../middleware/passport/SignInState");
 
 router.post('/signIn', noSignInState, (req, res, next) => {
   passport.authenticate('local', function (err, users) {
     if (users === false) {
-      res.send({
-        responseCode: 404,
+      res.status(403).send({
+        responseCode: 403,
         message: 'Login Failed...',
       });
     } else {
@@ -22,6 +22,7 @@ router.post('/signIn', noSignInState, (req, res, next) => {
           })
         }
         else {
+          UsersController.signInTimeUpdate(req.body.account)
           res.cookie('token', users, {
             httpOnly: true,
             signed: true,
@@ -39,11 +40,14 @@ router.post('/signIn', noSignInState, (req, res, next) => {
   })(req, res, next);
 });
 router.post('/signOut', signInState, UsersController.signOut);
-router.post('/signUp', UsersController.insertUser);
+router.post('/signUp', UsersController.insertUsers);
 router.post('/duplicateAccount', UsersController.findByAccount);
 router.post('/duplicateNickName', UsersController.findByNickName);
 router.post('/duplicateEmail', UsersController.findByEmail);
 router.post('/duplicatePhone', UsersController.findByPhone);
+router.post("/mypageUsersInfo", UsersController.findUsersInfo);
+router.post("/usersInfoModify", UsersController.updateUsers);
+router.post("/terminate", UsersController.dormancyUsers);
 
 router.post('/auth', UsersController.loginStatusCheck);
 

@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = require("../config/sequelize");
 
+const sequelize = require("../config/sequelize");
 const Animals = require("../models/Animals");
 
 const Users = sequelize.define("Users", 
@@ -43,12 +43,6 @@ const Users = sequelize.define("Users",
         address4: {
             type: DataTypes.STRING
         },
-        lat: {
-            type: DataTypes.FLOAT
-        },
-        lng: {
-            type: DataTypes.FLOAT
-        },
         role: {
             type: DataTypes.INTEGER
         },
@@ -66,6 +60,11 @@ const Users = sequelize.define("Users",
         },
         lastLoginDate: {
             type: DataTypes.STRING
+        },
+        usersStatus: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+            allowNull: false
         }
     },
     {
