@@ -22,10 +22,20 @@ export default function LoginPage() {
 
   const onSubmit = useCallback(async ():Promise<boolean> => {
     if(loginId.current === null || loginId.current.value === '') {
-      alert('아이디를 입력해주세요');
+      // alert('아이디를 입력해주세요');
+      openAlert({
+        title: '로그인 실패',
+        type: 'error',
+        content: '아이디를 입력해주세요'
+      });
       return false;
     } else if (loginPw.current === null || loginPw.current.value === '') {
-      alert('비밀번호를 입력해주세요');
+      // alert('비밀번호를 입력해주세요');
+      openAlert({
+        title: '로그인 실패',
+        type: 'error',
+        content: '비밀번호를 입력해주세요'
+      });
       return false;
     }
 
