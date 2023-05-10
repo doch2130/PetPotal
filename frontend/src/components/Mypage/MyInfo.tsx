@@ -99,10 +99,15 @@ export default function MyInfo() {
 
   // 회원정보 불러오기
   const userInfoGet = useCallback(async () => {
-    const result = await controller.myUserInfoLoad();
-    console.log('result : ', result);
+    const result = await controller.userInfoLoad();
+    // console.log('result : ', result);
     if(result.data.responseCode !== 200) {
-      alert('에러가 발생했습니다');
+      // alert('에러가 발생했습니다');
+      openAlert({
+        title: '회원정보 로드 실패',
+        type: 'error',
+        content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
+      });
       return ;
     }
     setUserData(result.data.data);
@@ -115,7 +120,7 @@ export default function MyInfo() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    console.log('userData : ', userData);
+    // console.log('userData : ', userData);
   }, [userData]);
 
   return (
