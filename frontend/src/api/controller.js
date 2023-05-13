@@ -12,7 +12,8 @@ export default class Controller {
   async auth() {
     const result = await this.httpClient.post(`users/auth`);
     // console.log('auth result: ', result);
-    axios.defaults.headers.common['token'] = `${result.data.token}`;
+    // axios.defaults.headers.common['token'] = `${result.data.token}`;
+    axios.defaults.headers.common['token'] = `${result.data.token.token}`;
     return result.data;
   }
 
@@ -51,7 +52,8 @@ export default class Controller {
   async login(object) {
     const result = await this.httpClient.post(`users/signIn`, object);
     // console.log(result);
-    axios.defaults.headers.common['token'] = `${result.data.token}`;
+    // axios.defaults.headers.common['token'] = `${result.data.token}`;
+    axios.defaults.headers.common['token'] = `${result.data.data.token}`;
     return result;
   }
 
