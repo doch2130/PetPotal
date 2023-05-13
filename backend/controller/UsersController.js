@@ -32,6 +32,7 @@ exports.signInTimeUpdate = (account) => {
 exports.signOut = (request, response) => {
   request.logout(async (err) => {
     if (err) {
+      console.log('err ', err);
       return response.send({
         responseCode: 400,
         data: false,
