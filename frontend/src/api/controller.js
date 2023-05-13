@@ -49,7 +49,6 @@ export default class Controller {
 
   // 로그인
   async login(object) {
-    // return this.httpClient.post(`users/signIn`, object);
     const result = await this.httpClient.post(`users/signIn`, object);
     // console.log(result);
     axios.defaults.headers.common['token'] = `${result.data.token}`;

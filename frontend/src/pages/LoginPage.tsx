@@ -47,14 +47,28 @@ export default function LoginPage() {
       password
     }
 
-    const result = await controller.login(data);
-    // console.log('result : ', result);
-    // console.log('result : ', result.status);
-    // console.log('result : ', result.data);
-    // console.log('result : ', result.data.data);
-    // console.log('userInfo : ', userInfo);
+    try {
+      const result = await controller.login(data);
+      // console.log('result : ', result);
+      // console.log('userInfo : ', userInfo);
 
-    if(result.data.responseCode !== 200) {
+      const updataData = [
+        {
+          account: result.data.data.account,
+          address1: result.data.data.address1,
+          address2: result.data.data.address2,
+          address3: result.data.data.address3,
+          message: result.data.message,
+          responseCode: result.data.responseCode,
+        }
+      ];
+
+      setUserInfo(updataData);
+
+      navigate('/');
+      return true;
+
+    } catch (err) {
       openAlert({
         title: '로그인 실패',
         type: 'error',
@@ -62,22 +76,6 @@ export default function LoginPage() {
       });
       return false;
     }
-
-    const updataData = [
-      {
-        account: result.data.data.account,
-        address1: result.data.data.address1,
-        address2: result.data.data.address2,
-        address3: result.data.data.address3,
-        message: result.data.message,
-        responseCode: result.data.responseCode,
-      }
-    ];
-
-    setUserInfo(updataData);
-
-    navigate('/');
-    return true;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
