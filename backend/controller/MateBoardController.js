@@ -1,4 +1,4 @@
-const redis = require('redis');
+// const redis = require('redis');
 const fs = require('fs');
 
 const MateBoard = require('../models/MateBoard');
@@ -25,24 +25,10 @@ exports.insertMateBoard = async (request, result) => {
     for (let i = 0; i < request.files.length; i++) {
       matePhotosList[i] = request.files[i].filename;
     }
-
-    const boardData = JSON.parse(request.body.data);
-    console.log('boardData : ', boardData);
-    // 카테고리 필드 => writeType '구함' / '지원'
-    // 금액 필드 => 추가 필요
-    // userIndexNumber, animalsIndexNumber 가져오는 방법 확인 필요
-
-    // userIndexNumber
-    // 토큰으로 검사해서 user정보를 가져오는지??
-
-    // animalsIndexNumber
-    // 지원 일 때 동물 정보 없음
-    // 구함 일 때 (내 정보에서 가져오는 것이 아닌 신규 동물 정보인 경우에 대한 처리 방안)
-
-    // 사진 저장은 잘되지만, DB데이터 저장 시 데이터 정리가 안되서 안되는 중
-
+   
     await MateBoard.create({
-      mateBoardTitle: request.body.title,
+      mateBoardTitle: request.body.mateBoardTitle,
+      mateBoardFee: parseInt(request.body.mateBoardFee),
       mateBoardContent1: request.body.mateBoardContent1,
       mateBoardContent2: request.body.mateBoardContent2,
       mateBoardPhotos: matePhotosList.toString(),
@@ -55,13 +41,14 @@ exports.insertMateBoard = async (request, result) => {
       .then((response) => {
         if (response == null) {
           result.send({
-            responseCode: 304,
+            responseCode: 403,
+            data: false,
             message: 'no result',
           });
         } else {
           result.send({
             responseCode: 200,
-            data: response,
+            data: true,
           });
         }
       })

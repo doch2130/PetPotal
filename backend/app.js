@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const session = require("express-session");
 const passport = require("passport");
 
-const basicAuth = require("./middleware/basicAuth");
+const Passport = require("./middleware/passport/Passport");
 const Test01Route = require('./routes/Test01Routes');
 const UsersRoute = require('./routes/UsersRoutes');
 const AnimalsRoute = require('./routes/AnimalsRoutes');
@@ -26,21 +26,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
-
+Passport();
 app.use(
   session({ 
     name: "petpotal",
     secret: 'pettotal',
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 1,
     },
-    resave: true,
-    saveUninitialized: true
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-basicAuth();
 
 app.use('/static', express.static(__dirname + '/data/mateTextEditorImg'));
 app.use('/api/test01', Test01Route);

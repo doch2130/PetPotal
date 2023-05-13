@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
+
 const sequelize = require("../config/sequelize");
 const Users = require("./Users");
 
@@ -10,6 +11,9 @@ const MateBoard = sequelize.define("MateBoard", {
         },
         mateBoardTitle: {
             type: DataTypes.STRING
+        },
+        mateBoardFee: {
+            type: DataTypes.INTEGER
         },
         mateBoardContent1: {
             type: DataTypes.TEXT
