@@ -1,9 +1,8 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const redis = require("redis");
+const redisConfig = require("../config/redisClient.json");
 
-exports.DeleteToken = async (dbNumber, inputToken) => {
-    const redis = require("redis");
-    const redisConfig = require("../config/redisClient.json");
-
+exports.DeleteToken = async (dbNumber, inputToken) => {   
     let account = jwt.decode(inputToken).account;
 
     const redisClient = redis.createClient(redisConfig[dbNumber]);
