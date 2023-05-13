@@ -14,22 +14,24 @@ exports.signInTimeUpdate = (account) => {
   const lastLoginDate = CurrentDate.CurrentTimeStamp();
   Users.update(
     { lastLoginDate: lastLoginDate },
-    { where: { account: account}, },
-  ).then(() => {
-    // console.log("signInTimeUpdate Complete");
-  }).catch((error) => {
-    console.error("signInTimeUpdate Fail\n", error);
-  })
-}
+    { where: { account: account } }
+  )
+    .then(() => {
+      // console.log("signInTimeUpdate Complete");
+    })
+    .catch((error) => {
+      console.error('signInTimeUpdate Fail\n', error);
+    });
+};
 
 /**
  * @desc 로그아웃을 수행하는 메서드 세션을 폐기하고, 사용자의 cookie를 제거한다.
  * @param {*} request - request.headers.token Request Header에 token 삽입
- * @param {*} response 
+ * @param {*} response
  */
 exports.signOut = (request, response) => {
   request.logout(async (err) => {
-    if(err) {
+    if (err) {
       return response.send({
         responseCode: 400,
         data: false,
@@ -39,35 +41,35 @@ exports.signOut = (request, response) => {
       const existToken = request.headers.token;
       // console.log("existToken:", existToken);
       const checkTokenResult = await CheckToken.CheckToken(1, existToken);
-      if(checkTokenResult) {
+      if (checkTokenResult) {
         await DeleteToken.DeleteToken(1, existToken);
         request.session.destroy(() => {
-          response.clearCookie("token");
-          response.clearCookie("petpotal");
+          response.clearCookie('token');
+          response.clearCookie('petpotal');
           response.status(200).send({
             responseCode: 200,
-            message: "Success SignOut"
-          })
-        })
+            message: 'Success SignOut',
+          });
+        });
       } else {
         request.session.destroy(() => {
-          response.clearCookie("token");
-          response.clearCookie("petpotal");
+          response.clearCookie('token');
+          response.clearCookie('petpotal');
           response.status(403).send({
             responseCode: 403,
-            message: "Already SignOut or Invalid Key",
-            error: err
-          });       
-        })
+            message: 'Already SignOut or Invalid Key',
+            error: err,
+          });
+        });
       }
     }
-  })
+  });
 };
 
 /**
  * 회원가입을 수행하는 메서드
  * @param {*} request - Request Body에 데이터 삽입 프론트에서 x-www-url-form-urlencoded 형식으로 요청(var urlencoded = new URLSearchParams();)
- * @param {*} response 
+ * @param {*} response
  */
 exports.insertUsers = async (request, response) => {
   let hashed = await Crypt.encrypt(request.body.password);
@@ -107,8 +109,8 @@ exports.insertUsers = async (request, response) => {
 
 /**
  * 아이디 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  * @returns { boolean }
  */
 exports.findByAccount = (request, response) => {
@@ -133,8 +135,8 @@ exports.findByAccount = (request, response) => {
 
 /**
  * 닉네임 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  * @returns { boolean }
  */
 exports.findByNickName = (request, response) => {
@@ -158,8 +160,8 @@ exports.findByNickName = (request, response) => {
 
 /**
  * 이메일 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  * @returns { boolean }
  */
 exports.findByEmail = (request, response) => {
@@ -183,8 +185,8 @@ exports.findByEmail = (request, response) => {
 
 /**
  * 전화번호 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  * @returns { boolean }
  */
 exports.findByPhone = (request, response) => {
@@ -207,102 +209,127 @@ exports.findByPhone = (request, response) => {
 };
 
 /**
- * 아이디를 통해 해당 사용자의 정보를 조회하는 메서드  
+ * 아이디를 통해 해당 사용자의 정보를 조회하는 메서드
  * [아이디, 이름, 닉네임, 전화번호, 이메일, 주소] 정보를 조회
- * @param {String} request 
- * @param {*} response 
+ * @param {String} request
+ * @param {*} response
  */
 exports.findUsersInfo = async (request, response) => {
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
-  
-  if(checkTokenResult) {
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
+
+  if (checkTokenResult) {
     Users.findOne({
-      attributes: ["account", "name", "nickName", "phone", "email", "address1", "address2", "address3", "address4"],
-      where: { account: request.body.account }
-    }).then((res) => {
-      response.status(200).send({
-        responseCode: 200,
-        message: "Success",
-        data: res
-      })
-    }).catch((err) => {
-      response.status(400).send({
-        responseCode: 400,
-        message: "Failed",
-        data: err
-      })
+      attributes: [
+        'account',
+        'name',
+        'nickName',
+        'phone',
+        'email',
+        'address1',
+        'address2',
+        'address3',
+        'address4',
+      ],
+      where: { account: request.body.account },
     })
-  }
-  else {
+      .then((res) => {
+        response.status(200).send({
+          responseCode: 200,
+          message: 'Success',
+          data: res,
+        });
+      })
+      .catch((err) => {
+        response.status(400).send({
+          responseCode: 400,
+          message: 'Failed',
+          data: err,
+        });
+      });
+  } else {
     response.status(500).send({
       responseCode: 500,
-      message: "Invalid Key",
-      data: false
-    })
+      message: 'Invalid Key',
+      data: false,
+    });
   }
-  
 };
 
 /**
  * 회원정보를 변경하는 메서드
- * @param {*} request 
- * @param {*} response 
+ * @param {*} request
+ * @param {*} response
  */
 exports.updateUsers = async (request, response) => {
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
   let newHashed, newSalt, newHashedPass;
 
-  if(checkTokenResult == true) {
-    if(
-      (request.body.changePassword === undefined || request.body.changePassword == "")
-      &&
-      (request.body.password != undefined || request.body.password != "")
-      ) {  
+  if (checkTokenResult == true) {
+    if (
+      (request.body.changePassword === undefined ||
+        request.body.changePassword == '') &&
+      (request.body.password != undefined || request.body.password != '')
+    ) {
       Users.findOne({
         attributes: ['salt'],
         where: { account: request.body.account },
-      }).then(async(res) => {
-        // console.log(res.dataValues.salt);
-        const hashedPass = await Crypt.decrypt(res.dataValues.salt, request.body.password);
-        Users.update(
-          {
-            name: request.body.name,
-            nickName: request.body.nickName,
-            address1: request.body.address1,
-            address2: request.body.address2,
-            address3: request.body.address3,
-            address4: request.body.addresss4,
-            modifiedDate: currentTimeStamp
-          },
-          {
-            where: {
-              account: request.body.account,
-              password: hashedPass
-            }
-          }
-        ).then(() => {
-          response.status(200).send({
-            responseCode: 200,
-            message: "Modified Complete(not change pass)",
-            data: true
-          })
-        }).catch((err) => {
-          response.status(500).send({
-            responseCode: 500,
-            message: "Modified Fail",
-            data: false,
-            error: err
-          })
-        })
-      }).catch((err) => {
-        console.error(err);
       })
-    }
-    else if(request.body.changePassword === null && request.body.password != null) {
+        .then(async (res) => {
+          // console.log(res.dataValues.salt);
+          const hashedPass = await Crypt.decrypt(
+            res.dataValues.salt,
+            request.body.password
+          );
+          Users.update(
+            {
+              name: request.body.name,
+              nickName: request.body.nickName,
+              address1: request.body.address1,
+              address2: request.body.address2,
+              address3: request.body.address3,
+              address4: request.body.addresss4,
+              modifiedDate: currentTimeStamp,
+            },
+            {
+              where: {
+                account: request.body.account,
+                password: hashedPass,
+              },
+            }
+          )
+            .then(() => {
+              response.status(200).send({
+                responseCode: 200,
+                message: 'Modified Complete(not change pass)',
+                data: true,
+              });
+            })
+            .catch((err) => {
+              response.status(500).send({
+                responseCode: 500,
+                message: 'Modified Fail',
+                data: false,
+                error: err,
+              });
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else if (
+      request.body.changePassword === null &&
+      request.body.password != null
+    ) {
       newHashed = await Crypt.encrypt(request.body.changePassword);
       newSalt = newHashed.salt;
-      newHashedPass = newHashed.hashedpw;  
+      newHashedPass = newHashed.hashedpw;
       Users.update(
         {
           password: newHashedPass,
@@ -313,79 +340,82 @@ exports.updateUsers = async (request, response) => {
           address2: request.body.address2,
           address3: request.body.address3,
           address4: request.body.addresss4,
-          modifiedDate: currentTimeStamp
+          modifiedDate: currentTimeStamp,
         },
         {
           where: {
-            account: request.body.account
-          }
+            account: request.body.account,
+          },
         }
-      ).then((res) => {
-        response.status(200).send({
-          responseCode: 200,
-          message: "Modified Complete(apply new pass)",
-          data: true
+      )
+        .then((res) => {
+          response.status(200).send({
+            responseCode: 200,
+            message: 'Modified Complete(apply new pass)',
+            data: true,
+          });
         })
-      }).catch((err) => {
-        response.status(500).send({
-          responseCode: 500,
-          message: "Modified Fail",
-          data: false
-        })
-      })  
+        .catch((err) => {
+          response.status(500).send({
+            responseCode: 500,
+            message: 'Modified Fail',
+            data: false,
+          });
+        });
     }
   } else {
     response.status(403).send({
       responseCode: 403,
-      message: "Invalid Key",
-      data: false
-    })
+      message: 'Invalid Key',
+      data: false,
+    });
   }
 };
 
 /**
- * 회원탈퇴를 신청하는 메서드 
- * @param {*} request 
- * @param {*} response 
+ * 회원탈퇴를 신청하는 메서드
+ * @param {*} request
+ * @param {*} response
  */
 exports.dormancyUsers = async (request, response) => {
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
 
-  if(checkTokenResult == true) {
+  if (checkTokenResult == true) {
     Users.update(
       {
         modifiedDate: currentTimeStamp,
-        usersStatus: parseInt(3)
+        usersStatus: parseInt(3),
       },
       {
         where: {
-          account: request.body.account
-        }
+          account: request.body.account,
+        },
       }
     )
-    .then(() => {
-      response.status(200).send({
-        responseCode: 200,
-        data: true
+      .then(() => {
+        response.status(200).send({
+          responseCode: 200,
+          data: true,
+        });
       })
-    })
-    .catch(() => {
-      response.status(502).send({
-        responseCode: 502,
-        data: false
-      })
-    })
-  }
-  else {
+      .catch(() => {
+        response.status(502).send({
+          responseCode: 502,
+          data: false,
+        });
+      });
+  } else {
     response.status(400).send({
       responseCode: 400,
       data: false,
-      message: "Invalid Key"
-    })
+      message: 'Invalid Key',
+    });
   }
-  
-}
+};
 
 /*
 회원가입 메서드 no sequelize
@@ -432,7 +462,7 @@ exports.loginStatusCheck = async (req, res) => {
     // console.log('token : ', token);
 
     if (!token) {
-      res.send({
+      res.status(200).send({
         data: {
           account: '',
           responseCode: 401,
@@ -442,13 +472,14 @@ exports.loginStatusCheck = async (req, res) => {
       });
       return;
     }
-    console.log("req:\n", req.session);
+    // console.log('req:\n', req.session);
 
-    const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, req.user.toekn, token);
+    // const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, req.user.toekn, token);
+    const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, token);
     // console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
-      res.send({
+      res.status(200).send({
         data: {
           account: checkTokenResult.decodeData.account,
           address1: checkTokenResult.decodeData.address1,
@@ -460,7 +491,7 @@ exports.loginStatusCheck = async (req, res) => {
         token,
       });
     } else {
-      res.send({
+      res.status(200).send({
         data: {
           account: '',
           responseCode: 401,
@@ -470,7 +501,15 @@ exports.loginStatusCheck = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log('loginStatusCheck Error : ', err);
+    // console.log('loginStatusCheck Error : ', err);
+    res.status(500).send({
+      data: {
+        account: '',
+        responseCode: 500,
+        message: 'Server Error',
+      },
+      token: '',
+    });
   }
 };
 
