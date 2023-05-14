@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const MateBoardController = require('../controller/MateBoardController');
-const MulterFileHandler = require("../middleware/MulterFileHandler");
+const MulterFileHandler = require("../middleware/filehandler/MulterFileHandler");
 
 const insertContentUpload = MulterFileHandler.MultiFileHandler("mateBoardImg");
 const uploadInsertContentHandler = insertContentUpload.array("mateBoardPhotos")

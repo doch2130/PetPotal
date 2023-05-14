@@ -8,7 +8,7 @@ const CurrentDate = require('../middleware/CurrentDate');
 const {
   SingleFileHandler,
   MultiFileHandler,
-} = require('../middleware/MulterFileHandler');
+} = require('../middleware/filehandler/MulterFileHandler');
 
 /**
  * Mate 게시글 작성 메서드
