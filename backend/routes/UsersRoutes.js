@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 
+const app = express();
 const router = express.Router();
 const UsersController = require('../controller/UsersController');
 const ProfileFileHandler = require("../middleware/filehandler/ProfileFileHandler");
@@ -50,6 +51,7 @@ router.post('/duplicateEmail', UsersController.findByEmail);
 router.post('/duplicatePhone', UsersController.findByPhone);
 router.post("/mypageUsersInfo", UsersController.findUsersInfo);
 router.post("/usersInfoModify", UsersController.updateUsers);
+router.get("/profile", UsersController.selectUsersProfileImage);
 router.post("/updateProfile", userProfileImageUploadController, UsersController.updateProfileImage);
 router.post("/terminate", UsersController.dormancyUsers);
 

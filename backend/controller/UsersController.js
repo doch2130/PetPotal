@@ -374,6 +374,26 @@ exports.updateUsers = async (request, response) => {
   }
 };
 
+exports.selectUsersProfileImage = async (request, response) => {
+  await Users.findOne({
+    attributes: ["profileImageFileName"],
+    where: { account: request.body.account}
+  }).then((res) => { 
+    response.status(200).send({
+      responseCode: 200,
+      message: "profileImage Loading complete",
+      data: `http://${request.host}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`
+    })
+  }).catch((err) => {
+    response.status(403).send({
+      responseCode: 403,
+      message: "profileImage Loading failed...",
+      data: false
+    })
+
+  })
+}
+
 /**
  * 회원의 프로필이미지를 업데이트 합니다.  
  * frontend에서 request를 요청할 때  
