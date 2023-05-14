@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../hooks/useAlert';
 
 interface JoinFormInput {
     account: String;
@@ -21,6 +22,7 @@ interface JoinFormInput {
 
 export default function MemberJoin() {
   const navigate = useNavigate();
+  const { openAlert } = useAlert();
   const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<JoinFormInput>({mode: 'onChange'});
   const [duplicateValue, setDuplicateValue] = useState({
     account: false,
@@ -145,7 +147,19 @@ export default function MemberJoin() {
           break;
       }
 
-      alert('사용하실 수 있습니다');
+      // alert('사용하실 수 있습니다');
+      openAlert({
+        title: '중복체크 성공',
+        type: 'success',
+        content: '사용하실 수 있습니다'
+      });
+    } else {
+      // alert('사용할 수 없습니다');
+      openAlert({
+        title: '중복체크 실패',
+        type: 'error',
+        content: '사용할 수 없습니다'
+      });
     }
   }
 
@@ -223,7 +237,7 @@ export default function MemberJoin() {
             <input
               {...register('name', 
               {
-                required: true,
+                required: {value: true, message: '값을 입력해주세요'},
                 minLength: {
                   value: 1,
                   message: '1글자 이상 30자 이하로 입력해주세요',
@@ -248,7 +262,7 @@ export default function MemberJoin() {
             <input
               {...register('nickName',
               {
-                required: true,
+                required: {value: true, message: '값을 입력해주세요'},
                 minLength: {
                   value: 1,
                   message: '1글자 이상 30자 이하로 입력해주세요',

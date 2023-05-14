@@ -7,6 +7,7 @@ import naver from '../assets/icon/naver.png';
 import google from '../assets/icon/google.png';
 import AouthButton from '../components/Aouth/AouthButton';
 import style from './LoginPage.module.css';
+import { useAlert } from '../hooks/useAlert';
 
 
 export default function LoginPage() {
@@ -14,16 +15,27 @@ export default function LoginPage() {
   const loginId = useRef<HTMLInputElement>(null);
   const loginPw = useRef<HTMLInputElement>(null);
   const controller = new Controller();
+  const { openAlert } = useAlert();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
 
   const onSubmit = useCallback(async ():Promise<boolean> => {
     if(loginId.current === null || loginId.current.value === '') {
-      alert('아이디를 입력해주세요');
+      // alert('아이디를 입력해주세요');
+      openAlert({
+        title: '로그인 실패',
+        type: 'error',
+        content: '아이디를 입력해주세요'
+      });
       return false;
     } else if (loginPw.current === null || loginPw.current.value === '') {
-      alert('비밀번호를 입력해주세요');
+      // alert('비밀번호를 입력해주세요');
+      openAlert({
+        title: '로그인 실패',
+        type: 'error',
+        content: '비밀번호를 입력해주세요'
+      });
       return false;
     }
 
@@ -35,33 +47,35 @@ export default function LoginPage() {
       password
     }
 
-    const result = await controller.login(data);
-    // console.log('result : ', result);
-    // console.log('result : ', result.status);
-    // console.log('result : ', result.data);
-    // console.log('result : ', result.data.data);
-    // console.log('userInfo : ', userInfo);
+    try {
+      const result = await controller.login(data);
+      // console.log('result : ', result);
+      // console.log('userInfo : ', userInfo);
 
-    if(result.data.responseCode !== 200) {
-      alert('로그인 정보가 일치하지 않습니다');
+      const updataData = [
+        {
+          account: result.data.data.account,
+          address1: result.data.data.address1,
+          address2: result.data.data.address2,
+          address3: result.data.data.address3,
+          message: result.data.message,
+          responseCode: result.data.responseCode,
+        }
+      ];
+
+      setUserInfo(updataData);
+
+      navigate('/');
+      return true;
+
+    } catch (err) {
+      openAlert({
+        title: '로그인 실패',
+        type: 'error',
+        content: '로그인 정보가 일치하지 않습니다'
+      });
       return false;
     }
-
-    const updataData = [
-      {
-        account: result.data.data.account,
-        address1: result.data.data.address1,
-        address2: result.data.data.address2,
-        address3: result.data.data.address3,
-        message: result.data.message,
-        responseCode: result.data.responseCode,
-      }
-    ];
-
-    setUserInfo(updataData);
-
-    navigate('/');
-    return true;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

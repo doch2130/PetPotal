@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import defaultImg from '../../assets/icon/people.png';
+import defaultImg from '../../assets/profile/default.png';
 import MyInfoModifyModal from './MyInfoModifyModal';
 import style from './MyInfo.module.css';
 import { useModal } from '../../hooks/useModal';
@@ -11,13 +11,15 @@ import { UserType, userState } from '../../recoil/user';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
-interface userData {
+interface userDataInterface {
   account: '',
   name: '',
   nickName: '',
   phone: '',
   email: '',
-  address: '',
+  address1: '',
+  address2: '',
+  address3: '',
   address4: '',
 }
 
@@ -25,18 +27,22 @@ export default function MyInfo() {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const { openAlert } = useAlert();
-  const { openConfirm } = useConfirm();
+  const { openConfirm, closeConfirm } = useConfirm();
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
   const controller = new Controller();
-  const [userData, setUserData] = useState<userData>({
+  const [userData, setUserData] = useState<userDataInterface>({
     account: '',
     name: '',
     nickName: '',
     phone: '',
     email: '',
-    address: '',
+    address1: '',
+    address2: '',
+    address3: '',
     address4: '',
   });
+
+  const [profileImage, setProfileImage] = useState<string>(defaultImg);
 
   // 회원탈퇴
   const memberWithdrawal = () => {
@@ -46,19 +52,23 @@ export default function MyInfo() {
       callback: async () => {
         openAlert({
           title: '회원탈퇴 실패',
-          content: '에러가 발생하였습니다. 새로고침 후 다시 시도해주세요'
+          type: 'error',
+          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
         });
         const result = await controller.withdrawal();
-        if(result.data.statusCode !== 200) {
+        if(result.data.responseCode !== 200) {
           openAlert({
             title: '회원탈퇴 실패',
-            content: '에러가 발생하였습니다. 새로고침 후 다시 시도해주세요'
+            type: 'error',
+            content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
           });
           return ;
         }
 
+        closeConfirm();
         openAlert({
           title: '회원탈퇴 성공',
+          type: 'success',
           content: '회원탈퇴가 정상적으로 완료되었습니다'
         });
         setUserInfo([{
@@ -77,7 +87,8 @@ export default function MyInfo() {
   // 회원수정 창 열기
   const mermberModifyOpen = () => {
     const ModalContent = () => (
-      <MyInfoModifyModal onClose={closeModal} userData={userData} setUserData={setUserData} />
+      <MyInfoModifyModal onClose={closeModal} userData={userData} setUserData={setUserData}
+        profileImage={profileImage} setProfileImage={setProfileImage} />
     );
 
     openModal({
@@ -87,19 +98,30 @@ export default function MyInfo() {
   }
 
   // 회원정보 불러오기
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userInfoGet = useCallback(async () => {
-    const result = await controller.myUserInfoLoad();
-    result.data.address = result.data.address1 + ' ' + result.data.address2 + ' ' + result.data.address3;
-    setUserData(result.data);
+    const result = await controller.userInfoLoad();
+    // console.log('result : ', result);
+    if(result.data.responseCode !== 200) {
+      // alert('에러가 발생했습니다');
+      openAlert({
+        title: '회원정보 로드 실패',
+        type: 'error',
+        content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
+      });
+      return ;
+    }
+    setUserData(result.data.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 회원정보 불러오기
   useEffect(() => {
-    // userInfoGet();
+    userInfoGet();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    // console.log('userData : ', userData);
+  }, [userData]);
 
   return (
     <div className={style.wrap}>
@@ -107,33 +129,17 @@ export default function MyInfo() {
       <div className={style.myInfoWrap}>
         <div className={style.myInfoLeft}>
           <div className={style.myImageWrap}>
-            <img src={defaultImg} alt='myImage' />
+            <img src={profileImage} alt='MyProfileImage' />
           </div>
         </div>
         <div className={style.myInfoRight}>
-          <p>test1</p>
-          <p>테스트닉네임</p>
-          <p>010-1234-5678</p>
-          <p>서울시 중구 중림동</p>
-          <p>744-55 자이아파트 101동</p>
+          <p>{userData.account}</p>
+          <p>{userData.nickName}</p>
+          <p>{userData.phone}</p>
+          <p>{userData.address1 + ' ' + userData.address2 + ' ' + userData.address3}</p>
+          <p>{userData.address4}</p>
         </div>
       </div>
-
-      {/* <div className={style.myInfoWrap}>
-        <div className={style.myInfoLeft}>
-          <div className={style.myImageWrap}>
-            <img src={defaultImg} alt='myImage' />
-          </div>
-        </div>
-        <div className={style.myInfoRight}>
-          <p>{userData?.account}</p>
-          <p>{userData?.nickName}</p>
-          <p>{userData?.phone}</p>
-          <p>{userData?.address}</p>
-          <p>{userData?.address4}</p>
-        </div>
-      </div> */}
-
       <div className={style.buttonGroup}>
         <button type='button' className={style.fullButton} onClick={mermberModifyOpen}>수정</button>
         <button type='button' className={style.fullButton} onClick={memberWithdrawal}>탈퇴</button>

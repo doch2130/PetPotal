@@ -8,7 +8,7 @@ import { useModal } from '../../hooks/useModal';
 
 export default function MyPetBox() {
   const { openModal, closeModal } = useModal();
-  const { openConfirm } = useConfirm();
+  const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
   const controller = new Controller();
 
@@ -20,19 +20,23 @@ export default function MyPetBox() {
       callback: async () => {
         openAlert({
           title: '삭제 실패',
-          content: '에러가 발생하였습니다. 새로고침 후 다시 시도해주세요'
+          type: 'error',
+          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
         });
         const result = await controller.petDelete();
-        if(result.data.statusCode !== 200) {
+        if(result.data.responseCode !== 200) {
           openAlert({
             title: '삭제 실패',
-            content: '에러가 발생하였습니다. 새로고침 후 다시 시도해주세요'
+            type: 'error',
+            content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
           });
           return ;
         }
 
+        closeConfirm();
         openAlert({
           title: '반려동물 정보 삭제 성공',
+          type: 'success',
           content: '해당 정보가 삭제되었습니다'
         });
       },

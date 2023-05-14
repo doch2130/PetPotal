@@ -4,6 +4,7 @@ import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageResize from '@looop/quill-image-resize-module-react';
 import Controller from '../../../api/controller';
+import { useAlert } from '../../../hooks/useAlert';
 Quill.register('modules/ImageResize', ImageResize);
 
 // typescript에서 모듈 관련하여 img 삽입 시 resize 기능에 문제가 발생
@@ -18,6 +19,7 @@ export default function MateWriteTextEditorQuil({
   const [imgTempList, setImgTempList] = useState([]);
   const quillRef = useRef();
   const controller = new Controller();
+  const { openAlert } = useAlert();
 
   const imageHandler = useCallback(() => {
     const input = document.createElement('input');
@@ -34,7 +36,12 @@ export default function MateWriteTextEditorQuil({
         const result = await controller.mateWriteTextEditorImage(formData);
 
         if (result.status !== 200) {
-          alert('에러가 발생하였습니다. 새로고침 후 다시 시도해주세요!');
+          // alert('에러가 발생하였습니다. 새로고침 후 다시 시도해주세요!');
+          openAlert({
+            title: '텍스트에디터 이미지 에러',
+            type: 'error',
+            content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요!',
+          });
         }
         // console.log(result.data);
 

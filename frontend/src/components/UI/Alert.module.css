@@ -10,7 +10,7 @@
 
 .alert {
   width: 400px;
-  height: 200px;
+  min-height: 260px;
   position: fixed;
   top: 20%;
   left: 50%;
@@ -19,7 +19,7 @@
   border: 1px solid #000000;
   border-radius: 5px;
   animation: slide-down 100ms ease-out forwards;
-  background-color: #b6b5b5;
+  background-color: var(--main-bg-color);
 }
 
 @keyframes slide-down {
@@ -31,4 +31,108 @@
     opacity: 1;
     transform: translate(-50%, -20%);
   }
+}
+
+.header {
+  text-align: center;
+  margin: 20px auto;
+}
+
+.header svg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  stroke-width: 5;
+}
+
+
+.checkMark {
+  stroke: #4caf50;
+}
+
+.errorMark {
+  stroke: #af4c4c;
+}
+
+.checkMark circle,
+.errorMark circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: stroke 0.6s ease-in-out forwards;
+}
+
+.checkMark path,
+.errorMark path {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-linecap: round;
+  transform-origin: 50% 50%;
+  transform: scale(0);
+  animation: drawCheck 0.4s ease-in-out 0.2s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fill {
+  100% {
+    fill: #4caf50;
+  }
+}
+
+
+@keyframes drawCheck {
+  0% {
+    stroke-dashoffset: 48;
+    transform: scale(0);
+  }
+  50% {
+    stroke-dashoffset: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    transform: scale(1);
+  }
+}
+
+.content {
+  width: 80%;
+  margin: auto;
+  font-size: 1.4rem;
+  white-space: pre-wrap;
+  text-align: center;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -20px);
+}
+
+.footer button {
+  background-color: #3085d6;
+  width: 70px;
+  height: 45px;
+  margin: 0 10px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.footer button:hover {
+  background-color: #2b78c0;
+}
+
+.footer button:active,
+.footer button:focus {
+  /* border: 3px solid #b1cae3; */
+  /* border: 3px solid #000; */
+  border: 3px solid #0969da;
 }

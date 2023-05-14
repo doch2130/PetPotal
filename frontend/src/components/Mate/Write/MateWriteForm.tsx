@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Controller from '../../../api/controller';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import style from './MateWriteForm.module.css';
+import { useConfirm } from '../../../hooks/useConfirm';
 
 interface propsData {
   imgFile: Array<File>;
@@ -30,9 +31,10 @@ export default function MateWriteForm(props:propsData) {
   // const {getValues, register, handleSubmit, formState: { isSubmitting, errors }} = useForm({mode: 'onChange'});
   const wrtieType = watch("writeType");
   const controller = new Controller();
+  const { openConfirm, closeConfirm } = useConfirm();
 
   const onSubmit = async (data:MateWriteFormInput) => {
-    console.log('data : ', data);
+    // console.log('data : ', data);
     if(wrtieType === '구함') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
@@ -52,18 +54,35 @@ export default function MateWriteForm(props:propsData) {
       formData.append('mateBoardPhotos', el);
     });
 
-    if(window.confirm('작성한 내용으로 등록하시겠습니까?')) {
-      const result = await controller.mateWrite(formData);
-      console.log('result : ', result);
-    }
+    openConfirm({
+      title: '글 작성 등록',
+      content: '작성한 내용으로 등록하시겠습니까?',
+      callback: async () => {
+        closeConfirm();
+        const result = await controller.mateWrite(formData);
+        console.log('result : ', result);
+      }
+    });
+    // if(window.confirm('작성한 내용으로 등록하시겠습니까?')) {
+    //   const result = await controller.mateWrite(formData);
+    //   console.log('result : ', result);
+    // }
 
     return ;
   }
 
   const handleSubmitCancle = () => {
-    if(window.confirm('글 작성을 취소하시겠습니까?')) {
-      navigate('/mate');
-    }
+    openConfirm({
+      title: '글 작성 취소',
+      content: '글 작성을 취소하시겠습니까?',
+      callback: () => {
+        closeConfirm();
+        navigate('/mate');
+      }
+    });
+    // if(window.confirm('글 작성을 취소하시겠습니까?')) {
+    //   navigate('/mate');
+    // }
   }
 
   return (

@@ -1,9 +1,8 @@
-const passport = require("passport");
+const passport = require('passport');
 const redis = require('redis');
 const jwt = require('jsonwebtoken');
 
 exports.CheckToken = async (dbNumber, inputToken) => {
-    
   const redisConfig = require('../config/redisClient.json');
 
   let account = jwt.decode(inputToken).account;
@@ -26,42 +25,36 @@ exports.CheckToken = async (dbNumber, inputToken) => {
   }
 };
 
-// exports.CheckTokenLoginStatus = async (dbNumber, inputToken) => {
-//   const redis = require('redis');
-//   const redisConfig = require('../config/redisClient.json');
+exports.CheckTokenLoginStatus = async (dbNumber, inputToken) => {
+  const redis = require('redis');
+  const redisConfig = require('../config/redisClient.json');
 
-//   // let account = jwt.decode(inputToken).account;
+  // console.log('inputToken : ', inputToken);
+  const decodeData = jwt.decode(inputToken.token);
+  // console.log('decodeData : ', decodeData);
 
-//   const decodeData = jwt.decode(inputToken);
+  const redisClient = redis.createClient(redisConfig[dbNumber]);
+  await redisClient.connect();
+  const standardToken = await redisClient.get(decodeData.account);
+  await redisClient.disconnect();
 
-//   const redisClient = redis.createClient(redisConfig[dbNumber]);
-//   await redisClient.connect();
-//   let standardToken = await redisClient.get(decodeData.account);
-//   await redisClient.disconnect();
+  // console.log('standardToken ', standardToken);
 
-//   if (standardToken == inputToken) {
-//     // console.log("redisToken:\n", standardToken);
-//     // console.log("inputToken:\n", inputToken);
-//     // console.log("token이 일치합니다.");
-//     // return { status: true, account };
-//     return { status: true, decodeData };
-//   } else {
-//     // console.log("redisToken:\n", standardToken);
-//     // console.log("inputToken:\n", inputToken);
-//     // console.error("token이 일치하지 않습니다.");
-//     return { status: false };
-//   }
-// };
-
-exports.CheckTokenLoginStatus = async (dbNumber, inputToken, token) => {
-  console.log("inputToken:", inputToken);
-  console.log("token:", token);
-  passport.authenticate("jwt", (err, response, next) => {
-    if(err) {
-      return next(err);
-    }
-    else {
-      return next(response);
-    }
-  });
+  if (standardToken == inputToken.token) {
+    return { status: true, decodeData };
+  } else {
+    return { status: false };
+  }
 };
+
+// exports.CheckTokenLoginStatus = async (dbNumber, inputToken) => {
+//   console.log('inputToken:', inputToken);
+//   // console.log("token:", token);
+//   passport.authenticate('jwt', (err, response, next) => {
+//     if (err) {
+//       return next(err);
+//     } else {
+//       return next(response);
+//     }
+//   });
+// };

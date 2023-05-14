@@ -9,8 +9,8 @@
 }
 
 .confirm {
-  width: 500px;
-  height: 100px;
+  width: 450px;
+  height: 300px;
   position: fixed;
   top: 20%;
   left: 50%;
@@ -19,7 +19,8 @@
   border: 1px solid #000000;
   border-radius: 5px;
   animation: slide-down 100ms ease-out forwards;
-  background-color: #eedbdb;
+  background-color: var(--main-bg-color);
+  text-align: center;
 }
 
 @keyframes slide-down {
@@ -31,4 +32,61 @@
     opacity: 1;
     transform: translate(-50%, -20%);
   }
+}
+
+.header {
+  margin: 20px;
+}
+
+.header img {
+  width: 80px;
+  height: 80px;
+}
+
+.content {
+  width: 80%;
+  margin: auto;
+  font-size: 1.4rem;
+  white-space: pre-wrap;
+  text-align: center;
+}
+
+.buttonGroup {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+}
+
+.buttonGroup button {
+  width: 70px;
+  height: 45px;
+  margin: 0 10px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttonGroup button:nth-of-type(1) {
+  background-color: #dd3333;
+}
+
+.buttonGroup button:nth-of-type(1):hover {
+  background-color: #c72e2e;
+}
+
+.buttonGroup button:nth-of-type(2) {
+  background-color: #3085d6;
+}
+
+.buttonGroup button:nth-of-type(2):hover {
+  background-color: #2b78c0;
+}
+
+.buttonGroup button:active,
+.buttonGroup button:focus {
+  /* border: 3px solid #b1cae3; */
+  /* border: 3px solid #000; */
+  border: 3px solid #0969da;
 }

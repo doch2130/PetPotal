@@ -2,6 +2,7 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 're
 import PictureBox from '../../UI/PictureBox';
 import FileUploadButton from '../../UI/FileUploadButton';
 import style from './MateWritePreview.module.css';
+import { useAlert } from '../../../hooks/useAlert';
 
 interface propsData {
   imgFile: Array<File>;
@@ -19,6 +20,7 @@ export default function MateWritePreview(props:propsData) {
   const [imgUrl, setImgUrl] = useState<string[]>([]);
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const slideRef = useRef<any>([]);
+  const { openAlert } = useAlert();
 
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setMouseDownClientX(e.clientX);
@@ -92,7 +94,12 @@ export default function MateWritePreview(props:propsData) {
     }
 
     if(files.length > 5) {
-      alert('사진은 5개 이하만 등록 가능합니다.');
+      // alert('사진은 5개 이하만 등록 가능합니다.');
+      openAlert({
+        title: '사진 개수 초과',
+        type: 'error',
+        content: '사진은 5개 이하만 등록 가능합니다'
+      });
       return ;
     }
 
