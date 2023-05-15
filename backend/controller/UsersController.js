@@ -498,7 +498,7 @@ exports.dormancyUsers = async (request, response) => {
     request.headers.token
   );
 
-  console.log(request.body.account);
+  // console.log(request.body.account);
 
   if (checkTokenResult == true) {
     Users.update(
