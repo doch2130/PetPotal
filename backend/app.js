@@ -22,10 +22,11 @@ const corsOptions = {
 app.use(morgan('dev'));
 app.use(cors(corsOptions));
 app.use(cookieParser('petpotal'));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
+
 Passport();
 app.use(
   session({ 
@@ -42,8 +43,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/static', express.static(__dirname + '/data/mateTextEditorImg'));
+app.use("/static2", express.static("./data/profile"));
 app.use('/api/test01', Test01Route);
 app.use('/api/users', UsersRoute);
+app.use("/api/users/profile", express.static("./data/profile"));
 app.use('/api/animals', AnimalsRoute);
 app.use('/api/mateBoard', MateBoardRoute);
 

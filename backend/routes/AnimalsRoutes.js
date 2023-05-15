@@ -6,7 +6,7 @@ const path = require("path");
 const multer = require('multer');
 
 const AnimalsController = require("../controller/AnimalsController");
-const MulterFileHandler = require("../middleware/MulterFileHandler");
+const MulterFileHandler = require("../middleware/filehandler/MulterFileHandler");
 
 // single file handling
 // const upload = MulterFileHandler.SingleFileHandler("animals");

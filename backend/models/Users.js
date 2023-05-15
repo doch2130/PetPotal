@@ -46,6 +46,14 @@ const Users = sequelize.define("Users",
         role: {
             type: DataTypes.INTEGER
         },
+        profileImageFileName: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
+        profileImageLink: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
         snsAccount: {
             type: DataTypes.STRING
         },
