@@ -53,8 +53,9 @@ export default function MyInfoModifyModal(props:propsData) {
     if(files === null || files.length === 0) {
       return ;
     }
-    console.log(files);
-    const result = await controller.userProfileModify(files);
+    const formData = new FormData();
+    formData.append('usersProfile', files[0]);
+    const result = await controller.userProfileModify(formData);
     console.log('imgFileHandler result :', result);
     return ;
   };
