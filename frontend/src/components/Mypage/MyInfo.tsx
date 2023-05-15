@@ -50,7 +50,7 @@ export default function MyInfo() {
       title: '회원탈퇴',
       content: '정말로 회원을 탈퇴하시겠습니까?',
       callback: async () => {
-        const result = await controller.memberSignOut();
+        const result = await controller.memberSignOut(userInfo[0].account);
         if(result.data.responseCode !== 200) {
           openAlert({
             title: '회원탈퇴 실패',

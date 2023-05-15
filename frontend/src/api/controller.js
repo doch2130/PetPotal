@@ -67,8 +67,8 @@ export default class Controller {
   }
 
   // 회원탈퇴
-  async memberSignOut() {
-    const result = await this.httpClient.post('users/terminate');
+  async memberSignOut(account) {
+    const result = await this.httpClient.post('users/terminate', { account });
     // console.log('result : ', result);
     if (result.data.responseCode === 200) {
       axios.defaults.headers.common['token'] = ``;
