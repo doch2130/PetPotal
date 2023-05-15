@@ -60,6 +60,7 @@ export default class Controller {
   // 로그아웃
   async logout() {
     const result = await this.httpClient.post('users/signOut');
+    // console.log('result : ', result);
     if (result.data.responseCode === 200) {
       axios.defaults.headers.common['token'] = ``;
     }
