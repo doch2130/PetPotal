@@ -64,7 +64,7 @@ export default function Navbar() {
           content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
         });
         const result = await controller.logout();
-        if(result.data.data === true) {
+        if(result.data.responseCode === 200) {
           closeConfirm();
           openAlert({
             title: '로그아웃 성공',
