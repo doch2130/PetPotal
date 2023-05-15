@@ -100,7 +100,7 @@ export default function MyInfo() {
   // 회원정보 불러오기
   const userInfoGet = useCallback(async () => {
     const result = await controller.userInfoLoad();
-    // console.log('result : ', result);
+    console.log('result : ', result);
     if(result.data.responseCode !== 200) {
       // alert('에러가 발생했습니다');
       openAlert({
@@ -110,13 +110,13 @@ export default function MyInfo() {
       });
       return ;
     }
-    setUserData(result.data.data);
+    // setUserData(result.data.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 회원정보 불러오기
   useEffect(() => {
-    userInfoGet();
+    // userInfoGet();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -133,11 +133,11 @@ export default function MyInfo() {
           </div>
         </div>
         <div className={style.myInfoRight}>
-          <p>{userData.account}</p>
+          {/* <p>{userData.account}</p>
           <p>{userData.nickName}</p>
           <p>{userData.phone}</p>
           <p>{userData.address1 + ' ' + userData.address2 + ' ' + userData.address3}</p>
-          <p>{userData.address4}</p>
+          <p>{userData.address4}</p> */}
         </div>
       </div>
       <div className={style.buttonGroup}>
