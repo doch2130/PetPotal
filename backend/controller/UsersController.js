@@ -1,6 +1,6 @@
 const Users = require('../models/Users');
 const passport = require('passport');
-const fs = require("fs");
+const fs = require('fs');
 
 const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
@@ -376,102 +376,114 @@ exports.updateUsers = async (request, response) => {
 
 exports.selectUsersProfileImage = async (request, response) => {
   await Users.findOne({
-    attributes: ["profileImageFileName"],
-    where: { account: request.body.account}
-  }).then((res) => { 
-    response.status(200).send({
-      responseCode: 200,
-      message: "profileImage Loading complete",
-      data: `http://${request.host}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`
-    })
-  }).catch((err) => {
-    response.status(403).send({
-      responseCode: 403,
-      message: "profileImage Loading failed...",
-      data: false
-    })
-
+    attributes: ['profileImageFileName'],
+    where: { account: request.body.account },
   })
-}
+    .then((res) => {
+      response.status(200).send({
+        responseCode: 200,
+        message: 'profileImage Loading complete',
+        data: `http://${request.host}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
+      });
+    })
+    .catch((err) => {
+      response.status(403).send({
+        responseCode: 403,
+        message: 'profileImage Loading failed...',
+        data: false,
+      });
+    });
+};
 
 /**
- * 회원의 프로필이미지를 업데이트 합니다.  
- * frontend에서 request를 요청할 때  
+ * 회원의 프로필이미지를 업데이트 합니다.
+ * frontend에서 request를 요청할 때
  * body의 키는 usersProfile
  * @param {*} request.headers.account 요청 헤더의 필수 키 account
  * @param {*} request.files 요청 바디의 필수 키 usersProfile
- * @param {*} response 
+ * @param {*} response
  */
 exports.updateProfileImage = async (request, response) => {
   // console.log(request.file);
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
-  const uploaderAccount = request.headers.account
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
+  const uploaderAccount = request.headers.account;
   const previousProfileFileName = await Users.findOne({
-    attributes: ["profileImageFileName"],
-    where: { account: uploaderAccount }
+    attributes: ['profileImageFileName'],
+    where: { account: uploaderAccount },
   });
   // console.log(previousProfileFileName.dataValues.profileImageFileName);
 
-  if(checkTokenResult){
-    if(previousProfileFileName.dataValues.profileImageFileName === undefined ||
-    previousProfileFileName.dataValues.profileImageFileName == "" ||
-    previousProfileFileName.dataValues.profileImageFileName == null ||
-    previousProfileFileName.dataValues.profileImageFileName == "null"){
+  if (checkTokenResult) {
+    if (
+      previousProfileFileName.dataValues.profileImageFileName === undefined ||
+      previousProfileFileName.dataValues.profileImageFileName == '' ||
+      previousProfileFileName.dataValues.profileImageFileName == null ||
+      previousProfileFileName.dataValues.profileImageFileName == 'null'
+    ) {
       await Users.update(
         {
-          profileImageFileName: request.file.filename
+          profileImageFileName: request.file.filename,
         },
         {
           where: {
-            account: uploaderAccount
-          }
+            account: uploaderAccount,
+          },
         }
-      ).then(res => {
-        response.status(200).send({
-          responseCode: 200,
-          message: "profile update success",
-          data: true
+      )
+        .then((res) => {
+          response.status(200).send({
+            responseCode: 200,
+            message: 'profile update success',
+            data: true,
+          });
         })
-      }).catch(err => {
-        response.status(403).send({
-          responseCode: 403,
-          message: "profile update failure",
-          data: false
-        })
-      })
+        .catch((err) => {
+          response.status(403).send({
+            responseCode: 403,
+            message: 'profile update failure',
+            data: false,
+          });
+        });
     } else {
-      await fs.rmSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`);
+      await fs.rmSync(
+        `./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`
+      );
       await Users.update(
         {
-          profileImageFileName: request.file.filename
+          profileImageFileName: request.file.filename,
         },
         {
           where: {
-            account: uploaderAccount
-          }
+            account: uploaderAccount,
+          },
         }
-      ).then(res => {
-        response.status(200).send({
-          responseCode: 200,
-          message: "profile update success",
-          data: true
+      )
+        .then((res) => {
+          response.status(200).send({
+            responseCode: 200,
+            message: 'profile update success',
+            data: true,
+          });
         })
-      }).catch(err => {
-        response.status(403).send({
-          responseCode: 403,
-          message: "profile update failure",
-          data: false
-        })
-      })
+        .catch((err) => {
+          response.status(403).send({
+            responseCode: 403,
+            message: 'profile update failure',
+            data: false,
+          });
+        });
     }
   } else {
     response.status(500).send({
       responseCode: 500,
-      message: "Invalid Key",
-      data: false
-    })
+      message: 'Invalid Key',
+      data: false,
+    });
   }
-}
+};
 
 /**
  * 회원탈퇴를 신청하는 메서드
@@ -614,46 +626,46 @@ exports.loginStatusCheck = async (req, res) => {
   }
 };
 
-// mypage user info load test
-exports.test2 = async (req, res) => {
-  const inputToken = req.headers.token;
-  const checkTokenResult = await CheckToken.CheckTokenLoginStatus(
-    1,
-    inputToken
-  );
-  console.log(checkTokenResult);
-  if (checkTokenResult.status == true) {
-    Users.findOne({
-      attributes: [
-        'account',
-        'name',
-        'nickName',
-        'phone',
-        'email',
-        'address1',
-        'address2',
-        'address3',
-        'address4',
-      ],
-      where: { account: checkTokenResult.decodeData.account },
-    })
-      .then((response) => {
-        res.send({
-          responseCode: 200,
-          message: 'Success',
-          data: response,
-        });
-      })
-      .catch((err) => {
-        res.send({
-          responseCode: 500,
-          message: 'DB Error',
-        });
-      });
-  } else {
-    res.send({
-      responseCode: 400,
-      message: 'Incorrect Key',
-    });
-  }
-};
+// // mypage user info load test
+// exports.test2 = async (req, res) => {
+//   const inputToken = req.headers.token;
+//   const checkTokenResult = await CheckToken.CheckTokenLoginStatus(
+//     1,
+//     inputToken
+//   );
+//   console.log(checkTokenResult);
+//   if (checkTokenResult.status == true) {
+//     Users.findOne({
+//       attributes: [
+//         'account',
+//         'name',
+//         'nickName',
+//         'phone',
+//         'email',
+//         'address1',
+//         'address2',
+//         'address3',
+//         'address4',
+//       ],
+//       where: { account: checkTokenResult.decodeData.account },
+//     })
+//       .then((response) => {
+//         res.send({
+//           responseCode: 200,
+//           message: 'Success',
+//           data: response,
+//         });
+//       })
+//       .catch((err) => {
+//         res.send({
+//           responseCode: 500,
+//           message: 'DB Error',
+//         });
+//       });
+//   } else {
+//     res.send({
+//       responseCode: 400,
+//       message: 'Incorrect Key',
+//     });
+//   }
+// };
