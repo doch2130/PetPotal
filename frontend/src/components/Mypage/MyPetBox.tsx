@@ -6,14 +6,15 @@ import Controller from '../../api/controller';
 import MyPetModifyModal from './MyPetModifyModal';
 import { useModal } from '../../hooks/useModal';
 
-export default function MyPetBox() {
+export default function MyPetBox(props:any) {
+  const { petData } = props;
   const { openModal, closeModal } = useModal();
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
   const controller = new Controller();
 
   // 반려동물 정보 삭제
-  const petWithdrawal = () => {
+  const petDelete = () => {
     openConfirm({
       title: '반려동물 정보 삭제',
       content: '해당 반려동물 정보를 삭제하시겠습니까?',
@@ -44,13 +45,13 @@ export default function MyPetBox() {
   }
 
    // 반려동물 수정 창 열기
-   const petModifyOpen = () => {
+   const petModifyOpen = (petData:any) => {
     const ModalContent = () => (
-      <MyPetModifyModal onClose={closeModal} />
+      <MyPetModifyModal onClose={closeModal} petData={petData} />
     );
 
     openModal({
-      backDrop: true,
+      backDrop: false,
       content: <ModalContent />
     });
   }
@@ -65,28 +66,28 @@ export default function MyPetBox() {
       <div className={style.rightWrap}>
         <p>
           <span>이름</span>
-          <span>단추</span>
+          <span>{petData.animalsName}</span>
         </p>
         <p>
           <span>나이</span>
-          <span>10세</span>
+          <span>{petData.animalsAge}세</span>
         </p>
         <p>
           <span>성별</span>
-          <span>수컷</span>
+          <span>{petData.animalsGender}</span>
         </p>
         <p>
           <span>종류</span>
-          <span>강아지</span>
+          <span>{petData.animalsCategory1}</span>
         </p>
         <p>
           <span>품종</span>
-          <span>포메라니안</span>
+          <span>{petData.animalsCategory2}</span>
         </p>
       </div>
       <div className={style.buttonGroup}>
-        <button type='button' className={style.emptyButton} onClick={petModifyOpen} >수정</button>
-        <button type='button' className={style.emptyButton} onClick={petWithdrawal} >삭제</button>
+        <button type='button' className={style.emptyButton} onClick={() => petModifyOpen(petData)} >수정</button>
+        <button type='button' className={style.emptyButton} onClick={petDelete} >삭제</button>
       </div>
     </div>
   )

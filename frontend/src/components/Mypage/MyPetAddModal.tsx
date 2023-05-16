@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEventHandler, useState } from 'react'
+import { ChangeEvent, MouseEventHandler, useState } from 'react'
 import style from './MyPetAddModal.module.css';
 import PictureBox from '../UI/PictureBox';
 import FileUploadButton from '../UI/FileUploadButton';

@@ -5,14 +5,25 @@ import MyPetAddModal from './MyPetAddModal';
 import Controller from '../../api/controller';
 import MyPetBox from './MyPetBox';
 
+const tempData = {
+  animalsName: '단추',
+  animalsAge: 10,
+  animalsGender: '수컷',
+  animalsNeutered: '아니오',
+  animalsWeight: 10.5,
+  animalsCategory1: '강아지',
+  animalsCategory2: '포메라니안',
+  animalsPhotos: 'http://localhost:3000/static/media/MainPage_Hoteling_Img_2.1be147f53fe8107cd837.jpg',
+}
+
 export default function MyPet() {
-  const [petList, setPetList] = useState(0);
+  const [petList, setPetList] = useState(tempData);
   const { openModal, closeModal } = useModal();
   const controller = new Controller();
 
   const myPetAddModal = () => {
     const ModalContent = () => (
-      <MyPetAddModal onClose={closeModal}/>
+      <MyPetAddModal onClose={closeModal} />
     );
     openModal({
       backDrop: false,
@@ -40,7 +51,7 @@ export default function MyPet() {
           <></>
         } */}
         <div className={style.myPetList}>
-          <MyPetBox />
+          <MyPetBox petData={petList} />
         </div>
       </div>
     </div>
