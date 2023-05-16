@@ -89,7 +89,7 @@ export default class Controller {
   // 마이 페이지 - 회원정보 수정
   async userInfoModify(object) {
     // console.log('object : ', object);
-    return this.httpClient.post('users/mypage/userInfoModify', object);
+    return this.httpClient.post('users/usersInfoModify', object);
   }
 
   // 마이 페이지 - 회원정보 프로필 수정
