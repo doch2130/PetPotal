@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 export interface ModalType {
   isOpen: boolean;
-  title: string;
+  backDrop: boolean;
   content: JSX.Element | string;
   callback?: () => any;
 }
@@ -12,7 +12,7 @@ export const modalState = atom<ModalType>({
 
   default: {
     isOpen: false,
-    title: '',
+    backDrop: false,
     content: '',
   }
 });

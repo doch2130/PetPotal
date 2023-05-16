@@ -15,7 +15,7 @@ export default function MyPet() {
       <MyPetAddModal onClose={closeModal}/>
     );
     openModal({
-      title: '나의 반려동물 등록',
+      backDrop: false,
       content: <ModalContent />
     });
   }

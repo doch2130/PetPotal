@@ -87,7 +87,7 @@ export default function MyInfo() {
     );
 
     openModal({
-      title: "회원정보 수정",
+      backDrop: false,
       content: <ModalContent />
     });
   }
