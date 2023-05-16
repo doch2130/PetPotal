@@ -113,7 +113,7 @@ export default function MyInfoModifyModal(props:propsData) {
   };
 
   const onSubmit : SubmitHandler<userFormInput> = async (data) => {
-    console.log(data);
+    // console.log(data);
 
     if(!duplicateValue[0].isNickName) {
       setError('nickName', {message: '중복확인을 해주세요'}, {shouldFocus: true });
