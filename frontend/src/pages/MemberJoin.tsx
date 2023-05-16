@@ -50,7 +50,8 @@ export default function MemberJoin() {
     setAddressObj({
         address1: data.sido,
         address2: data.sigungu,
-        address3: data.address,
+        // address3: data.address,
+        address3: data.address.slice(data.address.indexOf(data.sigungu) + data.sigungu.length + 1),
     });
   };
 
@@ -94,7 +95,7 @@ export default function MemberJoin() {
 
     switch(id) {
       case 'account':
-        console.log(errors.account?.message);
+        // console.log(errors.account?.message);
         if((errors.account?.message !== '중복확인을 해주세여' && errors.account) || !getValues('account')) {
           return false;
         }
@@ -126,7 +127,7 @@ export default function MemberJoin() {
       default:
         break;
     }
-    console.log(apiResult);
+    // console.log(apiResult);
     if(apiResult?.data.data) {
       setDuplicateValue({
         ...duplicateValue,
