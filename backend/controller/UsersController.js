@@ -266,6 +266,7 @@ exports.findUsersInfo = async (request, response) => {
  * @param {*} response
  */
 exports.updateUsers = async (request, response) => {
+  // console.log('request.body ', request.body);
   const checkTokenResult = await CheckToken.CheckToken(
     1,
     request.headers.token
@@ -296,7 +297,7 @@ exports.updateUsers = async (request, response) => {
               address1: request.body.address1,
               address2: request.body.address2,
               address3: request.body.address3,
-              address4: request.body.addresss4,
+              address4: request.body.address4,
               modifiedDate: currentTimeStamp,
             },
             {
@@ -306,7 +307,8 @@ exports.updateUsers = async (request, response) => {
               },
             }
           )
-            .then(() => {
+            .then((res) => {
+              console.log('res ', res);
               response.status(200).send({
                 responseCode: 200,
                 message: 'Modified Complete(not change pass)',
@@ -326,7 +328,7 @@ exports.updateUsers = async (request, response) => {
           console.error(err);
         });
     } else if (
-      request.body.changePassword === null &&
+      request.body.changePassword !== null &&
       request.body.password != null
     ) {
       newHashed = await Crypt.encrypt(request.body.changePassword);
@@ -341,7 +343,7 @@ exports.updateUsers = async (request, response) => {
           address1: request.body.address1,
           address2: request.body.address2,
           address3: request.body.address3,
-          address4: request.body.addresss4,
+          address4: request.body.address4,
           modifiedDate: currentTimeStamp,
         },
         {
@@ -384,7 +386,7 @@ exports.selectUsersProfileImage = async (request, response) => {
       response.status(200).send({
         responseCode: 200,
         message: 'profileImage Loading complete',
-        data: `http://${request.host}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
+        data: `http://${request.hostname}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
       });
     })
     .catch((err) => {
