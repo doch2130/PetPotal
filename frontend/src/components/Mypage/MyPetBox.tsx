@@ -50,7 +50,7 @@ export default function MyPetBox() {
     );
 
     openModal({
-      title: "반려동물 정보 수정",
+      backDrop: true,
       content: <ModalContent />
     });
   }

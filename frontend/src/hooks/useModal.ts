@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { modalState } from "../recoil/modal";
 
 type OpenModalType = {
-  title: string;
+  backDrop: boolean;
   content: JSX.Element | string;
   callback?: () => any;
 };
@@ -18,10 +18,10 @@ export const useModal = () => {
     [setModalDataState]
   );
 
-  const openModal = useCallback(({ title, content, callback }: OpenModalType) =>
+  const openModal = useCallback(({ backDrop, content, callback }: OpenModalType) =>
       setModalDataState({
         isOpen: true,
-        title: title,
+        backDrop: backDrop,
         content: content,
         callback: callback
       }),
