@@ -33,7 +33,7 @@ exports.insertMateBoard = async (request, result) => {
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
-  if (checkTokenResult == true) {
+  if(checkTokenResult.result == true) {
     let matePhotosList = new Array(request.files.length);
     for (let i = 0; i < request.files.length; i++) {
       matePhotosList[i] = request.files[i].filename;
@@ -86,11 +86,11 @@ exports.findAllMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
-  if (checkTokenResult === true) {
+  if(checkTokenResult.result === true) {
     let pageNumber = request.params.pageNumber;
     let offset = 0;
 
-    if (pageNumber > 1) {
+    if(pageNumber > 1) {
       offset = 10 * (pageNumber - 1);
     }
 
@@ -128,14 +128,14 @@ exports.findByUsersIndexNumber = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
-  if (checkTokenResult === true) {
+  if(checkTokenResult.result === true) {
     await MateBoard.findAll({
       // attributes: ["animalsUsersIndexNumber"],
       where: {
         usersIndexNumber: request.params.usersIndexNumber,
       },
     }).then((response) => {
-      if (response == null) {
+      if(response == null) {
         result.send({
           responseCode: 304,
           message: 'no result',

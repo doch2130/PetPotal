@@ -33,6 +33,11 @@ const MateBoard = sequelize.define("MateBoard", {
         mateBoardModifyDate: {
             type: DataTypes.STRING
         },
+        mateBoardModifyDate: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
+        },
         usersIndexNumber: {
             type: DataTypes.BIGINT
         },

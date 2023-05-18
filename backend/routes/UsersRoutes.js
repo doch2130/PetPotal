@@ -8,10 +8,7 @@ const ProfileFileHandler = require('../middleware/filehandler/ProfileFileHandler
 const userProfileImageUpload = ProfileFileHandler.profileImageFileHandler();
 const userProfileImageUploadController =
   userProfileImageUpload.single('usersProfile');
-const {
-  signInState,
-  noSignInState,
-} = require('../middleware/passport/SignInState');
+const { signInState, noSignInState, } = require('../middleware/passport/SignInState');
 
 router.post('/signIn', noSignInState, (req, res, next) => {
   passport.authenticate('local', function (err, users) {
@@ -19,6 +16,7 @@ router.post('/signIn', noSignInState, (req, res, next) => {
       res.status(403).send({
         responseCode: 403,
         message: 'Login Failed...',
+        // error: err
       });
     } else {
       return req.login(users, (err) => {
@@ -55,21 +53,19 @@ router.post('/duplicatePhone', UsersController.findByPhone);
 router.post('/mypageUsersInfo', UsersController.findUsersInfo);
 router.post('/usersInfoModify', UsersController.updateUsers);
 router.get('/profile', UsersController.selectUsersProfileImage);
-router.post(
-  '/updateProfile',
-  userProfileImageUploadController,
-  UsersController.updateProfileImage
-);
+router.post('/updateProfile', userProfileImageUploadController, UsersController.updateProfileImage);
 router.post('/terminate', UsersController.dormancyUsers);
 
 router.post('/auth', UsersController.loginStatusCheck);
 
 router.get('/sessionGet', (req, res) => {
   return res.send({
+    "req.port": req.socket.localPort,
     'req.session': req.session,
     'req.passport': req._passport,
   });
 });
+router.post("/defaultPass", UsersController.defaultPassword);
 
 // mypage user info load test
 // router.post('/mypage/userInfoLoad', UsersController.test2);
