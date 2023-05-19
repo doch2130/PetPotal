@@ -116,3 +116,22 @@
   background: var(--main-default-color);
   color: white;
 }
+
+@media (max-width: 865px) {
+  .wrapUl li {
+    width: 100%;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 765px) {
+  .wrapUl p:nth-of-type(3) {
+    width: 200px;
+  }
+}
+
+
+@media (max-width: 500px) {
+  .wrapUl p:nth-of-type(3) {
+    width: 150px;
+  }
+}
