@@ -5,19 +5,31 @@ import MyPetAddModal from './MyPetAddModal';
 import Controller from '../../api/controller';
 import MyPetBox from './MyPetBox';
 
-const tempData = {
-  animalsName: '단추',
-  animalsAge: 10,
-  animalsGender: '수컷',
-  animalsNeutered: '아니오',
-  animalsWeight: 10.5,
-  animalsCategory1: '강아지',
-  animalsCategory2: '포메라니안',
-  animalsPhotos: 'http://localhost:3000/static/media/MainPage_Hoteling_Img_2.1be147f53fe8107cd837.jpg',
-}
+const tempDataArray: any[] | (() => any[]) = [
+  {
+    animalsName: '단추',
+    animalsAge: 10,
+    animalsGender: '수컷',
+    animalsNeutered: '아니오',
+    animalsWeight: 10.5,
+    animalsCategory1: '강아지',
+    animalsCategory2: '포메라니안',
+    animalsPhotos: '/static/media/MainPage_Hoteling_Img_2.1be147f53fe8107cd837.jpg',
+  },
+  {
+    animalsName: '가을',
+    animalsAge: 8,
+    animalsGender: '암컷',
+    animalsNeutered: '예',
+    animalsWeight: 5,
+    animalsCategory1: '고양이',
+    animalsCategory2: '페르시안',
+    animalsPhotos: '/static/media/MainPage_Cat.9fed3dbb00482ebb7bdf.png',
+  }
+]
 
 export default function MyPet() {
-  const [petList, setPetList] = useState(tempData);
+  const [petList, setPetList] = useState(tempDataArray);
   const { openModal, closeModal } = useModal();
   const controller = new Controller();
 
@@ -37,23 +49,27 @@ export default function MyPet() {
   // }, []);
 
   return (
-    <div className={style.wrap}>
+    <div className={style.wrap} style={{'minHeight': `${300* petList.length}px`}} >
       <div className={style.topWrap}>
         <h2>나의 반려동물</h2>
         <button type='button' onClick={myPetAddModal}>등록</button>
       </div>
-      <div className={style.myPetWrap}>
-        {/* {petList === 0 ?
+      {petList.length === 0 &&
+        <div className={style.myPetWrap}>
           <div className={style.myPetEmpty}>
             <h2>등록된 반려동물이 없습니다</h2>
           </div>
-        :
-          <></>
-        } */}
-        <div className={style.myPetList}>
-          <MyPetBox petData={petList} />
         </div>
-      </div>
+      }
+      {petList?.map((el, index) => {
+          return (
+          <div className={style.myPetWrap} key={index}>
+            <div className={style.myPetList}>
+              <MyPetBox petData={el} />
+            </div>
+          </div>
+          )
+        })}
     </div>
   )
 }

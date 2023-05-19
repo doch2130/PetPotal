@@ -1,0 +1,137 @@
+.wrap {
+  /* background-color: #F0F0F0; */
+  padding: 1rem 0;
+  max-width: 768px;
+  margin: auto;
+  min-height: 300px;
+}
+
+.wrapTop {
+  text-align: right;
+}
+
+.zeroContent {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.wrapDivUl {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 768px;
+}
+
+.wrapUl {
+  width: 100%;
+  text-align: center;
+}
+
+.wrapUl li {
+  width: 80%;
+  margin: 5px auto;
+  cursor: pointer;
+}
+
+.wrapUl li:hover {
+  background-color: #E9E9E9;
+}
+
+.wrapUl li:active {
+  background-color: #bbbbbb;
+}
+
+.wrapUl p {
+  display: inline-block;
+  margin: 0 5px;
+  overflow: hidden;
+}
+
+.wrapUl p:nth-of-type(1) {
+  width: 35px;
+}
+.wrapUl p:nth-of-type(2) {
+  width: 32px;
+}
+.wrapUl p:nth-of-type(3) {
+  width: 330px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+}
+.wrapUl p:nth-of-type(4) {
+  width: 128px;
+}
+
+.emptyButton {
+  font-size: 1.1rem;
+  background: var(--main-bg-color);
+  border: 1px solid var(--main-default-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.emptyButton:hover {
+  background-color: var(--main-default-dark-color);
+  color: var(--main-bg-color);
+}
+
+.topButton {
+  margin: 0 1rem 10px 0;
+  width: 60px;
+  height: 35px;
+}
+
+.wrapBottom {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.wrapBottom > .fullButton {
+  width: 35px;
+  height: 35px;
+  padding: 0px;
+  margin: 0 2px;
+}
+
+
+.fullButton {
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  /* background: var(--main-default-color); */
+  background: #E9E9E9;
+  /* color: white; */
+  color: black;
+  cursor: pointer;
+}
+
+.fullButton:hover {
+  background-color: var(--main-default-dark-color);
+  color: white;
+}
+
+.active {
+  background: var(--main-default-color);
+  color: white;
+}
+
+@media (max-width: 865px) {
+  .wrapUl li {
+    width: 100%;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 765px) {
+  .wrapUl p:nth-of-type(3) {
+    width: 200px;
+  }
+}
+
+
+@media (max-width: 500px) {
+  .wrapUl p:nth-of-type(3) {
+    width: 150px;
+  }
+}

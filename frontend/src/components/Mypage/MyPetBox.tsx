@@ -60,7 +60,7 @@ export default function MyPetBox(props:any) {
     <div className={style.wrap}>
       <div className={style.leftWrap}>
         <div className={style.petImageWrap}>
-          <img src={defaultImg} alt='petImage' />
+          <img src={petData.animalsPhotos} alt='petImage' />
         </div>
       </div>
       <div className={style.rightWrap}>
