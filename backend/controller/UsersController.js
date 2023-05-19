@@ -290,6 +290,7 @@ exports.updateUsers = async (request, response) => {
               address2: request.body.address2,
               address3: request.body.address3,
               address4: request.body.address4,
+              address4: request.body.address4,
               modifiedDate: currentTimeStamp,
             },
             {
@@ -342,6 +343,7 @@ exports.updateUsers = async (request, response) => {
           address2: request.body.address2,
           address3: request.body.address3,
           address4: request.body.address4,
+          address4: request.body.address4,
           modifiedDate: currentTimeStamp,
         },
         {
@@ -375,15 +377,16 @@ exports.updateUsers = async (request, response) => {
 };
 
 exports.selectUsersProfileImage = async (request, response) => {
+  // console.log(request.query);
   await Users.findOne({
     attributes: ['profileImageFileName'],
-    where: { account: request.body.account },
+    where: { account: request.query.account },
   })
     .then((res) => {
       response.status(200).send({
         responseCode: 200,
         message: 'profileImage Loading complete',
-        data: `http://${request.host}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
+        data: `http://${request.hostname}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
       });
     })
     .catch((err) => {
@@ -617,12 +620,18 @@ exports.loginStatusCheck = async (req, res) => {
     // console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
+      const result = await Users.findOne({
+        attributes: ['address1', 'address2', 'address3', 'address4'],
+        where: { account: checkTokenResult.decodeData.account },
+      });
+
       res.status(200).send({
         data: {
           account: checkTokenResult.decodeData.account,
-          address1: checkTokenResult.decodeData.address1,
-          address2: checkTokenResult.decodeData.address2,
-          address3: checkTokenResult.decodeData.address3,
+          address1: result.address1,
+          address2: result.address2,
+          address3: result.address3,
+          address4: result.address4,
           responseCode: 200,
           message: 'Login Success',
         },
@@ -650,47 +659,3 @@ exports.loginStatusCheck = async (req, res) => {
     });
   }
 };
-
-// // mypage user info load test
-// exports.test2 = async (req, res) => {
-//   const inputToken = req.headers.token;
-//   const checkTokenResult = await CheckToken.CheckTokenLoginStatus(
-//     1,
-//     inputToken
-//   );
-//   console.log(checkTokenResult);
-//   if (checkTokenResult.status == true) {
-//     Users.findOne({
-//       attributes: [
-//         'account',
-//         'name',
-//         'nickName',
-//         'phone',
-//         'email',
-//         'address1',
-//         'address2',
-//         'address3',
-//         'address4',
-//       ],
-//       where: { account: checkTokenResult.decodeData.account },
-//     })
-//       .then((response) => {
-//         res.send({
-//           responseCode: 200,
-//           message: 'Success',
-//           data: response,
-//         });
-//       })
-//       .catch((err) => {
-//         res.send({
-//           responseCode: 500,
-//           message: 'DB Error',
-//         });
-//       });
-//   } else {
-//     res.send({
-//       responseCode: 400,
-//       message: 'Incorrect Key',
-//     });
-//   }
-// };

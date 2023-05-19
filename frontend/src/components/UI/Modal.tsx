@@ -5,7 +5,10 @@ import style from './Modal.module.css';
 import close from '../../assets/icon/plus.png';
 
 const Backdrop = (props:any) => {
-  return <div className={style.backdrop} onClick={props.onClose as MouseEventHandler} />;
+  return <>
+    {props.backDropEvent && <div className={style.backdrop} onClick={props.onClose as MouseEventHandler} />}
+    {!props.backDropEvent && <div className={style.backdrop} />}
+  </>;
 };
 
 const ModalOverlay = (props:any) => {
@@ -29,7 +32,7 @@ function Modal() {
     {modalDataState.isOpen && (
       <>
         {ReactDOM.createPortal(
-          <Backdrop onClose={closeModal} />,
+          <Backdrop onClose={closeModal} backDropEvent={modalDataState.backDrop} />,
           modalElement
         )}
         {ReactDOM.createPortal(

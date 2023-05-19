@@ -11,14 +11,14 @@ export default class Controller {
   // 로그인 상태 체크
   async auth() {
     const result = await this.httpClient.post(`users/auth`);
-    // console.log('auth result: ', result);
-    // axios.defaults.headers.common['token'] = `${result.data.token}`;
+    // console.log('auth result: ', result.data);
     axios.defaults.headers.common['token'] = `${result.data.token.token}`;
     return result.data;
   }
 
   // 회원가입
   async join(object) {
+    // console.log('object ', object);
     return this.httpClient.post(`users/signup`, object);
   }
 
@@ -60,7 +60,7 @@ export default class Controller {
   // 로그아웃
   async logout() {
     const result = await this.httpClient.post('users/signOut');
-    // console.log('result : ', result);
+    console.log('result : ', result);
     if (result.data.responseCode === 200) {
       axios.defaults.headers.common['token'] = ``;
     }
@@ -68,8 +68,9 @@ export default class Controller {
   }
 
   // 회원탈퇴
-  async withdrawal() {
-    const result = await this.httpClient.delete('users/withdrawal');
+  async memberSignOut(account) {
+    const result = await this.httpClient.post('users/terminate', { account });
+    // console.log('result : ', result);
     if (result.data.responseCode === 200) {
       axios.defaults.headers.common['token'] = ``;
     }
@@ -77,19 +78,24 @@ export default class Controller {
   }
 
   // 마이 페이지 - 회원정보 가져오기
-  async userInfoLoad() {
-    return this.httpClient.post('users/mypage/userInfoLoad');
+  async userInfoLoad(account) {
+    return this.httpClient.post('users/mypageUsersInfo', { account });
+  }
+
+  // 마이 페이지 - 프로필 사진 가져오기
+  async userProfileLoad(account) {
+    return this.httpClient.get(`users/profile?account=${account}`);
   }
 
   // 마이 페이지 - 회원정보 수정
   async userInfoModify(object) {
     // console.log('object : ', object);
-    return this.httpClient.post('users/mypage/userInfoModify', object);
+    return this.httpClient.post('users/usersInfoModify', object);
   }
 
   // 마이 페이지 - 회원정보 프로필 수정
   async userProfileModify(object) {
-    return this.httpClient.post('users/mypage/ProfileImageChange', object);
+    return this.httpClient.post('users/updateProfile', object);
   }
 
   // 마이 페이지 - 펫 정보 가져오기
@@ -98,8 +104,18 @@ export default class Controller {
   }
 
   // 마이 페이지 - 펫 정보 삭제
-  async petDelete() {
+  async myPetDelete() {
     return this.httpClient.delete('users/mypage/petDelete');
+  }
+
+  // 마이 페이지 - 펫 - 미리보기 이미지 업로드
+  async myPetPreviewImageUpload(object) {
+    return this.httpClient.post('animals/updatePetImage', object);
+  }
+
+  // 마이 페이지 - 펫 등록
+  async myPetAdd(object) {
+    return this.httpClient.post('animals/petAdd', object);
   }
 
   // 메이트 글쓰기 - 미리보기 이미지 업로드

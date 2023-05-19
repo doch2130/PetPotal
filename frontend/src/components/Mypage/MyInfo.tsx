@@ -45,17 +45,12 @@ export default function MyInfo() {
   const [profileImage, setProfileImage] = useState<string>(defaultImg);
 
   // 회원탈퇴
-  const memberWithdrawal = () => {
+  const memberSignOut = () => {
     openConfirm({
       title: '회원탈퇴',
       content: '정말로 회원을 탈퇴하시겠습니까?',
       callback: async () => {
-        openAlert({
-          title: '회원탈퇴 실패',
-          type: 'error',
-          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
-        });
-        const result = await controller.withdrawal();
+        const result = await controller.memberSignOut(userInfo[0].account);
         if(result.data.responseCode !== 200) {
           openAlert({
             title: '회원탈퇴 실패',
@@ -92,36 +87,59 @@ export default function MyInfo() {
     );
 
     openModal({
-      title: "회원정보 수정",
+      backDrop: false,
       content: <ModalContent />
     });
   }
 
   // 회원정보 불러오기
-  const userInfoGet = useCallback(async () => {
-    const result = await controller.userInfoLoad();
-    console.log('result : ', result);
-    if(result.data.responseCode !== 200) {
-      // alert('에러가 발생했습니다');
-      openAlert({
-        title: '회원정보 로드 실패',
-        type: 'error',
-        content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
-      });
-      return ;
+  useEffect(() => {
+    const userInfoGet = async (account: String) => {
+      const result = await controller.userInfoLoad(account);
+      // console.log('result : ', result);
+      if(result.data.responseCode !== 200) {
+        openAlert({
+          title: '회원정보 로드 실패',
+          type: 'error',
+          content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
+        });
+        return ;
+      }
+      setUserData(result.data.data);
     }
-    // setUserData(result.data.data);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  // 회원정보 불러오기
-  useEffect(() => {
-    // userInfoGet();
+     // 프로필 사진 가져오기
+     const userProfileGet = async (account: String) => {
+      const result = await controller.userProfileLoad(account);
+      if(result.data.responseCode !== 200) {
+        openAlert({
+          title: '회원정보 로드 실패',
+          type: 'error',
+          content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
+        });
+        return ;
+      }
+
+      const updataProfileImage = result.data.data.slice(result.data.data.lastIndexOf('/') + 1);
+      // console.log(updataProfileImage);
+
+      if(updataProfileImage === 'null') {
+        setProfileImage(defaultImg);
+      } else {
+        setProfileImage(result.data.data);
+      }
+    }
+
+    // console.log('userInfo : ', userInfo[0]);
+    if(userInfo[0].account !== '') {
+      userInfoGet(userInfo[0].account);
+      userProfileGet(userInfo[0].account);
+    }
+
+   
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    // console.log('userData : ', userData);
-  }, [userData]);
+  }, [userInfo]);
 
   return (
     <div className={style.wrap}>
@@ -133,16 +151,16 @@ export default function MyInfo() {
           </div>
         </div>
         <div className={style.myInfoRight}>
-          {/* <p>{userData.account}</p>
+          <p>{userData.account}</p>
           <p>{userData.nickName}</p>
           <p>{userData.phone}</p>
           <p>{userData.address1 + ' ' + userData.address2 + ' ' + userData.address3}</p>
-          <p>{userData.address4}</p> */}
+          <p>{userData.address4}</p>
         </div>
       </div>
       <div className={style.buttonGroup}>
         <button type='button' className={style.fullButton} onClick={mermberModifyOpen}>수정</button>
-        <button type='button' className={style.fullButton} onClick={memberWithdrawal}>탈퇴</button>
+        <button type='button' className={style.fullButton} onClick={memberSignOut}>탈퇴</button>
       </div>
     </div>
   )

@@ -22,7 +22,7 @@ interface userDataInterface {
 }
 
 interface userFormInput extends userDataInterface {
-  currentPassword: String;
+  password: String;
   changePassword: String;
   address: String;
 }
@@ -53,8 +53,9 @@ export default function MyInfoModifyModal(props:propsData) {
     if(files === null || files.length === 0) {
       return ;
     }
-    console.log(files);
-    const result = await controller.userProfileModify(files);
+    const formData = new FormData();
+    formData.append('usersProfile', files[0]);
+    const result = await controller.userProfileModify(formData);
     console.log('imgFileHandler result :', result);
     return ;
   };
@@ -112,7 +113,7 @@ export default function MyInfoModifyModal(props:propsData) {
   };
 
   const onSubmit : SubmitHandler<userFormInput> = async (data) => {
-    console.log(data);
+    // console.log(data);
 
     if(!duplicateValue[0].isNickName) {
       setError('nickName', {message: '중복확인을 해주세요'}, {shouldFocus: true });
@@ -130,6 +131,7 @@ export default function MyInfoModifyModal(props:propsData) {
       content: '해당 정보로 수정하시겠습니까?',
       callback: async () => {
         try {
+          // console.log('data ', data);
           const result = await controller.userInfoModify(data);
           // console.log('result : ', result);
 
@@ -216,7 +218,7 @@ export default function MyInfoModifyModal(props:propsData) {
         <div>
           <label>비밀번호</label>
           <input 
-            {...register('currentPassword',
+            {...register('password',
               {
                 required: {value: true, message: '현재 비밀번호를 입력해주세요'},
                 pattern: {
@@ -226,7 +228,7 @@ export default function MyInfoModifyModal(props:propsData) {
               }
             )}
             type='password' defaultValue='' placeholder='현재 비밀번호를 입력하세요' />
-          <p className={style.joinWarning}>{errors.currentPassword?.message}</p>
+          <p className={style.joinWarning}>{errors.password?.message}</p>
         </div>
         <div>
           <label>비밀번호 변경</label>

@@ -24,7 +24,7 @@ function App() {
       setIsLoading(true);
       try {
         const result = await controller.auth();
-        // console.log('result : ', result);
+        // console.log('result : ', result.data);
         setUserInfo([result.data]);
       } catch (err) {
         setAuthError(true);
