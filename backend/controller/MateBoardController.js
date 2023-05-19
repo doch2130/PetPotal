@@ -9,6 +9,8 @@ const {
   SingleFileHandler,
   MultiFileHandler,
 } = require('../middleware/filehandler/MulterFileHandler');
+const Animals = require('../models/Animals');
+const Users = require('../models/Users');
 
 /**
  * 게시글 작성 메서드
@@ -181,5 +183,61 @@ exports.textEditorImgFileUpload = (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send({ error: '텍스트 에디터 서버 오류' });
+  }
+};
+
+exports.findByIndexNumber = async (request, result) => {
+  let inputToken = request.headers.token;
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+
+  if(checkTokenResult.result === true) {
+    await MateBoard.findOne({
+      // attributes: ["animalsUsersIndexNumber"],
+      include: [
+        {
+          model: Animals,
+          as: "Pets",
+          attributes: [
+            "animalsName", "animalsGender", "animalsNeutered",
+            "animalsAge", "animalsWeight",
+            "animalsCategory1", "animalsCategory2"
+          ]
+        },
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        mateBoardIndexNumber: request.params.mateBoardIndexNumber,
+      }
+    }).then((response) => {
+      if(response == null) {
+        result.status(404).send({
+          responseCode: 404,
+          data: null,
+          message: 'no result',
+        });
+      } else {
+        result.status(200).send({
+          responseCode: 200,
+          data: response,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      result.status(500).send({
+        responseCode: 500,
+        data: false,
+        message: err
+      });
+    })
+  } else {
+    result.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
   }
 };

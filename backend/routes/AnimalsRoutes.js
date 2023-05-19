@@ -15,6 +15,6 @@ const singleFileUploadHandler = uploadSingle.single("animalsPhotos");
 
 router.post("/insertContent", multiFileUploadHandler, AnimalsController.insertAnimal);
 router.get("/findByUser/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);
-router.post("/updateImage", singleFileUploadHandler, AnimalsController.updateImage)
+router.post("/updateImage", singleFileUploadHandler, AnimalsController.updateImage);
 
 module.exports = router;

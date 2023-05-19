@@ -40,7 +40,7 @@ exports.insertAnimal = async(request, result) => {
             animalsGender: parseInt(request.body.animalsGender),
             animalsNeutered: request.body.animalsNeutered,            
             animalsAge: parseInt(request.body.animalsAge),
-            animalsWeight: parseInt(request.body.animalsWeight),            
+            animalsWeight: parseFloat(request.body.animalsWeight),            
             animalsCategory1: parseInt(request.body.animalsCategory1),
             animalsCategory2: convertedCategory2,
             animalsPhotos: animalsPhotosList.toString(),

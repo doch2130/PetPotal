@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/sequelize");
 const Users = require("./Users");
+const Animals = require("./Animals");
 
 const MateBoard = sequelize.define("MateBoard", {
         mateBoardIndexNumber: {
@@ -39,7 +40,7 @@ const MateBoard = sequelize.define("MateBoard", {
             defaultValue: 1
         },
         usersIndexNumber: {
-            type: DataTypes.BIGINT
+            type: DataTypes.BIGINT,
         },
         animalsIndexNumber: {
             type: DataTypes.BIGINT
@@ -49,8 +50,14 @@ const MateBoard = sequelize.define("MateBoard", {
         sequelize,
         tableName: "MateBoard",
         timestamps: false,
-        modelName: "MateBoard"
+        modelName: "MateBoard",
     }
 );
+
+// MateBoard.belongsTo(Users, { 
+//     foreignKey: "usersIndexNumber", 
+//     targetKey: "usersIndexNumber" ,
+//     as: "Users"
+// });
 
 module.exports = MateBoard;
