@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage';
 import MyPage from './pages/MyPage';
 import MatePage from './pages/MatePage';
 import MateWritePage from './pages/MateWritePage';
+import MateDetailPage from './pages/MateDetailPage';
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       {path: '/mypage/:page', element: <MyPage />},
       {path: '/mate', element: <MatePage />},
       {path: '/mate/write', element: <MateWritePage />},
+      {path: '/mate/detail/1', element: <MateDetailPage />},
     ]
   }
 ]);
