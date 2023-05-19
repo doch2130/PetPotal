@@ -99,9 +99,13 @@ exports.findAllMateBoard = async (request, result) => {
     await MateBoard.findAll({
       // await MateBoard.findAndCountAll({ // .findAndCountAll() 사용시 결과값으로 rows 개수를 결과에 포함하여 출력한다.
       // attributes: ["animalsUsersIndexNumber"],
-      // where: {
-      //     usersIndexNumber: request.params.usersIndexNumber
-      // }
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
       offset: offset,
       limit: 10,
       order: [['mateBoardRegistDate', 'DESC']],
