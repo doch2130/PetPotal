@@ -20,6 +20,12 @@
   flex: auto;
 }
 
+@media (min-width: 850px) {
+  .navWrap {
+    min-width: 155px;
+  }
+}
+
 @media (min-width: 425px) and (max-width: 850px) {
   .navWrap {
     flex: none;
