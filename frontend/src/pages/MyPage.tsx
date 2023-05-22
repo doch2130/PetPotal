@@ -37,8 +37,8 @@ export default function MyPage() {
           {pageValue === 'info' ? <MyInfo /> : null}
           {pageValue === 'pet' ? <MyPet /> : null}
           {pageValue === 'write' ? <MyWrite /> : null}
-          {pageValue === 'support' ? null : null}
-          {pageValue === 'interest' ? null : null}
+          {pageValue === 'support' ? <MyWrite /> : null}
+          {pageValue === 'interest' ? <MyWrite /> : null}
         </div>
       </div>
     </PrivatePage>
