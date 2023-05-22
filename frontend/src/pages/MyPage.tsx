@@ -10,10 +10,21 @@ import MyWrite from '../components/Mypage/MyWrite';
 export default function MyPage() {
   const { page } = useParams<{ page: string}>();
   const [pageValue, setPageValue] = useState<String>('');
-  
+  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
+
+  // console.log('windowSize ', innerWidth);
+
   useEffect(() => {
     if(page !== undefined) setPageValue(page);
   }, [page]);
+
+  useEffect(() => {
+    const resizeListener = () => {
+      setInnerWidth(window.innerWidth);
+    }
+
+    window.addEventListener('resize', resizeListener);
+  }, []);
 
   return (
     <PrivatePage>
