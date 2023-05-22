@@ -9,13 +9,43 @@
 .navWrap {
   height: initial;
   flex: 1 0;
-  width: 100px;
-  max-width: 200px;
+  min-width: 50px;
   border-right: 1px solid black;
+  transition: all 0.4s linear;
 }
 
 .bodyWrap {
   min-height: 330px;
   padding-top: 1rem;
   flex: auto;
+}
+
+@media (min-width: 850px) {
+  .navWrap {
+    min-width: 155px;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 850px) {
+  .navWrap {
+    flex: none;
+  }
+}
+
+
+@media (min-width: 425px) {
+  .navWrap {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 425px) {
+  .navWrap {
+    flex: auto !important;
+    border: none;
+    height: 70px;
+  }
+  .bodyWrap {
+    padding-top: 0px !important;
+  }
 }
