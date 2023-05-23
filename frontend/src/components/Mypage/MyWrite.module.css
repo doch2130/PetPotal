@@ -1,5 +1,4 @@
 .wrap {
-  /* background-color: #F0F0F0; */
   padding: 1rem 0;
   max-width: 768px;
   margin: auto;
@@ -28,9 +27,9 @@
 }
 
 .wrapUl li {
-  width: 80%;
-  margin: 5px auto;
+  margin: 10px auto;
   cursor: pointer;
+  font-size: 1.2rem;
 }
 
 .wrapUl li:hover {
@@ -48,31 +47,32 @@
 }
 
 .wrapUl p:nth-of-type(1) {
-  width: 35px;
+  width: 5%;
 }
 .wrapUl p:nth-of-type(2) {
-  width: 32px;
+  width: 5%;
 }
 .wrapUl p:nth-of-type(3) {
-  width: 330px;
+  width: 60%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   text-align: left;
 }
 .wrapUl p:nth-of-type(4) {
-  width: 128px;
+  width: 20%;
 }
 
-.emptyButton {
+.fullButton {
   font-size: 1.1rem;
-  background: var(--main-bg-color);
-  border: 1px solid var(--main-default-color);
+  color: var(--main-bg-color);
+  background: var(--main-default-color);
+  border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.emptyButton:hover {
+.fullButton:hover {
   background-color: var(--main-default-dark-color);
   color: var(--main-bg-color);
 }
@@ -88,7 +88,7 @@
   margin-top: 2rem;
 }
 
-.wrapBottom > .fullButton {
+.wrapBottom > .fullNumButton {
   width: 35px;
   height: 35px;
   padding: 0px;
@@ -96,18 +96,16 @@
 }
 
 
-.fullButton {
+.fullNumButton {
   border: none;
   border-radius: 5px;
   font-size: 1.1rem;
-  /* background: var(--main-default-color); */
   background: #E9E9E9;
-  /* color: white; */
   color: black;
   cursor: pointer;
 }
 
-.fullButton:hover {
+.fullNumButton:hover {
   background-color: var(--main-default-dark-color);
   color: white;
 }
@@ -117,9 +115,23 @@
   color: white;
 }
 
-@media (max-width: 865px) {
+/* @media (max-width: 865px) { */
+@media (max-width: 950px) {
   .wrapUl li {
-    width: 100%;
+    font-size: 1rem;
+  }
+
+  .wrapUl p:nth-of-type(1) {
+    width: 35px
+  }
+  .wrapUl p:nth-of-type(2) {
+    width: 32px
+  }
+  .wrapUl p:nth-of-type(3) {
+    width: 330px;
+  }
+  .wrapUl p:nth-of-type(4) {
+    width: 128px;
   }
 }
 

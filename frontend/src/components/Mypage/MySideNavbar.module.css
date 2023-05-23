@@ -11,10 +11,12 @@
 .wrap h2 {
   margin: auto;
   font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .menu {
   font-size: 1.3rem;
+  font-weight: 700;
   margin: 1rem auto;
 }
 
@@ -85,13 +87,18 @@
   }
 }
 
+@media (max-width: 530px) {
+  .wrap {
+    padding: 1rem 0;
+  }
+}
+
 @media (max-width: 425px) {
   .wrap {
     width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    /* padding-top: 0px; */
     padding: 0px;
   }
   .wrap > div {

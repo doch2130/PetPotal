@@ -109,9 +109,9 @@ export default class Controller {
   }
 
   // 마이 페이지 - 펫 - 미리보기 이미지 업로드
-  async myPetPreviewImageUpload(object) {
-    return this.httpClient.post('animals/updatePetImage', object);
-  }
+  // async myPetPreviewImageUpload(object) {
+  //   return this.httpClient.post('animals/updatePetImage', object);
+  // }
 
   // 마이 페이지 - 펫 등록
   async myPetAdd(object) {
