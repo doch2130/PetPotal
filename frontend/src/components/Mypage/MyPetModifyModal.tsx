@@ -31,6 +31,7 @@ export default function MyPetAddModal(props:props) {
   const { openConfirm, closeConfirm } = useConfirm();
   const controller = new Controller();
   const [ petImage, setPetImage ] = useState<string>(petData.animalsPhotos);
+  const [ tempPetImage, setTempPetImage ] = useState<string>('');
 
   const imgFileHandler = async (e:ChangeEvent<HTMLInputElement>):Promise<void> => {
     const files:any = e.target.files;
@@ -38,12 +39,15 @@ export default function MyPetAddModal(props:props) {
     if(files === null || files.length === 0) {
       return ;
     }
-    const formData = new FormData();
-    formData.append('animalsPhotos', files[0]);
 
-    const result = await controller.myPetPreviewImageUpload(formData);
-    console.log('result : ', result);
-    setPetImage(result.data);
+    if(tempPetImage !== '') {
+      URL.revokeObjectURL(tempPetImage);
+      setTempPetImage('');
+    }
+
+    const currentImgUrl = URL.createObjectURL(files[0]);
+    setTempPetImage(currentImgUrl);
+    setValue('animalsPhotos', files[0]);
   };
 
   const onSubmit : SubmitHandler<perFormInput> = async (data) => {
@@ -59,10 +63,17 @@ export default function MyPetAddModal(props:props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+
+    return () => {
+      URL.revokeObjectURL(tempPetImage);
+    }
+  }, [tempPetImage]);
+
   return (
     <div className={style.wrap}>
       <PictureBox width='125px' height='125px' >
-        <img src={petImage} alt='petImage' />
+        <img src={tempPetImage === '' ? petImage : tempPetImage} alt='petImage' />
       </PictureBox>
       <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
       <form className={style.wrapForm} onSubmit={handleSubmit(onSubmit)}>

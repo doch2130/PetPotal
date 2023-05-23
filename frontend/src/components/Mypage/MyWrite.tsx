@@ -67,7 +67,7 @@ export default function MyWrite() {
   return (
     <div className={style.wrap}>
       <div className={style.wrapTop}>
-      {tempData?.length > 0 && <button type='button' className={style.emptyButton + ' ' + style.topButton}>변경</button>}
+      {tempData?.length > 0 && <button type='button' className={style.fullButton + ' ' + style.topButton}>변경</button>}
       </div>
       {tempData?.length === 0 ? 
       <h2 className={style.zeroContent}>작성한 글이 없습니다.</h2>
@@ -88,13 +88,13 @@ export default function MyWrite() {
         </ul>
       </div>
       <div className={style.wrapBottom}>
-        <button type='button' className={style.fullButton}>{'<<'}</button>
-        <button type='button' className={style.fullButton}>{'<'}</button>
-        <button type='button' className={style.fullButton + ' ' + style.active}>1</button>
-        <button type='button' className={style.fullButton}>2</button>
-        <button type='button' className={style.fullButton}>3</button>
-        <button type='button' className={style.fullButton}>{'>'}</button>
-        <button type='button' className={style.fullButton}>{'>>'}</button>
+        <button type='button' className={style.fullNumButton}>{'<<'}</button>
+        <button type='button' className={style.fullNumButton}>{'<'}</button>
+        <button type='button' className={style.fullNumButton + ' ' + style.active}>1</button>
+        <button type='button' className={style.fullNumButton}>2</button>
+        <button type='button' className={style.fullNumButton}>3</button>
+        <button type='button' className={style.fullNumButton}>{'>'}</button>
+        <button type='button' className={style.fullNumButton}>{'>>'}</button>
       </div>
       </>
       }

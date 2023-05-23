@@ -13,6 +13,7 @@ const Backdrop = (props:any) => {
 
 const ModalOverlay = (props:any) => {
   const { modalDataState } = props;
+  
   return (
     <div className={style.modal}>
       <div className={style.wrapClose} onClick={props.onClose as MouseEventHandler}>

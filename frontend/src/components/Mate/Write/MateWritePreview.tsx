@@ -127,15 +127,12 @@ export default function MateWritePreview(props:propsData) {
       if(key === 'length' || key === 'item') continue;
 
       const currentImgUrl = URL.createObjectURL(files[key]);
-      // files[key].url = currentImgUrl;
       obj.push(files[key]);
       tempUrlList.push(currentImgUrl);
     }
 
     setImgUrl(tempUrlList.sort().reverse() as string[]);
     setImgFile(obj.sort().reverse() as File[]);
-    // setImgFile(files.sort().reverse() as File[]);
-
   };
 
   useEffect(() => {

@@ -71,3 +71,9 @@ h2 {
 .fullButton:hover {
   background-color: var(--main-default-dark-color);
 }
+
+@media (min-width: 576px) {
+  .wrap {
+    margin-top: 3rem;
+  }
+}

@@ -10,22 +10,27 @@ type OpenConfirmType = {
 
 export const useConfirm = () => {
   const [confirmDataState, setConfirmDataState] = useRecoilState(confirmState);
+  const bodyElement = document.querySelector('body') as HTMLBodyElement;
 
   const closeConfirm = useCallback(() =>
   setConfirmDataState((prev:any) => {
-        return { ...prev, isOpen: false };
-      }),
-    [setConfirmDataState]
+    bodyElement.style.overflow = 'auto';
+      return { ...prev, isOpen: false };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [setConfirmDataState]
   );
 
   const openConfirm = useCallback(({ title, content, callback }: OpenConfirmType) =>
-  setConfirmDataState({
-        isOpen: true,
-        title: title,
-        content: content,
-        callback: callback
-      }),
-    [setConfirmDataState]
+  setConfirmDataState(() => {
+    bodyElement.style.overflow = 'hidden';
+    return {
+      isOpen: true,
+      title: title,
+      content: content,
+      callback: callback
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [setConfirmDataState]
   );
 
   return { confirmDataState, closeConfirm, openConfirm };
