@@ -1,7 +1,5 @@
-// import React from 'react';
-
 import MainBeauty from "../components/MainSection/beauty/MainBeauty";
-import MainExplanation from "../components/MainSection/explanation/MainExplanation";
+// import MainExplanation from "../components/MainSection/explanation/MainExplanation";
 import MainFood from "../components/MainSection/food/MainFood";
 import MainHome from "../components/MainSection/home/MainHome";
 import MainHospital from "../components/MainSection/hospital/MainHospital";
@@ -14,7 +12,7 @@ export default function MainPage() {
   return (
     <>
       <MainHome />
-      <MainExplanation />
+      {/* <MainExplanation /> */}
       <MainMate />
       <MainHospital />
       <MainBeauty />
