@@ -5,7 +5,7 @@
   margin: auto;
 }
 
-h2 {
+.wrap > h2 {
   font-size: 2rem;
   margin-left: 2rem;
 }

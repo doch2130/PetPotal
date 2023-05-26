@@ -151,16 +151,17 @@
 
 .wrapRowMap .wrapCol {
   margin: 0px 2rem;
+  width: 100%;
 }
 
 .wrapRowMap h2 {
   font-size: 1.4rem;
 }
 
-.wrapRowMap .wrapCol div {
-  background-color: #d4d4d4;
+.wrapRowMap .wrapCol > div {
   width: 100%;
-  height: 250px;
+  border: 1px solid #d4d4d4;
+  margin: 10px auto;
 }
 
 .buttonGroup {

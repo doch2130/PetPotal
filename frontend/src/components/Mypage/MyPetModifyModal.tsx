@@ -228,7 +228,7 @@ export default function MyPetAddModal(props:props) {
         </div>
         <div className={style.buttonGroup}>
           <button type='button' onClick={onClose as MouseEventHandler}>취소</button>
-          <button type='button' onClick={handleSubmit(onSubmit)}>등록</button>
+          <button type='button' onClick={handleSubmit(onSubmit)}>수정</button>
         </div>
       </form>
     </div>
