@@ -2,14 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const session = require("express-session");
-const passport = require("passport");
+const session = require('express-session');
+const passport = require('passport');
 
-const Passport = require("./middleware/passport/Passport");
+const Passport = require('./middleware/passport/Passport');
 const Test01Route = require('./routes/Test01Routes');
 const UsersRoute = require('./routes/UsersRoutes');
 const AnimalsRoute = require('./routes/AnimalsRoutes');
 const MateBoardRoute = require('./routes/MateBoardRoutes');
+const { geocoding } = require('./controller/MapTest');
 
 const app = express();
 const port = 3010;
@@ -29,8 +30,8 @@ app.use(express.json());
 
 Passport();
 app.use(
-  session({ 
-    name: "petpotal",
+  session({
+    name: 'petpotal',
     secret: 'pettotal',
     resave: false,
     saveUninitialized: false,
@@ -43,15 +44,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/static', express.static(__dirname + '/data/mateTextEditorImg'));
-app.use("/static2", express.static("./data/profile"));
+app.use('/static2', express.static('./data/profile'));
 app.use('/api/test01', Test01Route);
 app.use('/api/users', UsersRoute);
-app.use("/api/users/profile", express.static("./data/profile"));
+app.use('/api/users/profile', express.static('./data/profile'));
 app.use('/api/animals', AnimalsRoute);
 app.use('/api/mateBoard', MateBoardRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+app.get('/api/naverMapTest', async (req, res) => {
+  console.log('주소', req.query.address);
+  const result = await geocoding(req.query.address);
+  console.log('결과 ', result);
+  res.send('result');
 });
 
 app.listen(port, () => {

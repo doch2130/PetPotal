@@ -11,6 +11,11 @@
   justify-content: space-between;
 }
 
+.topWrap > h2 {
+  font-size: 2rem;
+  margin-left: 2rem;
+}
+
 .topWrap > button {
   width: 60px;
   margin-right: 2rem;

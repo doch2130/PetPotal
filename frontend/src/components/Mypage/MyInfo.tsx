@@ -155,6 +155,24 @@ export default function MyInfo() {
   console.log('status ', status);
   console.log('error ', error);
 
+  useEffect(() => {
+    // 네이버 지도 테스트
+    const mapFunction = async () => {
+
+      // const address = (userData.address1 + ' ' + userData.address2 + ' ' + userData.address3).trim();
+      const address = (userData.address1 + ' ' + userData.address2 + ' ' + userData.address3 + ' ' + userData.address4).trim();
+      console.log('address ', address);
+      // console.log(address === '');
+      if(address !== '') {
+        const result = await controller.naverMapTest(address);
+        console.log('address result ', result);
+      }
+    }
+
+    mapFunction();
+
+  }, [userData]);
+
   return (
     <div className={style.wrap}>
       <h2>회원정보</h2>

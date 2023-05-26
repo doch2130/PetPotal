@@ -127,4 +127,8 @@ export default class Controller {
   async mateWrite(object) {
     return this.httpClient.post(`mateBoard/insertContent`, object);
   }
+
+  async naverMapTest(address) {
+    return this.httpClient.get(`naverMapTest?address=${address}`);
+  }
 }

@@ -4,6 +4,7 @@ import Controller from '../../../api/controller';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import style from './MateWriteForm.module.css';
 import { useConfirm } from '../../../hooks/useConfirm';
+import MapTest from './MapTest';
 
 interface propsData {
   imgFile: Array<File>;
@@ -345,7 +346,9 @@ export default function MateWriteForm(props:propsData) {
         <div className={style.wrapRow + ' ' + style.wrapRowMap}>
           <div className={style.wrapCol}>
             <h2>상세 위치</h2>
-            <div></div>
+            <div>
+              <MapTest />
+            </div>
           </div>
         </div>
 
