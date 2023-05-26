@@ -14,22 +14,160 @@ export default function MapTest() {
     const mapOptions: naver.maps.MapOptions = {
       center: location,
       zoom: 15,
-      // zoomControl: true,
+      zoomControl: true,
       zoomControlOptions: {
-        position: naver.maps.Position.TOP_RIGHT,
-      },
+        style: naver.maps.ZoomControlStyle.SMALL,
+        position: naver.maps.Position.TOP_RIGHT
+    }
     };
+
     const map = new naver.maps.Map(mapElement.current, mapOptions);
-    new naver.maps.Marker({
+
+    const marker = new naver.maps.Marker({
       position: location,
       map,
     });
-  }, []);
 
+    const InfoWindowOptions: naver.maps.InfoWindowOptions = {
+      content: '',
+      maxWidth: 250,
+      borderWidth: 2,
+      anchorSkew: true,
+    }
+    const infoWindow = new naver.maps.InfoWindow(InfoWindowOptions);
+
+    const initData = {
+      x: 126.9640440,
+      y: 37.5533104,
+      _lng: 126.9640440,
+      _lat: 37.5533104,
+    }
+    searchCoordinateToAddress(initData);
+    
+    naver.maps.Event.addListener(map, 'click', function(e) {
+      infoWindow.close();
+      marker.setPosition(e.coord);
+      searchCoordinateToAddress(e.coord);
+    });
+
+    naver.maps.Event.addListener(marker, 'click', function(e) {
+      if (infoWindow.getMap()) {
+        infoWindow.close();
+      } else {
+        infoWindow.open(map, marker);
+      }
+    });
+
+    function searchCoordinateToAddress(latlng:any) {
+      // console.log('latlng ', latlng);
+      naver.maps.Service.reverseGeocode({
+          coords: latlng,
+          orders: [
+              naver.maps.Service.OrderType.ADDR,
+              naver.maps.Service.OrderType.ROAD_ADDR
+          ].join(',')
+      }, function(status, response) {
+          if (status === naver.maps.Service.Status.ERROR) {
+              return alert('Something Wrong!');
+          }
+  
+          let items = response.v2.results,
+              address = '',
+              htmlAddresses = [];
+  
+          for (let i=0, ii=items.length, item, addrType; i<ii; i++) {
+              item = items[i];
+              address = makeAddress(item) || '';
+              addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
+  
+              htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
+          }
+  
+          infoWindow.setContent([
+              '<div style="padding:5px;min-width:200px;line-height:150%;font-size: 12px;">',
+              htmlAddresses.join('<br />'),
+              '</div>'
+          ].join('\n'));
+      });
+    }
+
+    function makeAddress(item:any) {
+      if (!item) {
+          return;
+      }
+  
+      const name = item.name,
+          region = item.region,
+          land = item.land,
+          isRoadAddress = name === 'roadaddr';
+  
+      let sido = '', sigugun = '', dongmyun = '', ri = '', rest = '';
+  
+      if (hasArea(region.area1)) {
+          sido = region.area1.name;
+      }
+  
+      if (hasArea(region.area2)) {
+          sigugun = region.area2.name;
+      }
+  
+      if (hasArea(region.area3)) {
+          dongmyun = region.area3.name;
+      }
+  
+      if (hasArea(region.area4)) {
+          ri = region.area4.name;
+      }
+  
+      if (land) {
+          if (hasData(land.number1)) {
+              if (hasData(land.type) && land.type === '2') {
+                  rest += '산';
+              }
+  
+              rest += land.number1;
+  
+              if (hasData(land.number2)) {
+                  rest += ('-' + land.number2);
+              }
+          }
+  
+          if (isRoadAddress === true) {
+              if (checkLastString(dongmyun, '면')) {
+                  ri = land.name;
+              } else {
+                  dongmyun = land.name;
+                  ri = '';
+              }
+  
+              if (hasAddition(land.addition0)) {
+                  rest += ' ' + land.addition0.value;
+              }
+          }
+      }
+  
+      return [sido, sigugun, dongmyun, ri, rest].join(' ');
+    }
+
+    function hasArea(area:any) {
+      return !!(area && area.name && area.name !== '');
+    }
+    
+    function hasData(data:any) {
+        return !!(data && data !== '');
+    }
+    
+    function checkLastString (word:any, lastString:any) {
+        return new RegExp(lastString + '$').test(word);
+    }
+    
+    function hasAddition (addition:any) {
+        return !!(addition && addition.value);
+    }
+
+  }, []);
 
   return (
     <div ref={mapElement} style={{ minHeight: '300px' }} />
   );
 }
-
-
