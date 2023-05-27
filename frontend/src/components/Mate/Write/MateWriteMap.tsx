@@ -2,8 +2,19 @@ import { useEffect, useRef } from 'react'
 
 const { naver } = window;
 
-export default function MapTest() {
-  const mapElement = useRef(null);
+interface naverMap {
+  height: string;
+}
+
+interface latlng {
+  x: number;
+  y: number;
+  _lat: number;
+  _lng: number;
+}
+
+export default function MateWriteMap(props:naverMap) {
+  const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!mapElement.current || !naver) return;
@@ -50,7 +61,7 @@ export default function MapTest() {
       searchCoordinateToAddress(e.coord);
     });
 
-    naver.maps.Event.addListener(marker, 'click', function(e) {
+    naver.maps.Event.addListener(marker, 'click', function() {
       if (infoWindow.getMap()) {
         infoWindow.close();
       } else {
@@ -58,7 +69,7 @@ export default function MapTest() {
       }
     });
 
-    function searchCoordinateToAddress(latlng:any) {
+    function searchCoordinateToAddress(latlng:latlng) {
       // console.log('latlng ', latlng);
       naver.maps.Service.reverseGeocode({
           coords: latlng,
@@ -153,11 +164,11 @@ export default function MapTest() {
       return !!(area && area.name && area.name !== '');
     }
     
-    function hasData(data:any) {
+    function hasData(data:string) {
         return !!(data && data !== '');
     }
     
-    function checkLastString (word:any, lastString:any) {
+    function checkLastString (word:string, lastString:string) {
         return new RegExp(lastString + '$').test(word);
     }
     
@@ -168,6 +179,6 @@ export default function MapTest() {
   }, []);
 
   return (
-    <div ref={mapElement} style={{ minHeight: '300px' }} />
+    <div ref={mapElement} style={{ minHeight: props.height }} />
   );
 }
