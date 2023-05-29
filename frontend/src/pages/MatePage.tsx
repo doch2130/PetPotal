@@ -7,6 +7,8 @@ export default function MatePage() {
     <div>
       <h1>MatePage</h1>
       <Link to='/mate/write'>글쓰기</Link>
+      <br />
+      <Link to='/mate/detail/1'>글보기</Link>
     </div>
   )
 }
