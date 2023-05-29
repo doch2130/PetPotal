@@ -5,6 +5,7 @@ export interface UserType {
   address1: String;
   address2: String;
   address3: String;
+  address4: String;
   message: String;
   responseCode: Number;
 }
@@ -18,6 +19,7 @@ export const userState = atom<UserType[]>({
       address1: '',
       address2: '',
       address3: '',
+      address4: '',
       message: '',
       responseCode: 0,
     },

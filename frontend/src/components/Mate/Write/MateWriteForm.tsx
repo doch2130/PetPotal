@@ -5,6 +5,9 @@ import Controller from '../../../api/controller';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
 
 interface propsData {
   imgFile: Array<File>;
@@ -25,6 +28,13 @@ interface MateWriteFormInput {
   cautionContent: String;
 }
 
+interface mapData {
+  x: number;
+  y: number;
+  _lng: number;
+  _lat: number;
+}
+
 export default function MateWriteForm(props:propsData) {
   const { imgFile } = props;
   const navigate = useNavigate();
@@ -33,6 +43,13 @@ export default function MateWriteForm(props:propsData) {
   const wrtieType = watch("writeType");
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
+  const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+  const [ mapData, setMapData ] = useState<mapData>({
+    x: 0,
+    y: 0,
+    _lng: 0,
+    _lat: 0,
+  });
 
   const onSubmit = async (data:MateWriteFormInput) => {
     // console.log('data : ', data);
@@ -77,6 +94,28 @@ export default function MateWriteForm(props:propsData) {
       }
     });
   }
+
+  useEffect(() => {
+    const mapGeocoding = async () => {
+      const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
+      // console.log('address ', address);
+      if (address !== '') {
+        const result = await controller.naverMapTest(address);
+        // console.log('result ', result.data);
+        // console.log('result ', result.data[0]);
+        // console.log('result ', result.data[1]);
+        setMapData({
+          x: result.data[0],
+          y: result.data[1],
+          _lng: result.data[0],
+          _lat: result.data[1],
+        });
+      }
+    }
+
+    mapGeocoding();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo]);
 
   return (
     <>
@@ -339,7 +378,11 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>상세 위치</h2>
             <div>
-              <MateWriteMap height='300px' />
+              {mapData.x !== 0 ?
+              <MateWriteMap height='300px' mapData={mapData}/>
+              :
+              <div>로딩 중입니다</div>
+            }
             </div>
           </div>
         </div>

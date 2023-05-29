@@ -4,13 +4,14 @@ const { naver } = window;
 
 interface naverMap {
   height: string;
+  mapData: latlng;
 }
 
 interface latlng {
   x: number;
   y: number;
-  _lat: number;
   _lng: number;
+  _lat: number;
 }
 
 export default function MateWriteMap(props:naverMap) {
@@ -21,7 +22,8 @@ export default function MateWriteMap(props:naverMap) {
 
     // 지도에 표시할 위치의 위도와 경도 좌표를 파라미터로 넣어줍니다.
     // backend 좌표 입력 시 LatLng(y, x)
-    const location = new naver.maps.LatLng(37.5533104, 126.9640440);
+    // const location = new naver.maps.LatLng(37.5533104, 126.9640440);
+    const location = new naver.maps.LatLng(props.mapData.y, props.mapData.x);
     const mapOptions: naver.maps.MapOptions = {
       center: location,
       zoom: 15,
@@ -47,13 +49,15 @@ export default function MateWriteMap(props:naverMap) {
     }
     const infoWindow = new naver.maps.InfoWindow(InfoWindowOptions);
 
-    const initData = {
-      x: 126.9640440,
-      y: 37.5533104,
-      _lng: 126.9640440,
-      _lat: 37.5533104,
-    }
-    searchCoordinateToAddress(initData);
+    // const initData = {
+    //   x: 126.9640440,
+    //   y: 37.5533104,
+    //   _lng: 126.9640440,
+    //   _lat: 37.5533104,
+    // }
+    // console.log('props.mapData ', props.mapData);
+    // searchCoordinateToAddress(initData);
+    searchCoordinateToAddress(props.mapData);
     
     naver.maps.Event.addListener(map, 'click', function(e) {
       infoWindow.close();

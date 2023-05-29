@@ -72,6 +72,7 @@ export default function MyInfo() {
           address1: '',
           address2: '',
           address3: '',
+          address4: '',
           message: '',
           responseCode: 0,
         }]);
@@ -97,7 +98,7 @@ export default function MyInfo() {
   useEffect(() => {
     const userInfoGet = async (account: String) => {
       const result = await controller.userInfoLoad(account);
-      console.log('result : ', result);
+      // console.log('result : ', result);
       if(result.data.responseCode !== 200) {
         openAlert({
           title: '회원정보 로드 실패',
@@ -151,27 +152,9 @@ export default function MyInfo() {
         }
       });
   }
-  console.log('data ', data);
-  console.log('status ', status);
-  console.log('error ', error);
-
-  useEffect(() => {
-    // 네이버 지도 테스트
-    const mapFunction = async () => {
-
-      // const address = (userData.address1 + ' ' + userData.address2 + ' ' + userData.address3).trim();
-      const address = (userData.address1 + ' ' + userData.address2 + ' ' + userData.address3 + ' ' + userData.address4).trim();
-      console.log('address ', address);
-      // console.log(address === '');
-      if(address !== '') {
-        const result = await controller.naverMapTest(address);
-        console.log('address result ', result);
-      }
-    }
-
-    mapFunction();
-
-  }, [userData]);
+  // console.log('data ', data);
+  // console.log('status ', status);
+  // console.log('error ', error);
 
   return (
     <div className={style.wrap}>

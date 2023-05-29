@@ -59,7 +59,7 @@ app.get('/api/naverMapTest', async (req, res) => {
   console.log('주소', req.query.address);
   const result = await geocoding(req.query.address);
   console.log('결과 ', result);
-  res.send('result');
+  res.send(result);
 });
 
 app.listen(port, () => {

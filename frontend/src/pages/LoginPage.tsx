@@ -58,6 +58,7 @@ export default function LoginPage() {
           address1: result.data.data.address1,
           address2: result.data.data.address2,
           address3: result.data.data.address3,
+          address4: result.data.data.address4,
           message: result.data.message,
           responseCode: result.data.responseCode,
         }
