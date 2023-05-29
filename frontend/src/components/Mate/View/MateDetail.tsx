@@ -7,10 +7,11 @@ import chatting from '../../../assets/icon/chatting.png';
 import locationMap from '../../../assets/icon/location_map.png';
 import PictureBox from '../../UI/PictureBox';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import MateViewMap from './MateViewMap';
+import MateDetailMap from './MateDetailMap';
 import { useRecoilState } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import Controller from '../../../api/controller';
+import { useModal } from '../../../hooks/useModal';
 
 const tempData = [
   '/static/media/default.0cb1e01d076d6e0fd830.png',
@@ -38,6 +39,7 @@ export default function MateDetail(props:any) {
     _lng: 0,
     _lat: 0,
   });
+  const { openModal, closeModal } = useModal();
 
   // const [imgFile, setImgFile] = useState<File[]>([]);
   // const [imgUrl, setImgUrl] = useState<string[]>([]);
@@ -144,6 +146,13 @@ export default function MateDetail(props:any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
+  const modalMapOpen = () => {
+    openModal({
+      backDrop: true,
+      content: <MateDetailMap height='350px' mapData={mapData} zoomControl={false} />
+    });
+  }
+
   return (
     <div className={style.wrap}>
       <div className={style.top}>
@@ -195,7 +204,7 @@ export default function MateDetail(props:any) {
               <img src={chatting} alt='chatting' />
               <span>연락하기</span>
             </div>
-            <div>
+            <div onClick={modalMapOpen}>
               <img src={locationMap} alt='locationMap' />
               <span>위치보기</span>
             </div>
@@ -228,7 +237,7 @@ export default function MateDetail(props:any) {
             {/* Naver Map */}
             <div>
             {mapData.x !== 0 ?
-              <MateViewMap height='300px' mapData={mapData} />
+              <MateDetailMap height='300px' mapData={mapData} zoomControl={true} />
             :
             <div>로딩 중입니다</div>
             }
