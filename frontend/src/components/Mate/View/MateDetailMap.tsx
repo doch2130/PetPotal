@@ -5,6 +5,7 @@ const { naver } = window;
 interface naverMap {
   height: string;
   mapData: latlng;
+  zoomControl: boolean;
 }
 
 interface latlng {
@@ -27,11 +28,11 @@ export default function MateViewMap(props:naverMap) {
     const mapOptions: naver.maps.MapOptions = {
       center: location,
       zoom: 15,
-      zoomControl: true,
+      zoomControl: props.zoomControl,
       zoomControlOptions: {
         style: naver.maps.ZoomControlStyle.SMALL,
         position: naver.maps.Position.TOP_RIGHT
-    }
+      }
     };
 
     const map = new naver.maps.Map(mapElement.current, mapOptions);
