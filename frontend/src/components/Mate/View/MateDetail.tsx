@@ -7,11 +7,22 @@ import chatting from '../../../assets/icon/chatting.png';
 import locationMap from '../../../assets/icon/location_map.png';
 import PictureBox from '../../UI/PictureBox';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import MateViewMap from './MateViewMap';
+import { useRecoilState } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
+import Controller from '../../../api/controller';
 
 const tempData = [
   '/static/media/default.0cb1e01d076d6e0fd830.png',
   '/static/media/default.0cb1e01d076d6e0fd830.png',
 ]
+
+interface mapData {
+  x: number;
+  y: number;
+  _lng: number;
+  _lat: number;
+}
 
 export default function MateDetail(props:any) {
   const { imgFile, setImgFile } = props;
@@ -19,6 +30,14 @@ export default function MateDetail(props:any) {
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
   const [mouseUpClientY, setMouseUpClientY] = useState(0);
+  const controller = new Controller();
+  const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+  const [ mapData, setMapData ] = useState<mapData>({
+    x: 0,
+    y: 0,
+    _lng: 0,
+    _lat: 0,
+  });
 
   // const [imgFile, setImgFile] = useState<File[]>([]);
   // const [imgUrl, setImgUrl] = useState<string[]>([]);
@@ -103,6 +122,28 @@ export default function MateDetail(props:any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mouseUpClientX]);
 
+  useEffect(() => {
+    const mapGeocoding = async () => {
+      const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
+      // console.log('address ', address);
+      if (address !== '') {
+        const result = await controller.naverMapTest(address);
+        // console.log('result ', result.data);
+        // console.log('result ', result.data[0]);
+        // console.log('result ', result.data[1]);
+        setMapData({
+          x: result.data[0],
+          y: result.data[1],
+          _lng: result.data[0],
+          _lat: result.data[1],
+        });
+      }
+    }
+
+    mapGeocoding();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo]);
+
   return (
     <div className={style.wrap}>
       <div className={style.top}>
@@ -115,7 +156,7 @@ export default function MateDetail(props:any) {
           <PictureBox width='200px' height='200px'>
             {imgUrl.map((el:any, index:number) => {
               return (
-              <div key={index} ref={(el) => slideRef.current[index] = el}>
+              <div style={{cursor: 'grab'}} key={index} ref={(el) => slideRef.current[index] = el}>
                 <img src={el} alt={el} />
               </div>
               );
@@ -184,7 +225,14 @@ export default function MateDetail(props:any) {
           </div>
           <div className={style.locationMap}>
             <p>상세 위치 안내</p>
-            <div></div>
+            {/* Naver Map */}
+            <div>
+            {mapData.x !== 0 ?
+              <MateViewMap height='300px' mapData={mapData} />
+            :
+            <div>로딩 중입니다</div>
+            }
+            </div>
           </div>
           <div className={style.contentBottom}>
             <div>

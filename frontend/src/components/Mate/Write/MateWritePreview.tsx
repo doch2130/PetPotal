@@ -166,7 +166,7 @@ export default function MateWritePreview(props:propsData) {
         <PictureBox width='300px' height='300px'>
           {imgUrl.map((el:any, index:number) => {
             return (
-            <div key={index} ref={(el) => slideRef.current[index] = el}>
+            <div style={{cursor: 'grab'}} key={index} ref={(el) => slideRef.current[index] = el}>
               <img src={el} alt={el} />
             </div>
             );
