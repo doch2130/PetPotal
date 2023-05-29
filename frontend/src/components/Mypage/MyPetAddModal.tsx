@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEventHandler, useState } from 'react'
+import { ChangeEvent, MouseEventHandler, useEffect, useState } from 'react'
 import style from './MyPetAddModal.module.css';
 import PictureBox from '../UI/PictureBox';
 import FileUploadButton from '../UI/FileUploadButton';
@@ -20,7 +20,7 @@ interface perFormInput {
   animalsWeight: string;
   animalsCategory1: string;
   animalsCategory2: string;
-  animalsPhotos: string;
+  animalsPhotos: File;
 }
 
 export default function MyPetAddModal(props:props) {
@@ -29,7 +29,7 @@ export default function MyPetAddModal(props:props) {
   const { openAlert } = useAlert();
   const { openConfirm, closeConfirm } = useConfirm();
   const controller = new Controller();
-  const [ petImage, setPetImage ] = useState<string>(defaultImg);
+  const [ imgUrl, setImgUrl ] = useState<string>(defaultImg);
 
   const imgFileHandler = async (e:ChangeEvent<HTMLInputElement>):Promise<void> => {
     const files:any = e.target.files;
@@ -37,17 +37,18 @@ export default function MyPetAddModal(props:props) {
     if(files === null || files.length === 0) {
       return ;
     }
-    const formData = new FormData();
-    formData.append('animalsPhotos', files[0]);
 
-    const result = await controller.myPetPreviewImageUpload(formData);
-    console.log('result : ', result);
-    setPetImage(result.data);
+    if(imgUrl !== '') {
+      URL.revokeObjectURL(imgUrl);
+      setImgUrl('');
+    }
+
+    const currentImgUrl = URL.createObjectURL(files[0]);
+    setImgUrl(currentImgUrl);
+    setValue('animalsPhotos', files[0]);
   };
 
   const onSubmit : SubmitHandler<perFormInput> = async (data) => {
-    console.log('data : ', data);
-    console.log(getValues('animalsAge'));
     if((getValues('animalsAge').includes('선택'))) {
       setError('animalsAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
       return ;
@@ -58,18 +59,22 @@ export default function MyPetAddModal(props:props) {
       return ;
     }
 
-    if(petImage !== defaultImg) {
-      setValue('animalsPhotos', petImage);
-    }
-
+    console.log('data : ', data);
     const result = await controller.myPetAdd(data);
     console.log('result : ', result);
   }
 
+  useEffect(() => {
+
+    return () => {
+      URL.revokeObjectURL(imgUrl);
+    }
+  }, [imgUrl]);
+
   return (
     <div className={style.wrap}>
       <PictureBox width='125px' height='125px' >
-        <img src={petImage} alt='defaultImage' />
+        <img src={imgUrl} alt='petImage' />
       </PictureBox>
       <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
       <form className={style.wrapForm} onSubmit={handleSubmit(onSubmit)}>

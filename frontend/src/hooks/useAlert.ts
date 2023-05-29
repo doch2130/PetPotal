@@ -11,22 +11,27 @@ type OpenAlertType = {
 
 export const useAlert = () => {
   const [alertDataState, setAlertDataState] = useRecoilState(alertState);
+  const bodyElement = document.querySelector('body') as HTMLBodyElement;
 
   const closeAlert = useCallback(() =>
     setAlertDataState((prev:any) => {
-        return { ...prev, isOpen: false };
-      }),
-    [setAlertDataState]
+      bodyElement.style.overflow = 'auto';
+      return { ...prev, isOpen: false };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [setAlertDataState]
   );
 
   const openAlert = useCallback(({ title, content, type }: OpenAlertType) =>
-    setAlertDataState({
+    setAlertDataState(() => {
+      bodyElement.style.overflow = 'hidden';
+      return {
         isOpen: true,
         title: title,
         type: type,
         content: content
-      }),
-    [setAlertDataState]
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [setAlertDataState]
   );
 
   return { alertDataState, closeAlert, openAlert };

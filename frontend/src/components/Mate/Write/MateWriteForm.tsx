@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useConfirm } from '../../../hooks/useConfirm';
 import Controller from '../../../api/controller';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
+import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
-import { useConfirm } from '../../../hooks/useConfirm';
 
 interface propsData {
   imgFile: Array<File>;
@@ -50,7 +51,6 @@ export default function MateWriteForm(props:propsData) {
     const formData = new FormData();
     formData.append("data", JSON.stringify(data));
     imgFile.forEach((el) => {
-      // formData.append('viewImgFile', el);
       formData.append('mateBoardPhotos', el);
     });
 
@@ -63,10 +63,6 @@ export default function MateWriteForm(props:propsData) {
         console.log('result : ', result);
       }
     });
-    // if(window.confirm('작성한 내용으로 등록하시겠습니까?')) {
-    //   const result = await controller.mateWrite(formData);
-    //   console.log('result : ', result);
-    // }
 
     return ;
   }
@@ -80,9 +76,6 @@ export default function MateWriteForm(props:propsData) {
         navigate('/mate');
       }
     });
-    // if(window.confirm('글 작성을 취소하시겠습니까?')) {
-    //   navigate('/mate');
-    // }
   }
 
   return (
@@ -345,7 +338,9 @@ export default function MateWriteForm(props:propsData) {
         <div className={style.wrapRow + ' ' + style.wrapRowMap}>
           <div className={style.wrapCol}>
             <h2>상세 위치</h2>
-            <div></div>
+            <div>
+              <MateWriteMap height='300px' />
+            </div>
           </div>
         </div>
 

@@ -10,22 +10,27 @@ type OpenModalType = {
 
 export const useModal = () => {
   const [modalDataState, setModalDataState] = useRecoilState(modalState);
+  const bodyElement = document.querySelector('body') as HTMLBodyElement;
 
   const closeModal = useCallback(() =>
-      setModalDataState((prev:any) => {
-        return { ...prev, isOpen: false };
-      }),
-    [setModalDataState]
+    setModalDataState((prev:any) => {
+      bodyElement.style.overflow = 'auto';
+      return { ...prev, isOpen: false };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [setModalDataState]
   );
 
-  const openModal = useCallback(({ backDrop, content, callback }: OpenModalType) =>
-      setModalDataState({
+  const openModal = useCallback(({ backDrop, content, callback }: OpenModalType) => 
+    setModalDataState(() => {
+      bodyElement.style.overflow = 'hidden';
+      return {
         isOpen: true,
         backDrop: backDrop,
         content: content,
         callback: callback
-      }),
-    [setModalDataState]
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [setModalDataState]
   );
 
   return { modalDataState, closeModal, openModal };

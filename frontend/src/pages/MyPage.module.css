@@ -1,6 +1,6 @@
 .wrap {
   min-height: 400px;
-  height: 50vh;
+  /* height: 50vh; */
   display: flex;
   flex-wrap: wrap;
   margin-top: -50px;
@@ -9,13 +9,48 @@
 .navWrap {
   height: initial;
   flex: 1 0;
-  width: 100px;
-  max-width: 200px;
+  min-width: 50px;
   border-right: 1px solid black;
+  transition: all 0.4s linear;
 }
 
 .bodyWrap {
   min-height: 330px;
   padding-top: 1rem;
   flex: auto;
+}
+
+@media (min-width: 850px) {
+  .navWrap {
+    min-width: 165px;
+  }
+}
+
+@media (min-width: 550px) {
+  .navWrap {
+    min-height: 650px;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 850px) {
+  .navWrap {
+    flex: none;
+  }
+}
+
+@media (min-width: 425px) {
+  .navWrap {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 425px) {
+  .navWrap {
+    flex: auto !important;
+    border: none;
+    height: 70px;
+  }
+  .bodyWrap {
+    padding-top: 0px !important;
+  }
 }

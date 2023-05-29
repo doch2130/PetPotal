@@ -5,7 +5,7 @@
   margin: auto;
 }
 
-h2 {
+.wrap > h2 {
   font-size: 2rem;
   margin-left: 2rem;
 }
@@ -70,4 +70,10 @@ h2 {
 
 .fullButton:hover {
   background-color: var(--main-default-dark-color);
+}
+
+@media (min-width: 576px) {
+  .wrap {
+    margin-top: 3rem;
+  }
 }
