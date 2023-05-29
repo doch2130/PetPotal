@@ -39,7 +39,7 @@ export default function MateDetail(props:any) {
     _lng: 0,
     _lat: 0,
   });
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
 
   // const [imgFile, setImgFile] = useState<File[]>([]);
   // const [imgUrl, setImgUrl] = useState<string[]>([]);
@@ -152,6 +152,15 @@ export default function MateDetail(props:any) {
       content: <MateDetailMap height='350px' mapData={mapData} zoomControl={false} />
     });
   }
+
+  // console.log('window.scrollY ', window.scrollY);
+
+  // const [scrollY, setScrollY] = useState(window.scrollY);
+
+  // useEffect(() => {
+  //   console.log('window.scrollY ', scrollY);
+  //   setScrollY(window.scrollY);
+  // }, [scrollY])
 
   return (
     <div className={style.wrap}>
