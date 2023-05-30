@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Test01Controller = require("../controller/Test01Controller");
 const SequelizeTest01Controller = require("../controller/SequelizeTest01Controller");
+const MapTest = require("../controller/MapTest");
 
 
 router.get("/findAll", Test01Controller.findAll);
@@ -16,5 +17,7 @@ router.get("/sequelizeFindAll", SequelizeTest01Controller.findAll);
 router.get("/sequelizeFindById/:id", SequelizeTest01Controller.findById);
 
 router.get("/mkSalt/:pw", Test01Controller.cryptTest);
+
+router.get("/geocoding/:query", MapTest.geocoding);
 
 module.exports = router;

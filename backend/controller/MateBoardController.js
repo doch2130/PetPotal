@@ -137,6 +137,13 @@ exports.findByUsersIndexNumber = async (request, result) => {
   if(checkTokenResult.result === true) {
     await MateBoard.findAll({
       // attributes: ["animalsUsersIndexNumber"],
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
       where: {
         usersIndexNumber: request.params.usersIndexNumber,
       },
