@@ -82,6 +82,35 @@
   color: white ;
 }
 
+.innerBoxColGu {
+  flex: 1 auto;
+  text-align: center;
+  width: 11%;
+  margin: 5px 0;
+  
+}
+
+.innerBoxColGu span {
+  cursor: pointer;
+}
+
+.innerBoxColGu span:hover {
+  color: var(--main-default-dark-color);
+  font-weight: 700;
+}
+
+.innerBoxClose {
+  text-align: right;
+}
+
+.innerBoxClose img {
+  transform: rotate(45deg);
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
 .boxCategory > div:nth-of-type(1),
 .boxAmount > div:nth-of-type(1) {
   display: inline-block;

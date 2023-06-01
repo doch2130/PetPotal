@@ -1,7 +1,8 @@
 import style from './MateBoard.module.css';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RegionData from './RegionData';
+import close from '../../../assets/icon/plus.png';
 
 export default function MateBoard() {
   const [ showBoxRegion, setShowBoxRegion ] = useState<Boolean>(false);
@@ -53,10 +54,16 @@ export default function MateBoard() {
             </div>
             <div className={style.innerBoxRow}>
               {boxRegionGu[Object.keys(boxRegionGu)[0]].map((el, index) => {
+                // console.log('index ', index);
                 return (
-                  <div className={style.innerBoxColGu} key={index}>{el}</div>
+                  <div className={style.innerBoxColGu} key={index}>
+                    <span>{el}</span>
+                  </div>
                 )
               })}
+            </div>
+            <div className={style.innerBoxClose}>
+              <img src={close} alt='closeButton' />
             </div>
           </div>
           }
