@@ -1,0 +1,161 @@
+.wrap {
+
+}
+
+.slideWrap img {
+  width: 100%;
+  max-height: 350px;
+}
+
+.bodyWrap {
+  max-width: 1320px;
+  margin: 1rem auto;
+}
+
+.bodyWrap h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.boxWrap {
+  background: #F6F6F6;
+  border: 1px solid #656464;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 1rem auto;
+}
+
+.boxWrap > div {
+  margin: 1rem auto;
+}
+
+.boxWrap > div > span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-right: 2rem;
+}
+
+.boxRegion > div:nth-of-type(1),
+.boxKinds > div:nth-of-type(1) {
+  background: #E4E4E4;
+  border: 1px solid #9D9D9D;
+  border-radius: 5px;
+  display: inline-block;
+  width: 90%;
+  height: 25px;
+  padding: 3px 10px 0px;
+  cursor: pointer;
+}
+
+/* 이너 박스 */
+.innerBoxWrap {
+  background: #FFFFFF;
+  border: 1px solid var(--main-default-color);
+  width: 97%;
+  margin: 1rem 0 !important;
+}
+
+.innerBoxRow {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.innerBoxCol {
+  flex: 1 auto;
+  width: 10%;
+  height: 33px;
+  background-color: #D6D6D6;
+  border: 1px solid #8D8D8D;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.innerBoxCol:hover {
+  text-decoration: underline;
+}
+
+.active {
+  background-color: var(--main-default-color);
+  color: white ;
+}
+
+.innerBoxColGu {
+  flex: 1 auto;
+  text-align: center;
+  width: 11%;
+  margin: 5px 0;
+  
+}
+
+.innerBoxColGu span {
+  cursor: pointer;
+}
+
+.innerBoxColGu span:hover {
+  color: var(--main-default-dark-color);
+  font-weight: 700;
+}
+
+.innerBoxClose {
+  text-align: right;
+}
+
+.innerBoxClose img {
+  transform: rotate(45deg);
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.boxCategory > div:nth-of-type(1),
+.boxAmount > div:nth-of-type(1) {
+  display: inline-block;
+}
+
+.boxCategory > div:nth-of-type(1) label,
+.boxAmount > div:nth-of-type(1) > span {
+  font-size: 1.1rem;
+  margin: 0 5px;
+}
+
+.boxCategory > div > input[type="checkbox"] {
+  height: 16px;
+  width: 16px;
+}
+
+.boxCategory > div > input[type="checkbox"]:nth-of-type(2) {
+  margin-left: 1rem;
+}
+
+.boxAmount > div > input[type='number'] {
+  height: 17px;
+  padding: 1px 5px;
+}
+
+.boxAmount > div > span {
+  font-size: 1rem !important;
+}
+
+.boxButtonGroup {
+  text-align: center  ;
+}
+
+.boxButtonGroup button {
+  background: #FFFFFF;
+  border: 1px solid #4AD645;
+  border-radius: 5px;
+  width: 70px;
+  height: 35px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.boxButtonGroup button:hover {
+  background: var(--main-default-dark-color);
+  color: white;
+}
