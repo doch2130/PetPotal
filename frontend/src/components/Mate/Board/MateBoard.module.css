@@ -35,13 +35,24 @@
   margin-right: 2rem;
 }
 
+.boxRegion,
+.boxKinds {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.boxRegion > div,
+.boxKinds > div {
+  flex: auto;
+}
+
 .boxRegion > div:nth-of-type(1),
 .boxKinds > div:nth-of-type(1) {
   background: #E4E4E4;
   border: 1px solid #9D9D9D;
   border-radius: 5px;
   display: inline-block;
-  width: 90%;
+  /* width: 90%; */
   height: 25px;
   padding: 3px 10px 0px;
   cursor: pointer;
@@ -51,7 +62,7 @@
 .innerBoxWrap {
   background: #FFFFFF;
   border: 1px solid var(--main-default-color);
-  width: 97%;
+  /* width: 100%; */
   margin: 1rem 0 !important;
 }
 
@@ -125,6 +136,11 @@
 .boxCategory > div > input[type="checkbox"] {
   height: 16px;
   width: 16px;
+  cursor: pointer;
+}
+
+.boxCategory > div > label {
+  cursor: pointer;
 }
 
 .boxCategory > div > input[type="checkbox"]:nth-of-type(2) {
