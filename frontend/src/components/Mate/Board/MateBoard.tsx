@@ -1,6 +1,6 @@
 import style from './MateBoard.module.css';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import RegionData from './RegionData';
 import close from '../../../assets/icon/plus.png';
 
@@ -8,7 +8,7 @@ export default function MateBoard() {
   const [ showBoxRegion, setShowBoxRegion ] = useState<Boolean>(false);
   const [ showBoxKinds, setShowBoxKinds ] = useState<Boolean>(false);
   const [ boxRegion, setBoxRegion ] = useState<string>('서울');
-  const [ regionData, setRegionData ] = useState<String[]>([]);
+  const [ regionDataList, setRegionDataList ] = useState<String[]>([]);
 
   const showBoxRegionHandler = () => {
     setShowBoxRegion(!showBoxRegion);
@@ -23,14 +23,26 @@ export default function MateBoard() {
 
   const regionAdd = (region:any, regionGu:string) => {
     const updateData = region + ' ' + regionGu;
-    setRegionData([...regionData, updateData]);
+    // console.log('regionDataList.includes(updateData) ', regionDataList.includes(updateData));
+    if(regionDataList.includes(updateData)) {
+      return ;
+    }
+
+    // 서울 전체 클릭 시 서울 들어가는 곳은 삭제 되게 설정
+    // 코드 수정 필요 (다른 지역도 해야 함)
+    // 그리고 전체 클릭 이후 다른 지역 클릭 시 전체 삭제되어야 함
+    // if(updateData === '서울 전체') {
+    //   setRegionDataList([updateData]);
+    //   return ;
+    // }
+    setRegionDataList([...regionDataList, updateData]);
   }
 
   const boxRegionGu = RegionData.filter((el) => Object.keys(el)[0] === boxRegion)[0];
 
   const regionDelete = (regionGu:String) => {
-    const updateData = regionData.filter((el) => el !== regionGu);
-    setRegionData(updateData);
+    const updateData = regionDataList.filter((el) => el !== regionGu);
+    setRegionDataList(updateData);
   }
 
   return (
@@ -44,19 +56,22 @@ export default function MateBoard() {
           <div className={style.boxRegion}>
             <span>지역</span>
             <div onClick={showBoxRegionHandler}>
-              {regionData.length === 0 && <span>지역을 선택하세요</span>}
-
-              <div>
-                {regionData.map((el, index) => {
-                  return (
-                    <span key={index} onClick={(event:React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-                      // 상위 엘리먼트들로의 이벤트 전파를 중단
-                      event.stopPropagation();
-                      regionDelete(el);
-                    }}>{el}</span>
-                  )
-                })}
-              </div>
+              {regionDataList.length === 0 ? <span>지역을 선택하세요</span> :
+                <div className={style.boxRegionTextList}>
+                  {regionDataList.map((el, index) => {
+                    return (
+                      <span key={index} onClick={(event:React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+                        // 상위 엘리먼트들로의 이벤트 전파를 중단
+                        event.stopPropagation();
+                        regionDelete(el);
+                      }}>
+                        {el}
+                        <img src={close} alt='closeButton' />
+                      </span>
+                    )
+                  })}
+                </div>
+              }
             </div>
           </div>
           {showBoxRegion && 
@@ -75,9 +90,26 @@ export default function MateBoard() {
             </div>
             <div className={style.innerBoxRow}>
               {boxRegionGu[Object.keys(boxRegionGu)[0]].map((el, index) => {
+                console.log('regionDataList ',regionDataList)
+                console.log('regionDataList.includes(Object.keys(boxRegionGu)[0] + " " + el) ', regionDataList.includes(Object.keys(boxRegionGu)[0] + ' ' + el));
                 return (
                   <div className={style.innerBoxColGu} key={index}>
-                    <span onClick={() => regionAdd(Object.keys(boxRegionGu)[0], el)}>{el}</span>
+                    {!regionDataList.includes(Object.keys(boxRegionGu)[0] + ' ' + el) && <span onClick={() => regionAdd(Object.keys(boxRegionGu)[0], el)}>{el}</span>}
+                    {regionDataList.includes(Object.keys(boxRegionGu)[0] + ' ' + el) && 
+                    <span className={style.active} onClick={() => regionDelete(Object.keys(boxRegionGu)[0] + ' ' + el)}>
+                      <svg fill="#000000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
+                        width="13px" height="13px" viewBox="0 0 305.002 305.002"
+                        xmlSpace="preserve">
+                        <g>
+                          <path d="M152.502,0.001C68.412,0.001,0,68.412,0,152.501s68.412,152.5,152.502,152.5c84.089,0,152.5-68.411,152.5-152.5
+                            S236.591,0.001,152.502,0.001z M152.502,280.001C82.197,280.001,25,222.806,25,152.501c0-70.304,57.197-127.5,127.502-127.5
+                            c70.304,0,127.5,57.196,127.5,127.5C280.002,222.806,222.806,280.001,152.502,280.001z"/>
+                          <path d="M218.473,93.97l-90.546,90.547l-41.398-41.398c-4.882-4.881-12.796-4.881-17.678,0c-4.881,4.882-4.881,12.796,0,17.678
+                            l50.237,50.237c2.441,2.44,5.64,3.661,8.839,3.661c3.199,0,6.398-1.221,8.839-3.661l99.385-99.385
+                            c4.881-4.882,4.881-12.796,0-17.678C231.269,89.089,223.354,89.089,218.473,93.97z"/>
+                        </g>
+                      </svg>
+                      {el}</span>}
                   </div>
                 )
               })}
