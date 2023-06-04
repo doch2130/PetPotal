@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import MainBeauty from "../components/MainSection/beauty/MainBeauty";
 // import MainExplanation from "../components/MainSection/explanation/MainExplanation";
 import MainFood from "../components/MainSection/food/MainFood";
@@ -9,6 +10,9 @@ import MainMate from "../components/MainSection/mate/MainMate";
 
 
 export default function MainPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <>
       <MainHome />

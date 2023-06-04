@@ -1,0 +1,98 @@
+.wrap {
+
+}
+
+
+/* Header */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.header select {
+  border: none;
+  font-size: 1rem;
+  color: #2477AB;
+  cursor: pointer;
+}
+
+.header select option {
+  color: black;
+}
+
+.headerSort p {
+  display: inline-block;
+  cursor: default;
+}
+
+/* body */
+.body {
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: space-evenly; */
+  margin: 1rem 0 2rem;
+}
+
+.AnimalCardWrap {
+  width: 33.3%;
+  margin: 1rem 0;
+}
+
+
+/* bottom */
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.bottom > div:nth-of-type(1) {
+  width: 80px;
+}
+
+.bottomPageButton button {
+  width: 35px;
+  height: 35px;
+  background-color: #E9E9E9;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 0 3px 0 0;
+}
+
+.bottomPageButtonActive {
+  background-color: var(--main-default-color) !important;
+  color: white;
+}
+
+.bottomPageButton button:hover {
+  color: white;
+  background-color: var(--main-default-dark-color);
+}
+
+.bottomWriteButton button {
+  width: 80px;
+  height: 35px;
+  background-color: var(--main-default-color);
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.bottomWriteButton img {
+  width: 17px;
+  height: 17px;
+}
+
+.bottomWriteButton button a {
+  color: white;
+}
+
+.bottomWriteButton button:hover {
+  background-color: var(--main-default-dark-color);
+}

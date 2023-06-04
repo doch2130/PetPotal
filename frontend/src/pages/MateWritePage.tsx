@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MateWriteForm from '../components/Mate/Write/MateWriteForm';
 import MateWritePreview from '../components/Mate/Write/MateWritePreview';
 import style from './MateWritePage.module.css';
@@ -6,6 +6,10 @@ import style from './MateWritePage.module.css';
 export default function MateWritePage() {
   // 미리보기 이미지 파일
   const [imgFile, setImgFile] = useState<File[]>([]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className={style.wrap}>
