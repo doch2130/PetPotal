@@ -4,6 +4,7 @@ import KindData from './KindData';
 import style from './MateBoard.module.css';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
 import close from '../../../assets/icon/plus.png';
+import MateBoardPost from './MateBoardPost';
 
 export default function MateBoard() {
   const [ showBoxRegion, setShowBoxRegion ] = useState<Boolean>(false);
@@ -206,6 +207,7 @@ export default function MateBoard() {
             <button type='button'>초기화</button>
           </div>
         </div>
+        <MateBoardPost />
       </div>
     </div>
   )
