@@ -1,13 +1,12 @@
 const express = require('express');
 const passport = require('passport');
 
-const app = express();
-const router = express.Router();
 const UsersController = require('../controller/UsersController');
 const ProfileFileHandler = require('../middleware/filehandler/ProfileFileHandler');
+
+const router = express.Router();
 const userProfileImageUpload = ProfileFileHandler.profileImageFileHandler();
-const userProfileImageUploadController =
-  userProfileImageUpload.single('usersProfile');
+const userProfileImageUploadController = userProfileImageUpload.single('usersProfile');
 const { signInState, noSignInState, } = require('../middleware/passport/SignInState');
 
 router.post('/signIn', noSignInState, (req, res, next) => {
