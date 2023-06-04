@@ -73,6 +73,7 @@
 }
 
 .bottomWriteButton button {
+  color: white;
   width: 80px;
   height: 35px;
   background-color: var(--main-default-color);
@@ -89,9 +90,9 @@
   height: 17px;
 }
 
-.bottomWriteButton button a {
+/* .bottomWriteButton button a {
   color: white;
-}
+} */
 
 .bottomWriteButton button:hover {
   background-color: var(--main-default-dark-color);

@@ -28,19 +28,17 @@ export default function MyPage() {
   }, []);
 
   return (
-    <PrivatePage>
-      <div className={style.wrap}>
-        <div className={style.navWrap}>
-          <MySideNavbar pageValue={pageValue} />
-        </div>
-        <div className={style.bodyWrap}>
-          {pageValue === 'info' ? <MyInfo /> : null}
-          {pageValue === 'pet' ? <MyPet /> : null}
-          {pageValue === 'write' ? <MyWrite /> : null}
-          {pageValue === 'support' ? <MyWrite /> : null}
-          {pageValue === 'interest' ? <MyWrite /> : null}
-        </div>
+    <div className={style.wrap}>
+      <div className={style.navWrap}>
+        <MySideNavbar pageValue={pageValue} />
       </div>
-    </PrivatePage>
+      <div className={style.bodyWrap}>
+        {pageValue === 'info' ? <MyInfo /> : null}
+        {pageValue === 'pet' ? <MyPet /> : null}
+        {pageValue === 'write' ? <MyWrite /> : null}
+        {pageValue === 'support' ? <MyWrite /> : null}
+        {pageValue === 'interest' ? <MyWrite /> : null}
+      </div>
+    </div>
   )
 }

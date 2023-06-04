@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import MateBoard from "../components/Mate/Board/MateBoard";
 import { useEffect } from "react";
+import MateBoard from "../components/Mate/Board/MateBoard";
 
 export default function MatePage() {
   useEffect(() => {

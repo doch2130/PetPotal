@@ -15,6 +15,8 @@ import MyPage from './pages/MyPage';
 import MatePage from './pages/MatePage';
 import MateWritePage from './pages/MateWritePage';
 import MateDetailPage from './pages/MateDetailPage';
+import PrivatePage from './pages/PrivatePage';
+import RestrictedPage from './pages/RestrictedPage';
 
 
 const router = createBrowserRouter([
@@ -24,12 +26,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {index: true, element: <MainPage />},
-      {path: '/memberjoin', element: <MemberJoin />},
+      {path: '/memberjoin', element: <RestrictedPage><MemberJoin /></RestrictedPage>},
       {path: '/search/:keyword', element: <Search />},
-      {path: '/login', element: <LoginPage />},
-      {path: '/mypage/:page', element: <MyPage />},
+      {path: '/login', element: <RestrictedPage><LoginPage /></RestrictedPage>},
+      {path: '/mypage/:page', element: <PrivatePage><MyPage /></PrivatePage>},
       {path: '/mate', element: <MatePage />},
-      {path: '/mate/write', element: <MateWritePage />},
+      {path: '/mate/write', element: <PrivatePage><MateWritePage /></PrivatePage>},
       {path: '/mate/detail/1', element: <MateDetailPage />},
     ]
   }
