@@ -9,18 +9,33 @@ const {
   SingleFileHandler,
   MultiFileHandler,
 } = require('../middleware/filehandler/MulterFileHandler');
+const Animals = require('../models/Animals');
+const Users = require('../models/Users');
 
 /**
- * Mate 게시글 작성 메서드
- * @param {*} request
- * @param {*} result
+ * 게시글 작성 메서드
+ * @description Mate 서비스 게시판의 글 작성 메서드
+ * @param {*} request result를 제외한 아래 항목을 request.body로 받는다.
+ * @param {String} mateBoardTitle 게시글 제목
+ * @param {int} mateBoardFee 비용
+ * @param {String} mateBoardContent1 본문
+ * @param {String} mateBoardContent2 주의사항
+ * @param {String} mateBoardPhotos 첨부 사진의 저장된 파일 이름
+ * @param {int} mateBoardCategory 구인/구직 여부 구인=1, 구직=2
+ * @param {String} mateBoardRegistDate 게시글 최초 작성일
+ * (형태: yyyy-M-ddTHH:mm:s.ms)
+ * @param {String} mateBoardModifyDate 게시글 최종 수정일
+ * (형태: yyyy-M-ddTHH:mm:s.ms)
+ * @param {BigInt} usersIndexNumber 작성자의 인덱스 번호
+ * @param {BigInt} animalsIndexNumber 게시글과 연관된 반려동물의 인덱스 번호 
+ * @param {*} result 메서드 결과를 전달하는 콜백함수
  */
 exports.insertMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
-  if (checkTokenResult == true) {
+  if(checkTokenResult.result == true) {
     let matePhotosList = new Array(request.files.length);
     for (let i = 0; i < request.files.length; i++) {
       matePhotosList[i] = request.files[i].filename;
@@ -73,20 +88,24 @@ exports.findAllMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
-  if (checkTokenResult === true) {
+  if(checkTokenResult.result === true) {
     let pageNumber = request.params.pageNumber;
     let offset = 0;
 
-    if (pageNumber > 1) {
+    if(pageNumber > 1) {
       offset = 10 * (pageNumber - 1);
     }
 
     await MateBoard.findAll({
       // await MateBoard.findAndCountAll({ // .findAndCountAll() 사용시 결과값으로 rows 개수를 결과에 포함하여 출력한다.
       // attributes: ["animalsUsersIndexNumber"],
-      // where: {
-      //     usersIndexNumber: request.params.usersIndexNumber
-      // }
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
       offset: offset,
       limit: 10,
       order: [['mateBoardRegistDate', 'DESC']],
@@ -115,14 +134,21 @@ exports.findByUsersIndexNumber = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
-  if (checkTokenResult === true) {
+  if(checkTokenResult.result === true) {
     await MateBoard.findAll({
       // attributes: ["animalsUsersIndexNumber"],
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
       where: {
         usersIndexNumber: request.params.usersIndexNumber,
       },
     }).then((response) => {
-      if (response == null) {
+      if(response == null) {
         result.send({
           responseCode: 304,
           message: 'no result',
@@ -168,5 +194,61 @@ exports.textEditorImgFileUpload = (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).send({ error: '텍스트 에디터 서버 오류' });
+  }
+};
+
+exports.findByIndexNumber = async (request, result) => {
+  let inputToken = request.headers.token;
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+
+  if(checkTokenResult.result === true) {
+    await MateBoard.findOne({
+      // attributes: ["animalsUsersIndexNumber"],
+      include: [
+        {
+          model: Animals,
+          as: "Pets",
+          attributes: [
+            "animalsName", "animalsGender", "animalsNeutered",
+            "animalsAge", "animalsWeight",
+            "animalsCategory1", "animalsCategory2"
+          ]
+        },
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        mateBoardIndexNumber: request.params.mateBoardIndexNumber,
+      }
+    }).then((response) => {
+      if(response == null) {
+        result.status(404).send({
+          responseCode: 404,
+          data: null,
+          message: 'no result',
+        });
+      } else {
+        result.status(200).send({
+          responseCode: 200,
+          data: response,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      result.status(500).send({
+        responseCode: 500,
+        data: false,
+        message: err
+      });
+    })
+  } else {
+    result.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
   }
 };

@@ -43,7 +43,7 @@ exports.signOut = (request, response) => {
       const existToken = request.headers.token;
       // console.log("existToken:", existToken);
       const checkTokenResult = await CheckToken.CheckToken(1, existToken);
-      if (checkTokenResult) {
+      if(checkTokenResult.result) {
         await DeleteToken.DeleteToken(1, existToken);
         request.session.destroy(() => {
           response.clearCookie('token');
@@ -217,12 +217,9 @@ exports.findByPhone = (request, response) => {
  * @param {*} response
  */
 exports.findUsersInfo = async (request, response) => {
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
 
-  if (checkTokenResult) {
+  if(checkTokenResult.result) {
     Users.findOne({
       attributes: [
         'account',
@@ -266,15 +263,11 @@ exports.findUsersInfo = async (request, response) => {
  * @param {*} response
  */
 exports.updateUsers = async (request, response) => {
-  // console.log('request.body ', request.body);
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
   let newHashed, newSalt, newHashedPass;
 
-  if (checkTokenResult == true) {
+  if (checkTokenResult.result == true) {
     if (
       (request.body.changePassword === undefined ||
         request.body.changePassword == '') &&
@@ -285,11 +278,10 @@ exports.updateUsers = async (request, response) => {
         where: { account: request.body.account },
       })
         .then(async (res) => {
-          // console.log(res.dataValues.salt);
-          const hashedPass = await Crypt.decrypt(
-            res.dataValues.salt,
-            request.body.password
-          );
+          console.log("salt:", res.dataValues.salt);
+          console.log("body:", request.body);
+          const hashedPass = await Crypt.decrypt(res.dataValues.salt, request.body.password);
+          console.log("hashedPass:", hashedPass);
           Users.update(
             {
               name: request.body.name,
@@ -297,6 +289,7 @@ exports.updateUsers = async (request, response) => {
               address1: request.body.address1,
               address2: request.body.address2,
               address3: request.body.address3,
+              address4: request.body.address4,
               address4: request.body.address4,
               modifiedDate: currentTimeStamp,
             },
@@ -306,31 +299,37 @@ exports.updateUsers = async (request, response) => {
                 password: hashedPass,
               },
             }
-          )
-            .then((res) => {
-              console.log('res ', res);
+          ).then((res) => {
+            if(res == 1) {
               response.status(200).send({
                 responseCode: 200,
                 message: 'Modified Complete(not change pass)',
-                data: true,
+                data: true
               });
-            })
-            .catch((err) => {
-              response.status(500).send({
-                responseCode: 500,
-                message: 'Modified Fail',
-                data: false,
-                error: err,
+            }else {
+              response.status(403).send({
+                responseCode: 403,
+                message: 'Modified Fail(Invalid pass)',
+                data: false
               });
+            }
+          })
+          .catch((err) => {
+            response.status(403).send({
+              responseCode: 403,
+              message: 'Modified Fail',
+              data: false,
+              error: err,
             });
+          });
         })
         .catch((err) => {
           console.error(err);
         });
     } else if (
-      request.body.changePassword !== null &&
-      request.body.password != null
-    ) {
+    request.body.changePassword !== undefined && 
+    request.body.password !== undefined
+    ){
       newHashed = await Crypt.encrypt(request.body.changePassword);
       newSalt = newHashed.salt;
       newHashedPass = newHashed.hashedpw;
@@ -343,6 +342,7 @@ exports.updateUsers = async (request, response) => {
           address1: request.body.address1,
           address2: request.body.address2,
           address3: request.body.address3,
+          address4: request.body.address4,
           address4: request.body.address4,
           modifiedDate: currentTimeStamp,
         },
@@ -402,16 +402,12 @@ exports.selectUsersProfileImage = async (request, response) => {
  * 회원의 프로필이미지를 업데이트 합니다.
  * frontend에서 request를 요청할 때
  * body의 키는 usersProfile
- * @param {*} request.headers.account 요청 헤더의 필수 키 account
  * @param {*} request.files 요청 바디의 필수 키 usersProfile
  * @param {*} response
  */
 exports.updateProfileImage = async (request, response) => {
   // console.log(request.file);
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
   const uploaderAccount = request.headers.account;
   const previousProfileFileName = await Users.findOne({
     attributes: ['profileImageFileName'],
@@ -419,8 +415,8 @@ exports.updateProfileImage = async (request, response) => {
   });
   // console.log(previousProfileFileName.dataValues.profileImageFileName);
 
-  if (checkTokenResult) {
-    if (
+  if(checkTokenResult.result) {
+    if(
       previousProfileFileName.dataValues.profileImageFileName === undefined ||
       previousProfileFileName.dataValues.profileImageFileName == '' ||
       previousProfileFileName.dataValues.profileImageFileName == null ||
@@ -495,14 +491,9 @@ exports.updateProfileImage = async (request, response) => {
  */
 exports.dormancyUsers = async (request, response) => {
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
 
-  // console.log(request.body.account);
-
-  if (checkTokenResult == true) {
+  if(checkTokenResult.result == true) {
     Users.update(
       {
         modifiedDate: currentTimeStamp,
@@ -534,6 +525,38 @@ exports.dormancyUsers = async (request, response) => {
     });
   }
 };
+
+/**
+ * 비밀번호 초기화 메서드  
+ * 초기화된 비밀번호는 1234
+ * @desc 비밀번호 초기화 메서드(개발용)
+ * @param {*} request 
+ * @param {*} response 
+ */
+exports.defaultPassword = async(request, response) => {
+  const usersAccount = request.body.account;
+  console.log(`Reset ${usersAccount}'s password`);
+  const newHashed = await Crypt.encrypt("1234");
+  await Users.update(
+    { 
+      salt: newHashed.salt,
+      password: newHashed.hashedpw,
+    },
+    {
+      where: { account: usersAccount}
+    }
+  ).then((res) => {
+    response.status(200).send({
+      responseCode: 200,
+      message: "success"
+    })
+  }).catch((err) => {
+    response.status(403).send({
+      responseCode: 403,
+      message: "failure"
+    })
+  })
+}
 
 /*
 회원가입 메서드 no sequelize
