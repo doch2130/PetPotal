@@ -17,15 +17,15 @@ exports.CheckToken = async (dbNumber, inputToken) => {
       // console.log("redisToken:\n", standardToken);
       // console.log("inputToken:\n", inputToken);
       // console.log("token이 일치합니다.");
-      return true;
+      return { account: account, result: true}
     } else {
       // console.log("redisToken:\n", standardToken);
       // console.log("inputToken:\n", inputToken);
       // console.error("token이 일치하지 않습니다.");
-      return false;
+      return { account: account, result: false};
     }
   } else {
-    return false;
+    return { account: account, result: false};
   }
 };
 

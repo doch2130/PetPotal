@@ -29,7 +29,7 @@ exports.insertAnimal = async(request, result) => {
     // console.log(`사용자 ${request.headers.account} 가 insertAnimal을 요청합니다.`);
     // console.log("multer:\n", request.files);
 
-    if(checkTokenResult == true) {
+    if(checkTokenResult.result == true) {
         let animalsPhotosList = new Array(request.files.length);
         for(let i = 0; i < request.files.length; i++) {
             animalsPhotosList[i] = request.files[i].filename;
@@ -40,7 +40,7 @@ exports.insertAnimal = async(request, result) => {
             animalsGender: parseInt(request.body.animalsGender),
             animalsNeutered: request.body.animalsNeutered,            
             animalsAge: parseInt(request.body.animalsAge),
-            animalsWeight: parseInt(request.body.animalsWeight),            
+            animalsWeight: parseFloat(request.body.animalsWeight),            
             animalsCategory1: parseInt(request.body.animalsCategory1),
             animalsCategory2: convertedCategory2,
             animalsPhotos: animalsPhotosList.toString(),
@@ -84,10 +84,10 @@ exports.insertAnimal = async(request, result) => {
 };
 
 exports.findByUsersIndexNumber = async(request, result) => {
-    let inputToken = request.headers.token;
-    let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+    const inputToken = request.headers.token;
+    const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
     
-    if(checkTokenResult == true) {
+    if(checkTokenResult.result == true) {
         await Animals.findAll({
             // attributes: ["animalsUsersIndexNumber"],
             where: { 
@@ -115,3 +115,8 @@ exports.findByUsersIndexNumber = async(request, result) => {
         })
     }
 };
+
+exports.updateImage = async(request, response) => {
+    const inputToken = request.headers.token;
+    const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+}
