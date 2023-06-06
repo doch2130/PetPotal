@@ -129,7 +129,7 @@ export default function MateDetail(props:any) {
       const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
       // console.log('address ', address);
       if (address !== '') {
-        const result = await controller.naverMapTest(address);
+        const result = await controller.naverMapGeocoding(address);
         // console.log('result ', result.data);
         // console.log('result ', result.data[0]);
         // console.log('result ', result.data[1]);

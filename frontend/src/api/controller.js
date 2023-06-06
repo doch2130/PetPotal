@@ -128,7 +128,7 @@ export default class Controller {
     return this.httpClient.post(`mateBoard/insertContent`, object);
   }
 
-  async naverMapTest(address) {
-    return this.httpClient.get(`naverMapTest?address=${address}`);
+  async naverMapGeocoding(address) {
+    return this.httpClient.get(`naverMapGeocoding?address=${address}`);
   }
 }
