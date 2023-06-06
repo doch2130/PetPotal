@@ -3,4 +3,5 @@
 <!-- <span>개발 인원: 3명</span>   -->
 <a href="https://github.com/PetPotal/PetPotal">GitHub Repository</a>  
 <a href="https://www.figma.com/file/nOtQYamTerRvLpGHrUxknc/PetPotal?type=design&node-id=0-1&t=3cORO2Qyy1CFPGwT-0">디자인(피그마)</a>
+<br />
 <a href="http://101.101.210.118:6300/">임시 홈페이지</a>
