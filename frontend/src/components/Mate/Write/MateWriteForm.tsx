@@ -26,6 +26,9 @@ interface MateWriteFormInput {
   isNeutered: String;
   detailContent: String;
   cautionContent: String;
+  address: String;
+  lng: number;
+  lat: number;
 }
 
 interface mapData {
@@ -52,7 +55,6 @@ export default function MateWriteForm(props:propsData) {
   });
 
   const onSubmit = async (data:MateWriteFormInput) => {
-    // console.log('data : ', data);
     if(wrtieType === '구함') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
@@ -65,17 +67,17 @@ export default function MateWriteForm(props:propsData) {
       }
     }
 
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(data));
-    imgFile.forEach((el) => {
-      formData.append('mateBoardPhotos', el);
-    });
-
     openConfirm({
       title: '글 작성 등록',
       content: '작성한 내용으로 등록하시겠습니까?',
       callback: async () => {
         closeConfirm();
+        // console.log('data : ', data);
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(data));
+        imgFile.forEach((el) => {
+          formData.append('mateBoardPhotos', el);
+        });
         const result = await controller.mateWrite(formData);
         console.log('result : ', result);
       }
@@ -96,14 +98,13 @@ export default function MateWriteForm(props:propsData) {
   }
 
   useEffect(() => {
+    // console.log('userInfo ', userInfo);
     const mapGeocoding = async () => {
       const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
       // console.log('address ', address);
       if (address !== '') {
         const result = await controller.naverMapGeocoding(address);
         // console.log('result ', result.data);
-        // console.log('result ', result.data[0]);
-        // console.log('result ', result.data[1]);
         setMapData({
           x: result.data[0],
           y: result.data[1],
@@ -379,7 +380,7 @@ export default function MateWriteForm(props:propsData) {
             <h2>상세 위치</h2>
             <div>
               {mapData.x !== 0 ?
-              <MateWriteMap height='300px' mapData={mapData}/>
+              <MateWriteMap height='300px' mapData={mapData} setValueHandler={setValue} />
               :
               <div>로딩 중입니다</div>
             }

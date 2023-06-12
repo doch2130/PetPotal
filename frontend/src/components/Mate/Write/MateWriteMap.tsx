@@ -2,19 +2,20 @@ import { useEffect, useRef } from 'react'
 
 const { naver } = window;
 
-interface naverMap {
+interface naverMapInterface {
   height: string;
-  mapData: latlng;
+  mapData: latlngInterface;
+  setValueHandler: Function;
 }
 
-interface latlng {
+interface latlngInterface {
   x: number;
   y: number;
   _lng: number;
   _lat: number;
 }
 
-export default function MateWriteMap(props:naverMap) {
+export default function MateWriteMap(props:naverMapInterface) {
   const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function MateWriteMap(props:naverMap) {
       }
     });
 
-    function searchCoordinateToAddress(latlng:latlng) {
+    function searchCoordinateToAddress(latlng:latlngInterface) {
       // console.log('latlng ', latlng);
       naver.maps.Service.reverseGeocode({
           coords: latlng,
@@ -96,6 +97,12 @@ export default function MateWriteMap(props:naverMap) {
               addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
   
               htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
+
+              if(addrType === '[지번 주소]') {
+                props.setValueHandler('address', address.trim().replace(/ +/g, " "));
+                props.setValueHandler('lng', latlng._lng);
+                props.setValueHandler('lat', latlng._lat);
+              }
           }
   
           infoWindow.setContent([
