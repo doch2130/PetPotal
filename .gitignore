@@ -3,6 +3,7 @@
 **/.DS_Store
 **/.env
 **/.env.production
+**/.vscode
 
 # 업로드된 이미지파일 제외
 **/data/animals/**
