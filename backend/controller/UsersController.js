@@ -1,13 +1,17 @@
-const Users = require('../models/Users');
 const fs = require('fs');
 const bcrypt = require("bcrypt");
+const nodeMailer = require("nodemailer");
+
+const Users = require('../models/Users');
 
 const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
 const DeleteToken = require('../middleware/DeleteToken');
+const RandomString = require('../middleware/RandomString');
 
 const dotenv = require('dotenv');
+
 dotenv.config({
   path: './config/.env',
 });
@@ -31,7 +35,8 @@ exports.signInTimeUpdate = (account) => {
 };
 
 /**
- * @desc 로그아웃을 수행하는 메서드 세션을 폐기하고, 사용자의 cookie를 제거한다.
+ * 로그아웃을 수행하는 메서드 세션을 폐기하고  
+ * 로그아웃한 사용자의 cookie를 제거한다.
  * @param {*} request - request.headers.token Request Header에 token 삽입
  * @param {*} response
  */
@@ -140,7 +145,7 @@ exports.insertUsers = async (request, response) => {
 };
 
 /**
- * 아이디 중복을 검사하는 메서드 중복일경우 false, 중복이 아닌경우 true 반환
+ * 아이디 중복을 검사하는 메서드 중복일경우 false 중복이 아닌경우 true 반환
  * @param {*} request
  * @param {*} response
  * @returns { boolean }
@@ -247,26 +252,23 @@ exports.findByPhone = (request, response) => {
  * @param {*} response
  */
 exports.findUsersInfo = async (request, response) => {
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
-
-  if (checkTokenResult) {
-    Users.findOne({
-      attributes: [
-        'account',
-        'name',
-        'nickName',
-        'phone',
-        'email',
-        'address1',
-        'address2',
-        'address3',
-        'address4',
-      ],
-      where: { account: request.body.account },
-    })
+  await CheckToken.CheckToken(1, request.headers.token)
+  .then((res) => {
+    if((res.result == true) && (res.account == request.body.account)) {
+      Users.findOne({
+        attributes: [
+          'account',
+          'name',
+          'nickName',
+          'phone',
+          'email',
+          'address1',
+          'address2',
+          'address3',
+          'address4',
+        ],
+        where: { account: request.body.account },
+      })
       .then((res) => {
         response.status(200).send({
           responseCode: 200,
@@ -281,15 +283,23 @@ exports.findUsersInfo = async (request, response) => {
           data: err,
         });
       });
-  } else {
-    response.status(500).send({
-      responseCode: 500,
+    }
+    else {
+      response.status(500).send({
+        responseCode: 500,
+        message: 'API키가 일치하지 않거나 요청자가 정확하지 않습니다.',
+        data: false,
+      });
+    }
+  })
+  .catch((err) => {
+    response.status(403).send({
+      responseCode: 403,
       message: 'Invalid Key',
       data: false,
     });
-  }
+  })
 };
-
 /**
  * 회원정보를 변경하는 메서드
  * @param {*} request
@@ -297,17 +307,15 @@ exports.findUsersInfo = async (request, response) => {
  */
 exports.updateUsers = async (request, response) => {
   // console.log('request.body ', request.body);
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  let newHashed, newSalt, newHashedPass;
+  let newHashed, newHashedPass;
+  const salt = parseInt(process.env.USER_SALT);
 
-  if (checkTokenResult == true) {
+  if (checkTokenResult.result == true) {
     if (
-      (request.body.changePassword === undefined ||
-        request.body.changePassword == '') &&
+      (request.body.changePassword === undefined || request.body.changePassword == '')
+      &&
       (request.body.password != undefined || request.body.password != '')
     ) {
       Users.findOne({
@@ -316,10 +324,7 @@ exports.updateUsers = async (request, response) => {
       })
         .then(async (res) => {
           // console.log(res.dataValues.salt);
-          const hashedPass = await Crypt.decrypt(
-            res.dataValues.salt,
-            request.body.password
-          );
+          const hashedPass = bcrypt.hashSync(request.body.password, salt);
           Users.update(
             {
               name: request.body.name,
@@ -361,13 +366,10 @@ exports.updateUsers = async (request, response) => {
       request.body.changePassword !== null &&
       request.body.password != null
     ) {
-      newHashed = await Crypt.encrypt(request.body.changePassword);
-      newSalt = newHashed.salt;
-      newHashedPass = newHashed.hashedpw;
+      newHashedPass = bcrypt.hashSync(request.body.changePassword, salt);
       Users.update(
         {
           password: newHashedPass,
-          salt: newSalt,
           name: request.body.name,
           nickName: request.body.nickName,
           address1: request.body.address1,
@@ -382,20 +384,30 @@ exports.updateUsers = async (request, response) => {
           },
         }
       )
-        .then((res) => {
+      .then((res) => {
+        if(res[0] === 1) {
           response.status(200).send({
             responseCode: 200,
             message: 'Modified Complete(apply new pass)',
             data: true,
           });
-        })
-        .catch((err) => {
-          response.status(500).send({
-            responseCode: 500,
-            message: 'Modified Fail',
+        }
+        else {
+          response.status(403).send({
+            responseCode: 403,
+            message: 'Modified Failed(apply new pass)',
             data: false,
           });
+        }        
+      })
+      .catch((err) => {
+        response.status(500).send({
+          responseCode: 500,
+          message: "Modified Fail(Database update issue)",
+          data: false,
+          error: err
         });
+      });
     }
   } else {
     response.status(403).send({
@@ -406,6 +418,11 @@ exports.updateUsers = async (request, response) => {
   }
 };
 
+/**
+ * account에 해당하는 사용자의 프로필이미지를 반환하는 함수
+ * @param {String} account 사용자 계정 
+ * @param {*} response 
+ */
 exports.selectUsersProfileImage = async (request, response) => {
   // console.log(request.query);
   await Users.findOne({
@@ -429,7 +446,7 @@ exports.selectUsersProfileImage = async (request, response) => {
 };
 
 /**
- * 회원의 프로필이미지를 업데이트 합니다.
+ * 회원의 프로필이미지를 업데이트 합니다.  
  * frontend에서 request를 요청할 때
  * body의 키는 usersProfile
  * @param {*} request.headers.account 요청 헤더의 필수 키 account
@@ -566,6 +583,102 @@ exports.dormancyUsers = async (request, response) => {
 };
 
 /**
+ * 사용자의 계정 비밀번호를 임의로 변경하여 사용자의 메일로 보내기 위한 함수
+ * @param {*} request 
+ * @param {*} response 
+ */
+exports.requestDefaultPassword = async(request, response) => {
+  const tempPassword = RandomString.RandomString(6);
+  console.log("temp Password:", tempPassword);
+
+  const transporter = nodeMailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    auth: {
+      user: process.env.NODE_MAILER_ACCOUNT,
+      pass: process.env.NODE_MAILER_PASS,
+    }
+  });
+
+  await Users.findOne({
+    attributes: ["account"],
+    where: { email: request.body.receiveMailAddress },
+  })
+  .then((res) => {
+    if(res !== null) {
+      const saltRounds = parseInt(process.env.USER_SALT);
+      const newHashed = bcrypt.hashSync(tempPassword, saltRounds);
+      console.log("temp Hashed:", newHashed);
+      Users.update(
+        { 
+          password: newHashed
+        },
+        {
+          where: { account: res.dataValues.account}
+        }
+      )
+      .then((res2) => {
+        if(res2[0] === 1) {
+          // console.log(res.dataValues.account);
+          const transport = {
+            to: request.body.receiveMailAddress,
+            // to: "gruzam0615@gmail.com",
+            subject: "펫포탈 임시 비밀번호 입니다.",
+            html: 
+            `
+            <h3>안녕하세요 펫포탈입니다.</h3>
+            <h3>${res.dataValues.account} 님의 임시 비밀번호 입니다.</h3>
+            <p>임시 비밀번호: <b>${tempPassword}</b></p>
+            <p>임시 비밀번호를 이용한 로그인 후 비밀번호 변경을 권장합니다.</p>
+            `
+          }
+          transporter.sendMail(transport, (error, info) => {
+            if(error) {
+              response.status(403).send({
+                responseCode: 403,
+                data: false,
+                message: "임시 비밀번호 메일 전송 실패"
+              })
+            }
+            else {
+              response.status(200).send({
+                responseCode: 200,
+                data: true,
+                message: "임시 비밀번호 메일 전송 완료"
+              })
+            }
+          })
+        }
+      })
+      .catch((err) => {
+        response.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "임시 비밀번호 업데이트 오류(임시 비밀번호 메일 전송이 불가능합니다.)",
+          error: err
+        })
+      })      
+    }
+    else {
+      response.status(403).send({
+        responseCode: 403,
+        data: false,
+        message: "존재하지 않는 회원입니다."
+      })
+    }
+  })
+  .catch((err) => {
+    response.status(403).send({
+      responseCode: 403,
+      data: false,
+      message: "회원정보(이메일 기반) 조회에 실패했습니다.",
+      error: err
+    })
+  })
+
+};
+
+/**
  * 비밀번호 초기화 메서드  
  * 초기화된 비밀번호는 1234
  * @desc 비밀번호 초기화 메서드(개발용)
@@ -575,11 +688,12 @@ exports.dormancyUsers = async (request, response) => {
 exports.defaultPassword = async(request, response) => {
   const usersAccount = request.body.account;
   console.log(`Reset ${usersAccount}'s password`);
-  const newHashed = await Crypt.encrypt("1234");
+  // const newHashed = await Crypt.encrypt("1234");
+  const saltRounds = parseInt(process.env.USER_SALT);
+  const newHashed = bcrypt.hashSync("1234", saltRounds);
   await Users.update(
     { 
-      salt: newHashed.salt,
-      password: newHashed.hashedpw,
+      password: newHashed
     },
     {
       where: { account: usersAccount}
@@ -587,11 +701,13 @@ exports.defaultPassword = async(request, response) => {
   ).then((res) => {
     response.status(200).send({
       responseCode: 200,
+      data: true,
       message: "success"
     })
   }).catch((err) => {
     response.status(403).send({
       responseCode: 403,
+      data: false,
       message: "failure"
     })
   })

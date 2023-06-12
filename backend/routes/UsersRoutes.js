@@ -53,6 +53,7 @@ router.post('/mypageUsersInfo', UsersController.findUsersInfo);
 router.post('/usersInfoModify', UsersController.updateUsers);
 router.get('/profile', UsersController.selectUsersProfileImage);
 router.post('/updateProfile', userProfileImageUploadController, UsersController.updateProfileImage);
+router.post("/resetPass", UsersController.requestDefaultPassword);
 router.post('/terminate', UsersController.dormancyUsers);
 
 router.post('/auth', UsersController.loginStatusCheck);
@@ -64,6 +65,7 @@ router.get('/sessionGet', (req, res) => {
     'req.passport': req._passport,
   });
 });
+
 router.post("/defaultPass", UsersController.defaultPassword);
 
 // mypage user info load test
