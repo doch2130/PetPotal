@@ -319,36 +319,46 @@ exports.updateUsers = async (request, response) => {
       (request.body.password != undefined || request.body.password != '')
     ) {
       Users.findOne({
-        attributes: ['salt'],
+        attributes: ["password"],
         where: { account: request.body.account },
       })
         .then(async (res) => {
-          // console.log(res.dataValues.salt);
-          const hashedPass = bcrypt.hashSync(request.body.password, salt);
-          Users.update(
-            {
-              name: request.body.name,
-              nickName: request.body.nickName,
-              address1: request.body.address1,
-              address2: request.body.address2,
-              address3: request.body.address3,
-              address4: request.body.address4,
-              modifiedDate: currentTimeStamp,
-            },
-            {
-              where: {
-                account: request.body.account,
-                password: hashedPass,
+          // console.log(res);
+          // console.log(request.body);
+          const comparePassResult = bcrypt.compareSync(request.body.password, res.dataValues.password);
+          if(comparePassResult === true) {
+            Users.update(
+              {
+                name: request.body.name,
+                nickName: request.body.nickName,
+                address1: request.body.address1,
+                address2: request.body.address2,
+                address3: request.body.address3,
+                address4: request.body.address4,
+                modifiedDate: currentTimeStamp,
               },
-            }
-          )
+              {
+                where: {
+                  account: request.body.account
+                },
+              }
+            )
             .then((res) => {
-              console.log('res ', res);
-              response.status(200).send({
-                responseCode: 200,
-                message: 'Modified Complete(not change pass)',
-                data: true,
-              });
+              // console.log('res ', res);
+              if(res[0] == 1) {
+                response.status(200).send({
+                  responseCode: 200,
+                  message: 'Modified Complete(not change pass)',
+                  data: true,
+                });
+              }
+              else {
+                response.status(403).send({
+                  responseCode: 403,
+                  message: 'Modified Failed(not change pass)',
+                  data: false,
+                });
+              }              
             })
             .catch((err) => {
               response.status(500).send({
@@ -358,6 +368,14 @@ exports.updateUsers = async (request, response) => {
                 error: err,
               });
             });
+          }
+          else {
+            response.status(403).send({
+              responseCode: 403,
+              message: 'Modified Fail(not change pass) Password Invalid',
+              data: false,
+            });
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -455,11 +473,10 @@ exports.selectUsersProfileImage = async (request, response) => {
  */
 exports.updateProfileImage = async (request, response) => {
   // console.log(request.file);
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
+  console.log(request.body);
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token
   );
-  const uploaderAccount = request.headers.account;
+  const uploaderAccount = request.body.account;
   const previousProfileFileName = await Users.findOne({
     attributes: ['profileImageFileName'],
     where: { account: uploaderAccount },
@@ -498,9 +515,9 @@ exports.updateProfileImage = async (request, response) => {
           });
         });
     } else {
-      await fs.rmSync(
-        `./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`
-      );
+      // console.log("existsSync:", await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`)); // return true or false
+      const fileExistCheck = await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`);
+      if(fileExistCheck == true) { await fs.rmSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`); }
       await Users.update(
         {
           profileImageFileName: request.file.filename,
@@ -511,20 +528,28 @@ exports.updateProfileImage = async (request, response) => {
           },
         }
       )
-        .then((res) => {
+      .then((res) => {
+        if(res[0] == 1) {
           response.status(200).send({
             responseCode: 200,
             message: 'profile update success',
             data: true,
           });
-        })
-        .catch((err) => {
+        } else {
           response.status(403).send({
             responseCode: 403,
-            message: 'profile update failure',
+            message: 'profile update fail',
             data: false,
           });
+        }
+      })
+      .catch((err) => {
+        response.status(403).send({
+          responseCode: 403,
+          message: 'profile update failure',
+          data: false,
         });
+      });
     }
   } else {
     response.status(500).send({
