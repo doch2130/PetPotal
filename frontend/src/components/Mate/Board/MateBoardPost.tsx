@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import writeImage from '../../../assets/icon/pencil.png';
 import AnimalCard from '../../UI/AnimalCard';
@@ -6,6 +6,8 @@ import style from './MateBoardPost.module.css';
 import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import { useConfirm } from '../../../hooks/useConfirm';
+import Controller from '../../../api/controller';
+import { useAlert } from '../../../hooks/useAlert';
 
 export default function MateBoardPost() {
   const navigater = useNavigate();
@@ -17,6 +19,9 @@ export default function MateBoardPost() {
   const [ tempData, setTempData ] = useState<string[]>([
     'test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'
   ]);
+  const controller = new Controller();
+  const [ likeBoardList, setLikeBoardList ] = useState();
+  const { openAlert } = useAlert();
 
   const detailPostMoveHandler = () => {
     navigater('/mate/detail/1');
@@ -38,6 +43,27 @@ export default function MateBoardPost() {
       }
     });
   }
+
+  useEffect(() => {
+    const getMateLikeBoardList = async () => {
+      const result = await controller.mateLikeBoardList(userInfo[0].account);
+      if(result.data !== 200) {
+        openAlert({
+          title: 'getMateLikeBoardList Error',
+          type: 'error',
+          content: '에러가 발생하였습니다. 새로고침 후 다시 이용해주세요',
+        })
+        return ;
+      }
+      setLikeBoardList(result.data);
+    }
+
+    if(userInfo[0].account !== '') {
+      getMateLikeBoardList();
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo[0].account]);
 
   return (
     <div className={style.wrap}>

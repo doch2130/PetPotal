@@ -118,6 +118,14 @@ export default function MateWriteForm(props:propsData) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
+  useEffect(() => {
+    const petInfoLoad = async () => {
+      const result = await controller.myPetInfoLoad();
+    }
+    petInfoLoad();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <form className={style.wrap} onSubmit={handleSubmit(onSubmit)}>
