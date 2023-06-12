@@ -85,8 +85,17 @@ const MultiFileHandler = (dirName) => {
   });
 };
 
+/**
+ * 사용되지 않는 파일을 삭제하기 위한 메서드입니다.(개발중)
+ */
+const DeleteUnused = () => {
+  console.log("DeleteUnused start");
+  console.log(fs.readFileSync(`./data/`));
+}
+
 module.exports = {
   BasicHandler,
   SingleFileHandler,
   MultiFileHandler,
+  DeleteUnused
 };

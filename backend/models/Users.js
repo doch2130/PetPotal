@@ -2,9 +2,9 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = require("../config/sequelize");
 const Animals = require("../models/Animals");
-const MateBoard = require("./MateBoard");
 
-const Users = sequelize.define("Users", {
+const Users = sequelize.define("Users", 
+    {
         usersIndexNumber: {
             type: DataTypes.BIGINT, 
             primaryKey: true, 
@@ -16,9 +16,9 @@ const Users = sequelize.define("Users", {
         password: {
             type: DataTypes.STRING
         },
-        salt: {
-            type: DataTypes.STRING
-        },
+        // salt: {
+        //     type: DataTypes.STRING
+        // },
         name: {
             type: DataTypes.STRING
         },
@@ -82,22 +82,5 @@ const Users = sequelize.define("Users", {
         modelName: "Users"
     }
 );
-
-// Users.hasMany(MateBoard, {
-//     foreignKey: "usersIndexNumber", 
-//     sourceKey: "usersIndexNumber",
-//     as: "Users"
-// });
-// Users.hasMany(MateBoard);
-MateBoard.belongsTo(Users, {
-    targetKey: "usersIndexNumber",
-    foreignKey: "usersIndexNumber",
-    as: "Users"
-});
-MateBoard.belongsTo(Animals, {
-    targetKey: "animalsIndexNumber",
-    foreignKey: "animalsIndexNumber",
-    as: "Pets"
-})
 
 module.exports = Users;
