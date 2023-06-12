@@ -1,5 +1,5 @@
 import style from './AnimalCard.module.css';
-import testImage from '../../assets/matepage/MateImg_3.png';
+import animalImage from '../../assets/matepage/MateImg_3.png';
 import emptyHeart from '../../assets/icon/empty_heart.png';
 import fullHeart from '../../assets/icon/full_heart.png';
 import { MouseEventHandler } from 'react';
@@ -12,7 +12,7 @@ export default function AnimalCard(props:animalCardInterface) {
   return (
     <div className={style.wrap} onClick={props.detailPostMoveHandler as MouseEventHandler}>
       <div className={style.image}>
-        <img src={testImage} alt='testImage' />
+        <img src={animalImage} alt='animalImage' />
         <img src={emptyHeart} alt='emptyHeart'  />
         {/* <img src={fullHeart} alt='fullHeart' /> */}
       </div>
