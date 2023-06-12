@@ -9,6 +9,7 @@
   z-index: 100;
   margin: auto;
   cursor: pointer;
+  transition: transform 0.3s;
 }
 
 .image img:nth-of-type(1) {
@@ -58,15 +59,10 @@
   text-overflow: ellipsis;
 }
 
-@keyframes animalCardHoverAnimation {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+.wrap:hover {
+  transform: scale(1.1);
 }
 
-.wrap:hover {
-  animation: animalCardHoverAnimation 0.3s linear;
+.wrap:not(:hover) {
+  transform: scale(1);
 }
