@@ -3,28 +3,19 @@ import MyInfo from '../components/Mypage/MyInfo';
 import MySideNavbar from '../components/Mypage/MySideNavbar';
 import style from './MyPage.module.css';
 import { useEffect, useState } from 'react';
-import PrivatePage from './PrivatePage';
 import MyPet from '../components/Mypage/MyPet';
 import MyWrite from '../components/Mypage/MyWrite';
 
 export default function MyPage() {
   const { page } = useParams<{ page: string}>();
   const [pageValue, setPageValue] = useState<String>('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [innerWidth, setInnerWidth] = useState<number>(window.innerWidth);
-
-  // console.log('windowSize ', innerWidth);
 
   useEffect(() => {
     if(page !== undefined) setPageValue(page);
   }, [page]);
 
   useEffect(() => {
-    const resizeListener = () => {
-      setInnerWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', resizeListener);
+    window.scrollTo(0, 0);
   }, []);
 
   return (
