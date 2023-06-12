@@ -37,6 +37,7 @@
 .AnimalCardWrap {
   width: 33.3%;
   margin: 1rem 0;
+  min-width: 300px;
 }
 
 
@@ -96,4 +97,17 @@
 
 .bottomWriteButton button:hover {
   background-color: var(--main-default-dark-color);
+}
+
+
+@media (max-width: 917px) {
+  .body {
+    justify-content: space-evenly;
+  }
+}
+
+@media (max-width: 425px) {
+  .bottom > div:nth-of-type(1) {
+    display: none;
+  }
 }
