@@ -38,6 +38,8 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // console.log('userInfo ', userInfo);
+
   // useEffect(() => {
   //   console.log("userInfo : ", userInfo);
   // }, [userInfo]);

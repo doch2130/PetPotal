@@ -5,6 +5,9 @@ import Controller from '../../../api/controller';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
 
 interface propsData {
   imgFile: Array<File>;
@@ -23,6 +26,16 @@ interface MateWriteFormInput {
   isNeutered: String;
   detailContent: String;
   cautionContent: String;
+  address: String;
+  lng: number;
+  lat: number;
+}
+
+interface mapData {
+  x: number;
+  y: number;
+  _lng: number;
+  _lat: number;
 }
 
 export default function MateWriteForm(props:propsData) {
@@ -33,9 +46,15 @@ export default function MateWriteForm(props:propsData) {
   const wrtieType = watch("writeType");
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
+  const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+  const [ mapData, setMapData ] = useState<mapData>({
+    x: 0,
+    y: 0,
+    _lng: 0,
+    _lat: 0,
+  });
 
   const onSubmit = async (data:MateWriteFormInput) => {
-    // console.log('data : ', data);
     if(wrtieType === '구함') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
@@ -48,17 +67,17 @@ export default function MateWriteForm(props:propsData) {
       }
     }
 
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(data));
-    imgFile.forEach((el) => {
-      formData.append('mateBoardPhotos', el);
-    });
-
     openConfirm({
       title: '글 작성 등록',
       content: '작성한 내용으로 등록하시겠습니까?',
       callback: async () => {
         closeConfirm();
+        // console.log('data : ', data);
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(data));
+        imgFile.forEach((el) => {
+          formData.append('mateBoardPhotos', el);
+        });
         const result = await controller.mateWrite(formData);
         console.log('result : ', result);
       }
@@ -77,6 +96,35 @@ export default function MateWriteForm(props:propsData) {
       }
     });
   }
+
+  useEffect(() => {
+    // console.log('userInfo ', userInfo);
+    const mapGeocoding = async () => {
+      const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
+      // console.log('address ', address);
+      if (address !== '') {
+        const result = await controller.naverMapGeocoding(address);
+        // console.log('result ', result.data);
+        setMapData({
+          x: result.data[0],
+          y: result.data[1],
+          _lng: result.data[0],
+          _lat: result.data[1],
+        });
+      }
+    }
+
+    mapGeocoding();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo]);
+
+  useEffect(() => {
+    const petInfoLoad = async () => {
+      const result = await controller.myPetInfoLoad();
+    }
+    petInfoLoad();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -339,7 +387,11 @@ export default function MateWriteForm(props:propsData) {
           <div className={style.wrapCol}>
             <h2>상세 위치</h2>
             <div>
-              <MateWriteMap height='300px' />
+              {mapData.x !== 0 ?
+              <MateWriteMap height='300px' mapData={mapData} setValueHandler={setValue} />
+              :
+              <div>로딩 중입니다</div>
+            }
             </div>
           </div>
         </div>

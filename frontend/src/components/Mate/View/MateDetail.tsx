@@ -7,11 +7,23 @@ import chatting from '../../../assets/icon/chatting.png';
 import locationMap from '../../../assets/icon/location_map.png';
 import PictureBox from '../../UI/PictureBox';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import MateDetailMap from './MateDetailMap';
+import { useRecoilState } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
+import Controller from '../../../api/controller';
+import { useModal } from '../../../hooks/useModal';
 
 const tempData = [
   '/static/media/default.0cb1e01d076d6e0fd830.png',
   '/static/media/default.0cb1e01d076d6e0fd830.png',
 ]
+
+interface mapData {
+  x: number;
+  y: number;
+  _lng: number;
+  _lat: number;
+}
 
 export default function MateDetail(props:any) {
   const { imgFile, setImgFile } = props;
@@ -19,6 +31,15 @@ export default function MateDetail(props:any) {
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
   const [mouseUpClientY, setMouseUpClientY] = useState(0);
+  const controller = new Controller();
+  const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+  const [ mapData, setMapData ] = useState<mapData>({
+    x: 0,
+    y: 0,
+    _lng: 0,
+    _lat: 0,
+  });
+  const { openModal } = useModal();
 
   // const [imgFile, setImgFile] = useState<File[]>([]);
   // const [imgUrl, setImgUrl] = useState<string[]>([]);
@@ -103,6 +124,44 @@ export default function MateDetail(props:any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mouseUpClientX]);
 
+  useEffect(() => {
+    const mapGeocoding = async () => {
+      const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
+      // console.log('address ', address);
+      if (address !== '') {
+        const result = await controller.naverMapGeocoding(address);
+        // console.log('result ', result.data);
+        // console.log('result ', result.data[0]);
+        // console.log('result ', result.data[1]);
+        setMapData({
+          x: result.data[0],
+          y: result.data[1],
+          _lng: result.data[0],
+          _lat: result.data[1],
+        });
+      }
+    }
+
+    mapGeocoding();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo]);
+
+  const modalMapOpen = () => {
+    openModal({
+      backDrop: true,
+      content: <MateDetailMap height='350px' mapData={mapData} zoomControl={false} />
+    });
+  }
+
+  // console.log('window.scrollY ', window.scrollY);
+
+  // const [scrollY, setScrollY] = useState(window.scrollY);
+
+  // useEffect(() => {
+  //   console.log('window.scrollY ', scrollY);
+  //   setScrollY(window.scrollY);
+  // }, [scrollY])
+
   return (
     <div className={style.wrap}>
       <div className={style.top}>
@@ -115,7 +174,7 @@ export default function MateDetail(props:any) {
           <PictureBox width='200px' height='200px'>
             {imgUrl.map((el:any, index:number) => {
               return (
-              <div key={index} ref={(el) => slideRef.current[index] = el}>
+              <div style={{cursor: 'grab'}} key={index} ref={(el) => slideRef.current[index] = el}>
                 <img src={el} alt={el} />
               </div>
               );
@@ -154,7 +213,7 @@ export default function MateDetail(props:any) {
               <img src={chatting} alt='chatting' />
               <span>연락하기</span>
             </div>
-            <div>
+            <div onClick={modalMapOpen}>
               <img src={locationMap} alt='locationMap' />
               <span>위치보기</span>
             </div>
@@ -184,7 +243,14 @@ export default function MateDetail(props:any) {
           </div>
           <div className={style.locationMap}>
             <p>상세 위치 안내</p>
-            <div></div>
+            {/* Naver Map */}
+            <div>
+            {mapData.x !== 0 ?
+              <MateDetailMap height='300px' mapData={mapData} zoomControl={true} />
+            :
+            <div>로딩 중입니다</div>
+            }
+            </div>
           </div>
           <div className={style.contentBottom}>
             <div>

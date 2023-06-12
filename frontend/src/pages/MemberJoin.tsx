@@ -1,7 +1,7 @@
 import style from './MemberJoin.module.css';
 import Controller from '../api/controller';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { useNavigate } from 'react-router-dom';
@@ -163,6 +163,10 @@ export default function MemberJoin() {
       });
     }
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={style.joinContainer}>

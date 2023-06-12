@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useRecoilState } from "recoil";
 import { UserType, userState } from '../recoil/user';
 import Controller from '../api/controller';
@@ -58,6 +58,7 @@ export default function LoginPage() {
           address1: result.data.data.address1,
           address2: result.data.data.address2,
           address3: result.data.data.address3,
+          address4: result.data.data.address4,
           message: result.data.message,
           responseCode: result.data.responseCode,
         }
@@ -91,6 +92,10 @@ export default function LoginPage() {
   const moveRegister = useCallback(():void => {
     navigate('/memberjoin');
   }, [navigate]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className={style.wrap}>

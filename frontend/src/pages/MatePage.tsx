@@ -1,12 +1,13 @@
-// import React from 'react'
-
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import MateBoard from "../components/Mate/Board/MateBoard";
 
 export default function MatePage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div>
-      <h1>MatePage</h1>
-      <Link to='/mate/write'>글쓰기</Link>
+      <MateBoard />
     </div>
   )
 }

@@ -2,20 +2,20 @@ import { useEffect, useRef } from 'react'
 
 const { naver } = window;
 
-interface naverMapInterface {
+interface naverMap {
   height: string;
-  mapData: latlngInterface;
-  setValueHandler: Function;
+  mapData: latlng;
+  zoomControl: boolean;
 }
 
-interface latlngInterface {
+interface latlng {
   x: number;
   y: number;
   _lng: number;
   _lat: number;
 }
 
-export default function MateWriteMap(props:naverMapInterface) {
+export default function MateViewMap(props:naverMap) {
   const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,11 +28,11 @@ export default function MateWriteMap(props:naverMapInterface) {
     const mapOptions: naver.maps.MapOptions = {
       center: location,
       zoom: 15,
-      zoomControl: true,
+      zoomControl: props.zoomControl,
       zoomControlOptions: {
         style: naver.maps.ZoomControlStyle.SMALL,
         position: naver.maps.Position.TOP_RIGHT
-    }
+      }
     };
 
     const map = new naver.maps.Map(mapElement.current, mapOptions);
@@ -60,11 +60,11 @@ export default function MateWriteMap(props:naverMapInterface) {
     // searchCoordinateToAddress(initData);
     searchCoordinateToAddress(props.mapData);
     
-    naver.maps.Event.addListener(map, 'click', function(e) {
-      infoWindow.close();
-      marker.setPosition(e.coord);
-      searchCoordinateToAddress(e.coord);
-    });
+    // naver.maps.Event.addListener(map, 'click', function(e) {
+    //   infoWindow.close();
+    //   marker.setPosition(e.coord);
+    //   searchCoordinateToAddress(e.coord);
+    // });
 
     naver.maps.Event.addListener(marker, 'click', function() {
       if (infoWindow.getMap()) {
@@ -74,7 +74,7 @@ export default function MateWriteMap(props:naverMapInterface) {
       }
     });
 
-    function searchCoordinateToAddress(latlng:latlngInterface) {
+    function searchCoordinateToAddress(latlng:latlng) {
       // console.log('latlng ', latlng);
       naver.maps.Service.reverseGeocode({
           coords: latlng,
@@ -97,12 +97,6 @@ export default function MateWriteMap(props:naverMapInterface) {
               addrType = item.name === 'roadaddr' ? '[도로명 주소]' : '[지번 주소]';
   
               htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
-
-              if(addrType === '[지번 주소]') {
-                props.setValueHandler('address', address.trim().replace(/ +/g, " "));
-                props.setValueHandler('lng', latlng._lng);
-                props.setValueHandler('lat', latlng._lat);
-              }
           }
   
           infoWindow.setContent([

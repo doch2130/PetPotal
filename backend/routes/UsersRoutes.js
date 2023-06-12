@@ -68,7 +68,4 @@ router.get('/sessionGet', (req, res) => {
 
 router.post("/defaultPass", UsersController.defaultPassword);
 
-// mypage user info load test
-// router.post('/mypage/userInfoLoad', UsersController.test2);
-
 module.exports = router;

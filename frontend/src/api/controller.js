@@ -60,7 +60,7 @@ export default class Controller {
   // 로그아웃
   async logout() {
     const result = await this.httpClient.post('users/signOut');
-    console.log('result : ', result);
+    // console.log('result : ', result);
     if (result.data.responseCode === 200) {
       axios.defaults.headers.common['token'] = ``;
     }
@@ -128,7 +128,15 @@ export default class Controller {
     return this.httpClient.post(`mateBoard/insertContent`, object);
   }
 
-  async naverMapTest(address) {
-    return this.httpClient.get(`naverMapTest?address=${address}`);
+  // 네이버 지도 API, 주소를 위경도로 변환
+  async naverMapGeocoding(address) {
+    return this.httpClient.get(`naverMapGeocoding?address=${address}`);
+  }
+
+  // 메이트 게시판 - 좋아요 게시글 가져오기
+  async mateLikeBoardList(account) {
+    return this.httpClient.get(
+      `mateBoard/mateLikeBoardList?account=${account}`
+    );
   }
 }

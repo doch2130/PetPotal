@@ -10,7 +10,7 @@ const Test01Route = require('./routes/Test01Routes');
 const UsersRoute = require('./routes/UsersRoutes');
 const AnimalsRoute = require('./routes/AnimalsRoutes');
 const MateBoardRoute = require('./routes/MateBoardRoutes');
-const { geocoding } = require('./controller/MapTest');
+const { geocoding } = require('./controller/NaverMapController');
 
 const app = express();
 const port = 3010;
@@ -55,12 +55,8 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/api/naverMapTest', async (req, res) => {
-  console.log('주소', req.query.address);
-  const result = await geocoding(req.query.address);
-  console.log('결과 ', result);
-  res.send('result');
-});
+// NaverMap Geocoding
+app.get('/api/naverMapGeocoding', geocoding);
 
 app.listen(port, () => {
   console.log(`pettotal backend listening on port ${port}`);

@@ -76,6 +76,7 @@ export default function Navbar() {
             address1: '',
             address2: '',
             address3: '',
+            address4: '',
             message: '',
             responseCode: 0,
           }]);
