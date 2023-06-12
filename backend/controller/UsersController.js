@@ -1,14 +1,19 @@
 const Users = require('../models/Users');
-const passport = require('passport');
 const fs = require('fs');
+const bcrypt = require("bcrypt");
 
 const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
 const DeleteToken = require('../middleware/DeleteToken');
 
+const dotenv = require('dotenv');
+dotenv.config({
+  path: './config/.env',
+});
+
 /**
- * @desc 로그인 수행시간 반영
+ * 로그인 시간을 최신화 하는 함수
  * @param {String} account - 로그인을 수행할 계정
  */
 exports.signInTimeUpdate = (account) => {
@@ -43,7 +48,7 @@ exports.signOut = (request, response) => {
       const existToken = request.headers.token;
       // console.log("existToken:", existToken);
       const checkTokenResult = await CheckToken.CheckToken(1, existToken);
-      if(checkTokenResult.result) {
+      if (checkTokenResult) {
         await DeleteToken.DeleteToken(1, existToken);
         request.session.destroy(() => {
           response.clearCookie('token');
@@ -74,39 +79,64 @@ exports.signOut = (request, response) => {
  * @param {*} response
  */
 exports.insertUsers = async (request, response) => {
-  let hashed = await Crypt.encrypt(request.body.password);
-  let salt = hashed.salt;
-  let hashedPass = hashed.hashedpw;
+  const saltRounds = parseInt(process.env.USER_SALT);
+  const hashedPass = bcrypt.hashSync(request.body.password, saltRounds);
+  // let hashed = await Crypt.encrypt(request.body.password);
+  // let salt = hashed.salt;
+  // let hashedPass = hashed.hashedpw;
 
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-
-  const insertUser = await Users.create({
-    account: request.body.account,
-    password: hashedPass,
-    salt: salt,
-    name: request.body.name,
-    nickName: request.body.nickName,
-    phone: request.body.phone,
-    email: request.body.email,
-    address1: request.body.address1,
-    address2: request.body.address2,
-    address3: request.body.address3,
-    address4: request.body.address4,
-    joinDate: currentTimeStamp,
-    modifiedDate: currentTimeStamp,
-  });
-
-  if (insertUser == null) {
-    response.send({
-      responseCode: 200,
-      message: '회원가입 실패',
-    });
-  } else {
-    response.send({
-      responseCode: 200,
-      message: '회원가입 완료',
-    });
-  }
+  Users.findOne({
+    attributes: ['account'],
+    where: { account: request.body.account },
+  })
+  .then(res => {
+    if(res === null) {
+      Users.create({
+        account: request.body.account,
+        password: hashedPass,
+        salt: "",
+        name: request.body.name,
+        nickName: request.body.nickName,
+        phone: request.body.phone,
+        email: request.body.email,
+        address1: request.body.address1,
+        address2: request.body.address2,
+        address3: request.body.address3,
+        address4: request.body.address4,
+        joinDate: currentTimeStamp,
+        modifiedDate: currentTimeStamp,
+      })
+      .then(res => {
+        response.status(200).send({
+          responseCode: 200,
+          data: true,
+          message: "회원가입 완료"
+        });
+      })
+      .catch(err => {
+        response.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "회원가입 실패"
+        })
+      })
+    }
+    else {
+      response.status(403).send({
+        responseCode: 403,
+        data: false,
+        message: "이미 사용중인 아이디입니다."
+      })
+    }
+  })
+  .catch(err => {
+    response.status(403).send({
+      responseCode: 403,
+      data: false,
+      message: "회원가입 실패"
+    })
+  })
 };
 
 /**
@@ -217,9 +247,12 @@ exports.findByPhone = (request, response) => {
  * @param {*} response
  */
 exports.findUsersInfo = async (request, response) => {
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
 
-  if(checkTokenResult.result) {
+  if (checkTokenResult) {
     Users.findOne({
       attributes: [
         'account',
@@ -263,11 +296,15 @@ exports.findUsersInfo = async (request, response) => {
  * @param {*} response
  */
 exports.updateUsers = async (request, response) => {
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  // console.log('request.body ', request.body);
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
   let newHashed, newSalt, newHashedPass;
 
-  if (checkTokenResult.result == true) {
+  if (checkTokenResult == true) {
     if (
       (request.body.changePassword === undefined ||
         request.body.changePassword == '') &&
@@ -278,10 +315,11 @@ exports.updateUsers = async (request, response) => {
         where: { account: request.body.account },
       })
         .then(async (res) => {
-          console.log("salt:", res.dataValues.salt);
-          console.log("body:", request.body);
-          const hashedPass = await Crypt.decrypt(res.dataValues.salt, request.body.password);
-          console.log("hashedPass:", hashedPass);
+          // console.log(res.dataValues.salt);
+          const hashedPass = await Crypt.decrypt(
+            res.dataValues.salt,
+            request.body.password
+          );
           Users.update(
             {
               name: request.body.name,
@@ -289,7 +327,6 @@ exports.updateUsers = async (request, response) => {
               address1: request.body.address1,
               address2: request.body.address2,
               address3: request.body.address3,
-              address4: request.body.address4,
               address4: request.body.address4,
               modifiedDate: currentTimeStamp,
             },
@@ -299,37 +336,31 @@ exports.updateUsers = async (request, response) => {
                 password: hashedPass,
               },
             }
-          ).then((res) => {
-            if(res == 1) {
+          )
+            .then((res) => {
+              console.log('res ', res);
               response.status(200).send({
                 responseCode: 200,
                 message: 'Modified Complete(not change pass)',
-                data: true
+                data: true,
               });
-            }else {
-              response.status(403).send({
-                responseCode: 403,
-                message: 'Modified Fail(Invalid pass)',
-                data: false
+            })
+            .catch((err) => {
+              response.status(500).send({
+                responseCode: 500,
+                message: 'Modified Fail',
+                data: false,
+                error: err,
               });
-            }
-          })
-          .catch((err) => {
-            response.status(403).send({
-              responseCode: 403,
-              message: 'Modified Fail',
-              data: false,
-              error: err,
             });
-          });
         })
         .catch((err) => {
           console.error(err);
         });
     } else if (
-    request.body.changePassword !== undefined && 
-    request.body.password !== undefined
-    ){
+      request.body.changePassword !== null &&
+      request.body.password != null
+    ) {
       newHashed = await Crypt.encrypt(request.body.changePassword);
       newSalt = newHashed.salt;
       newHashedPass = newHashed.hashedpw;
@@ -342,7 +373,6 @@ exports.updateUsers = async (request, response) => {
           address1: request.body.address1,
           address2: request.body.address2,
           address3: request.body.address3,
-          address4: request.body.address4,
           address4: request.body.address4,
           modifiedDate: currentTimeStamp,
         },
@@ -402,12 +432,16 @@ exports.selectUsersProfileImage = async (request, response) => {
  * 회원의 프로필이미지를 업데이트 합니다.
  * frontend에서 request를 요청할 때
  * body의 키는 usersProfile
+ * @param {*} request.headers.account 요청 헤더의 필수 키 account
  * @param {*} request.files 요청 바디의 필수 키 usersProfile
  * @param {*} response
  */
 exports.updateProfileImage = async (request, response) => {
   // console.log(request.file);
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
   const uploaderAccount = request.headers.account;
   const previousProfileFileName = await Users.findOne({
     attributes: ['profileImageFileName'],
@@ -415,8 +449,8 @@ exports.updateProfileImage = async (request, response) => {
   });
   // console.log(previousProfileFileName.dataValues.profileImageFileName);
 
-  if(checkTokenResult.result) {
-    if(
+  if (checkTokenResult) {
+    if (
       previousProfileFileName.dataValues.profileImageFileName === undefined ||
       previousProfileFileName.dataValues.profileImageFileName == '' ||
       previousProfileFileName.dataValues.profileImageFileName == null ||
@@ -491,9 +525,14 @@ exports.updateProfileImage = async (request, response) => {
  */
 exports.dormancyUsers = async (request, response) => {
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  const checkTokenResult = await CheckToken.CheckToken(
+    1,
+    request.headers.token
+  );
 
-  if(checkTokenResult.result == true) {
+  // console.log(request.body.account);
+
+  if (checkTokenResult == true) {
     Users.update(
       {
         modifiedDate: currentTimeStamp,

@@ -1,11 +1,18 @@
+const bcrypt = require("bcrypt");
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const jwt = require('jsonwebtoken');
 
+const jwt = require('jsonwebtoken');
 const jwtKey = 'testing';
-const Crypt = require("../Crypt");
+
 const SaveData = require("../redis/SaveData");
 let redisConfig = require('../../config/redisClient.json');
+const dotenv = require('dotenv');
+dotenv.config({
+  path: './config/.env',
+});
+
 const Users = require('../../models/Users');
 
 module.exports = () => {
@@ -24,8 +31,8 @@ module.exports = () => {
             if (response == null) {
               return result(null, null);
             } else {
-              const hashedPass = await Crypt.decrypt(response.dataValues.salt, password);
-              if(response.dataValues.password === hashedPass) {
+              const comparePassResult = bcrypt.compareSync(password, response.dataValues.password);
+              if(comparePassResult == true) {
                 const token = jwt.sign(
                   {
                     account: response.dataValues.account,
@@ -36,7 +43,6 @@ module.exports = () => {
                     expiresIn: 60 * 60 * 24 * 1,
                   }
                 );
-
                 const data = {
                   account: account,
                   token: token
@@ -50,8 +56,8 @@ module.exports = () => {
                   console.error("failed saveData");
                 })                
                 return result(null, data);
-                
-              } else {
+              }
+              else {
                 console.error('basicAuth Failed...');
                 return result(null, false);
               }
