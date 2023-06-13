@@ -22,6 +22,9 @@ export default function MainHome() {
       <div className={style.wrapCol}>
         <div className={style.wrapImg}>
           <img src={imgChange ? DogImage : CatImage} className={`${style.animatedImage} ${imgChange ? style.dogImg : style.catImg}`} alt='mainAnimalImage'/>
+          {/* {imgChange ? 
+          <img src={DogImage} alt='test' className={style.dogImg} /> :
+          <img src={CatImage} alt='test' className={style.catImg} />} */}
           <div className={style.imgSource}>
             <a href="https://kr.freepik.com/free-vector/happy-pomeranian-dog-character-hand-drawn-cartoon-art-illustration_17303376.htm#page=2&query=Canis lupus familiaris&position=30&from_view=search&track=ais">작가 mamewmy</a>
             <a href="https://kr.freepik.com/free-vector/hand-drawn-kawaii-objects-collection_26230952.htm#from_view=detail_serie">Freepik</a>
