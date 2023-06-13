@@ -69,15 +69,15 @@ export default function MemberJoin() {
 
   const onSubmit : SubmitHandler<JoinFormInput> = async (data) => {
     if(!duplicateValue.account) {
-      setError('account', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+      setError('account', {message: '중복확인을 해주세요'}, {shouldFocus: true })
     }
 
     // if(!duplicateValue.nickName) {
-    //   setError('nickName', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+    //   setError('nickName', {message: '중복확인을 해주세요'}, {shouldFocus: true })
     // }
 
     if(!duplicateValue.email) {
-      setError('email', {message: '중복확인을 해주세여'}, {shouldFocus: true })
+      setError('email', {message: '중복확인을 해주세요'}, {shouldFocus: true })
     }
     const apiObj = {...data, ...addressObj};
 
@@ -96,21 +96,42 @@ export default function MemberJoin() {
     switch(id) {
       case 'account':
         // console.log(errors.account?.message);
-        if((errors.account?.message !== '중복확인을 해주세여' && errors.account) || !getValues('account')) {
+        if((errors.account?.message !== '중복확인을 해주세요' && errors.account)) {
+          return false;
+        } else if(!getValues('account')) {
+          openAlert({
+            title: '중복체크 실패',
+            type: 'error',
+            content: '값을 입력해주세요'
+          });
           return false;
         }
-
+        
         apiResult = await controller.duplicateCheck(id, getValues('account'));
         break;
       case 'email':
-        if((errors.email?.message !== '중복확인을 해주세여' && errors.email) || !getValues('email')) {
+        if((errors.email?.message !== '중복확인을 해주세요' && errors.email)) {
+          return false;
+        } else if(!getValues('email')) {
+          openAlert({
+            title: '중복체크 실패',
+            type: 'error',
+            content: '값을 입력해주세요'
+          });
           return false;
         }
 
         apiResult = await controller.duplicateCheck(id, getValues('email'));
         break;
       case 'phone':
-        if((errors.phone?.message !== '중복확인을 해주세여' && errors.phone) || !getValues('phone')) {
+        if((errors.phone?.message !== '중복확인을 해주세요' && errors.phone)) {
+          return false;
+        } else if(!getValues('phone')) {
+          openAlert({
+            title: '중복체크 실패',
+            type: 'error',
+            content: '값을 입력해주세요'
+          });
           return false;
         }
 
@@ -118,7 +139,14 @@ export default function MemberJoin() {
         break;
 
       case 'nickName':
-        if((errors.nickName?.message !== '중복확인을 해주세여' && errors.nickName) || !getValues('nickName')) {
+        if((errors.nickName?.message !== '중복확인을 해주세요' && errors.nickName)) {
+          return false;
+        } else if(!getValues('nickName')) {
+          openAlert({
+            title: '중복체크 실패',
+            type: 'error',
+            content: '값을 입력해주세요'
+          });
           return false;
         }
 
