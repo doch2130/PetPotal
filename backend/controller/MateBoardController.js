@@ -42,16 +42,26 @@ exports.insertMateBoard = async (request, result) => {
     }
 
     await MateBoard.create({
-      mateBoardTitle: request.body.mateBoardTitle,
-      mateBoardFee: parseInt(request.body.mateBoardFee),
-      mateBoardContent1: request.body.mateBoardContent1,
-      mateBoardContent2: request.body.mateBoardContent2,
+      mateBoardTitle: request.body.title,
+      mateBoardFee: parseInt(request.body.amount),
+      mateBoardContent1: request.body.detailContent,
+      mateBoardContent2: request.body.cautionContent,
       mateBoardPhotos: matePhotosList.toString(),
       mateBoardCategory: parseInt(request.body.mateBoardCategory),
       mateBoardRegistDate: currentTimeStamp,
       mateBoardModifyDate: currentTimeStamp,
       usersIndexNumber: parseInt(request.body.usersIndexNumber),
       animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
+      // mateBoardTitle: request.body.mateBoardTitle,
+      // mateBoardFee: parseInt(request.body.mateBoardFee),
+      // mateBoardContent1: request.body.mateBoardContent1,
+      // mateBoardContent2: request.body.mateBoardContent2,
+      // mateBoardPhotos: matePhotosList.toString(),
+      // mateBoardCategory: parseInt(request.body.mateBoardCategory),
+      // mateBoardRegistDate: currentTimeStamp,
+      // mateBoardModifyDate: currentTimeStamp,
+      // usersIndexNumber: parseInt(request.body.usersIndexNumber),
+      // animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
     })
       .then((response) => {
         if (response == null) {

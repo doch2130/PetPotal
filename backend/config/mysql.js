@@ -10,11 +10,12 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
   if(err) { 
-    console.error("DB connect Failed");
+    console.error("Main DB connect Failed");
     console.error(err);
+    process.exit();
   }
   else { 
-    console.log('DB connected')
+    console.log('Main DB connected')
   };
 });
 
