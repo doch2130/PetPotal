@@ -110,6 +110,14 @@
   animation: marqueeClone 30s linear infinite;
 }
 
+@media (max-width: 576px) {
+  .wrapCol:nth-of-type(1) h1 {
+    margin-bottom: 0;
+  }
+  .wrapCol:nth-of-type(2) > div {
+    margin: 0;
+  }
+}
 
 @media (max-width: 520px) {
   .wrapCol {

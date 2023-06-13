@@ -12,7 +12,7 @@ export default function MainBeauty() {
         <div className={style.wrapLeft}>
           <h1>Beauty</h1>
           <p>Find a store that gives beauty to your pet more than other friends!</p>
-          <button>
+          <button type='button'>
             Find a Beauty Shop
           </button>
         </div>
