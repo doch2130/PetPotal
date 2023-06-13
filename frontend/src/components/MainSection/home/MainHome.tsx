@@ -7,12 +7,12 @@ export default function MainHome() {
   const [imgChange, setImgChange] = useState(true);
 
   useEffect(() => {
-    const changeTimer = setTimeout(() => {
+    const imageChangeTimer = setTimeout(() => {
       setImgChange(!imgChange);
-    }, 5000);
+    }, 6000);
 
     return () => {
-      clearTimeout(changeTimer);
+      clearTimeout(imageChangeTimer);
     }
 
   }, [imgChange]);
@@ -21,9 +21,7 @@ export default function MainHome() {
     <div className={style.wrap}>
       <div className={style.wrapCol}>
         <div className={style.wrapImg}>
-          {imgChange
-          ? <img src={DogImage} className={style.dogImg} alt='mainAnimalImage' />
-          : <img src={CatImage} className={style.catImg} alt='mainAnimalImage' />}
+          <img src={imgChange ? DogImage : CatImage} className={`${style.animatedImage} ${imgChange ? style.dogImg : style.catImg}`} alt='mainAnimalImage'/>
           <div className={style.imgSource}>
             <a href="https://kr.freepik.com/free-vector/happy-pomeranian-dog-character-hand-drawn-cartoon-art-illustration_17303376.htm#page=2&query=Canis lupus familiaris&position=30&from_view=search&track=ais">작가 mamewmy</a>
             <a href="https://kr.freepik.com/free-vector/hand-drawn-kawaii-objects-collection_26230952.htm#from_view=detail_serie">Freepik</a>
