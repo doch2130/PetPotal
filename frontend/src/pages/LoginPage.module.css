@@ -163,3 +163,15 @@
 .googleLoginButton span {
   margin-right: 45px;
 }
+
+@media (max-width: 576px) {
+  .col form {
+    width: 100%;
+  }
+  .col form h2 {
+    margin: 1rem 0;
+  }
+  .oauthLoginWrap {
+    width: 100%;
+  }
+}
