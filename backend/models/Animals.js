@@ -43,6 +43,10 @@ const Animals = sequelize.define("Animals", {
         },
         animalsUsersIndexNumber: {
             type: DataTypes.BIGINT
+        },
+        animalsInfoActivate: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
         }
     },
     {

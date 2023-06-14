@@ -33,6 +33,12 @@ exports.insertAnimal = async(request, result) => {
     // console.log("multer:\n", request.files);
 
     if(checkTokenResult.result == true) {
+        const usersIndexNumber = await Users.findOne({
+            attributes: [ "usersIndexNumber" ],
+            where: {
+                account: checkTokenResult.account
+            }
+        });
         let animalsPhotosList = new Array(request.files.length);
         for(let i = 0; i < request.files.length; i++) {
             animalsPhotosList[i] = request.files[i].filename;
@@ -49,7 +55,7 @@ exports.insertAnimal = async(request, result) => {
             animalsPhotos: animalsPhotosList.toString(),
             animalsRegistDate: currentTimeStamp,
             animalsModifyDate: currentTimeStamp,
-            animalsUsersIndexNumber: parseInt(request.body.animalsUsersIndexNumber),
+            animalsUsersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
         })
         .then(response => {
             if(response == null) {
@@ -86,6 +92,11 @@ exports.insertAnimal = async(request, result) => {
     }  
 };
 
+/**
+ * 회원색인번호 usersIndexNumber와 일치하는 동물 정보를 조회합니다.
+ * @param {*} request 
+ * @param {*} result 
+ */
 exports.findByUsersIndexNumber = async(request, result) => {
     const inputToken = request.headers.token;
     const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
@@ -94,7 +105,7 @@ exports.findByUsersIndexNumber = async(request, result) => {
         const usersAccount = await Users.findOne({
             attributes: [ "account" ],
             where: {
-                usersIndexNumber: request.params.animalsUsersIndexNumber
+                usersIndexNumber: request.params.animalsUsersIndexNumber,
             }
         });
         // console.log(usersAccount.dataValues.account);
@@ -102,7 +113,8 @@ exports.findByUsersIndexNumber = async(request, result) => {
             await Animals.findAll({
                 // attributes: ["animalsUsersIndexNumber"],
                 where: { 
-                    animalsUsersIndexNumber: request.params.animalsUsersIndexNumber
+                    animalsUsersIndexNumber: request.params.animalsUsersIndexNumber,
+                    animalsInfoActivate: 1
                 }
             }).then((response) => {
                 if(response == null) {
@@ -136,7 +148,124 @@ exports.findByUsersIndexNumber = async(request, result) => {
     }
 };
 
+/**
+ * 등록된 동물의 정보를 업데이트 하는 함수
+ * @param {*} request 
+ * @param {*} response 
+ */
+exports.updateInfo = async(request, response) => {
+    const inputToken = request.headers.token;
+    const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+    
+    if(checkTokenResult.result == true) {
+        const currentTimeStamp = CurrentDate.CurrentTimeStamp();
+        await Animals.update(
+            {
+                animalsName: request.body.animalsName,
+                animalsGender: parseInt(request.body.animalsGender),
+                animalsNeutered: parseInt(request.body.animalsNeutered),
+                animalsAge: parseInt(request.body.animalsAge),
+                animalsWeight: parseFloat(request.body.animalsWeight),
+                animalsModifyDate: currentTimeStamp,
+            },
+            {
+            where: {
+                animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
+            },
+            }
+        )
+        .then((res) => {
+            if(res[0] == 1) {
+                response.status(200).send({
+                    responseCode: 200,
+                    data: true,
+                    message: "정보 갱신 완료"
+                })
+            } else {
+                response.status(400).send({
+                    responseCode: 400,
+                    data: false,
+                    message: "정보 갱신 실패"
+                })
+            }
+        })
+        .catch((err) => {
+            response.status(400).send({
+                responseCode: 400,
+                data: false,
+                message: "정보 갱신 실패 데이터베이스 오류",
+                error: err
+            })
+        });        
+    } else {
+        response.status(400).send({
+            responseCode: 400,
+            data: false,
+            message: "Incorrect Auth Key"
+        })
+    }
+}
+
+/**
+ * 동물의 사진을 업데이트 하는 함수
+ * @param {*} request 
+ * @param {*} response 
+ */
 exports.updateImage = async(request, response) => {
     const inputToken = request.headers.token;
     const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+}
+
+/**
+ * 등록된 동물의 정보를 삭제하는 함수
+ * @param {*} request 
+ * @param {*} response 
+ */
+exports.deleteInfo = async(request, response) => {
+    const inputToken = request.headers.token;
+    const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+    
+    if(checkTokenResult.result == true) {
+        const currentTimeStamp = CurrentDate.CurrentTimeStamp();
+        await Animals.update(
+            {
+                animalsModifyDate: currentTimeStamp,
+                animalsInfoActivate: 2
+            },
+            {
+            where: {
+                animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
+            },
+            }
+        )
+        .then((res) => {
+            if(res[0] == 1) {
+                response.status(200).send({
+                    responseCode: 200,
+                    data: true,
+                    message: "삭제 완료"
+                })
+            } else {
+                response.status(400).send({
+                    responseCode: 400,
+                    data: false,
+                    message: "삭제 실패"
+                })
+            }
+        })
+        .catch((err) => {
+            response.status(400).send({
+                responseCode: 400,
+                data: false,
+                message: "삭제 실패 데이터베이스 오류",
+                error: err
+            })
+        });        
+    } else {
+        response.status(400).send({
+            responseCode: 400,
+            data: false,
+            message: "Incorrect Auth Key"
+        })
+    }
 }
