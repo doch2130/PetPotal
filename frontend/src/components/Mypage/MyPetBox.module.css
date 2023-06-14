@@ -62,3 +62,9 @@
   background-color: var(--main-default-dark-color);
   color: var(--main-bg-color);
 }
+
+@media (max-width: 576px) {
+  .rightWrap p {
+    width: 90%;
+  }
+}

@@ -24,7 +24,7 @@ const tempDataArray: any[] | (() => any[]) = [
     animalsWeight: 5,
     animalsCategory1: '고양이',
     animalsCategory2: '페르시안',
-    animalsPhotos: '/static/media/MainPage_Cat.9fed3dbb00482ebb7bdf.png',
+    animalsPhotos: '/static/media/MainPage_Cat.272ff640f2d534141921.png',
   }
 ]
 
