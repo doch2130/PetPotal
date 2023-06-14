@@ -1,4 +1,5 @@
 const multer = require("multer");
+const fs = require("fs");
 
 const Animals = require("../models/Animals");
 const Users = require("../models/Users");
@@ -105,7 +106,7 @@ exports.findByUsersIndexNumber = async(request, result) => {
         const usersAccount = await Users.findOne({
             attributes: [ "account" ],
             where: {
-                usersIndexNumber: request.params.animalsUsersIndexNumber,
+                usersIndexNumber: parseInt(request.params.animalsUsersIndexNumber),
             }
         });
         // console.log(usersAccount.dataValues.account);
@@ -124,6 +125,16 @@ exports.findByUsersIndexNumber = async(request, result) => {
                         message: "no result"
                     })
                 } else {
+                    if(response.length > 0) {
+                        response.forEach(e => {
+                            const prev = e.dataValues.animalsPhotos;
+                            if(prev == "") { 
+                                e.dataValues.animalsPhotos = "";
+                            } else {
+                                e.dataValues.animalsPhotos = `http://${request.hostname}:${request.socket.localPort}/api/animals/animalsPhotos/${prev}`;
+                            }
+                        });
+                    }
                     result.status(200).send({
                         responseCode: 200,
                         data: response
@@ -214,6 +225,93 @@ exports.updateInfo = async(request, response) => {
 exports.updateImage = async(request, response) => {
     const inputToken = request.headers.token;
     const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+    const prevImage = await Animals.findOne({
+        attributes: ["animalsPhotos"],
+        where: { animalsIndexNumber: parseInt(request.body.animalsIndexNumber) }
+    })
+    if(checkTokenResult) {
+        if(
+            prevImage.dataValues.animalsPhotos === undefined || prevImage.dataValues.animalsPhotos == "" ||
+            prevImage.dataValues.animalsPhotos == null || prevImage.dataValues.animalsPhotos == "null"
+        ) {
+            await Animals.update(
+                {
+                    animalsPhotos: request.file.filename,
+                },
+                {
+                    where: {
+                        animalsIndexNumber: request.body.animalsIndexNumber
+                    }
+                }
+            ).then((res) => {
+                if(res[0] == 1) {
+                    response.status(200).send({
+                        responseCode: 200,
+                        message: '동물 사진 업데이트 완료',
+                        data: true,
+                    });
+                } else {
+                    response.status(403).send({
+                        responseCode: 403,
+                        message: '동물 사진 업데이트 실패',
+                        data: false,
+                    });
+                }
+            })
+            .catch((err) => {
+                response.status(403).send({
+                    responseCode: 403,
+                    message: '동물 사진 업데이트 실패(데이터베이스 오류)',
+                    data: false,
+                    error: err
+                });
+            });
+        } else {
+            const fileExistCheck = fs.existsSync(`./data/animals/${prevImage.dataValues.animalsPhotos}`);
+            if(fileExistCheck == true) {
+                fs.rmSync(`./data/animals/${prevImage.dataValues.animalsPhotos}`);
+            }
+
+            await Animals.update(
+                {
+                    animalsPhotos: request.file.filename,
+                },
+                {
+                    where: {
+                        animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
+                    }
+                }   
+            ).then((res) => {
+                if(res[0] == 1) {
+                    response.status(200).send({
+                        responseCode: 200,
+                        message: '동물 사진 업데이트 완료',
+                        data: true,
+                    });
+                } else {
+                    response.status(403).send({
+                        responseCode: 403,
+                        message: '동물 사진 업데이트 실패',
+                        data: false,
+                    });
+                }
+            })
+            .catch((err) => {
+                response.status(403).send({
+                    responseCode: 403,
+                    message: '동물 사진 업데이트 실패(데이터베이스 오류)',
+                    data: false,
+                    error: err
+                });
+            });
+        }
+    } else {
+        response.status(500).send({
+            responseCode: 500,
+            message: 'Invalid Key',
+            data: false,
+          });
+    }
 }
 
 /**

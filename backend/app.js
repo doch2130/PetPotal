@@ -49,6 +49,7 @@ app.use('/api/test01', Test01Route);
 app.use('/api/users', UsersRoute);
 app.use('/api/users/profile', express.static('./data/profile'));
 app.use('/api/animals', AnimalsRoute);
+app.use("/api/animals/animalsPhotos", express.static("./data/animals"));
 app.use('/api/mateBoard', MateBoardRoute);
 
 app.get('/', (req, res) => {
