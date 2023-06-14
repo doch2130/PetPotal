@@ -104,7 +104,7 @@ export default function MyInfoModifyModal(props:propsData) {
     setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
     setValue('address1', data.sido);
     setValue('address2', data.sigungu);
-    setValue('address3', data.roadname);
+    setValue('address3', fullAddress.slice(fullAddress.indexOf(data.roadname)).trim());
   };
 
   const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
