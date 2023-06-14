@@ -83,7 +83,12 @@ export default function MemberJoin() {
 
     const result = await controller.join(apiObj);
     if(result.data.message === '회원가입 완료') {
-      alert(result.data.message);
+      // alert(result.data.message);
+      openAlert({
+        title: '회원가입 성공',
+        type: 'success',
+        content: result.data.message,
+      });
       navigate('/login');
     }
   };

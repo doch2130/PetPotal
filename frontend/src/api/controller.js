@@ -133,10 +133,13 @@ export default class Controller {
     return this.httpClient.get(`naverMapGeocoding?address=${address}`);
   }
 
+  // 메이트 게시판 - 전체 글 가져오기
+  async mateBoardList(pageNumber) {
+    return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`);
+  }
+
   // 메이트 게시판 - 좋아요 게시글 가져오기
   async mateLikeBoardList(account) {
-    return this.httpClient.get(
-      `mateBoard/mateLikeBoardList?account=${account}`
-    );
+    return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
   }
 }
