@@ -20,12 +20,24 @@ type useGetMateBoardListProps = {
 // };
 
 export const useGetMateBoardListQuery = ({ matePageNumber, options }: useGetMateBoardListProps) => {
+
+  // return useQuery(["fetch_default"], functionAPI.fetchDefault, {
+  //   onSuccess,
+  //   onError,
+  //   select:data => data.data
+  // });
+
+  // return useQuery
+
+
+
   const { data, ...queryInfo } = useQuery({
     queryKey: [`mateBoardList/${matePageNumber}`],
     queryFn: async () => {
       const result = await controller.mateBoardList(matePageNumber);
       return result.data;
-    }
+    },
   });
-  console.log('data ', data);
+  
+  return data;
 }

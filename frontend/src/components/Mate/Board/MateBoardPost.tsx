@@ -78,18 +78,26 @@ export default function MateBoardPost() {
 
   }, [historyValue]);
 
-  // useGetMateBoardListQuery({matePageNumber});
-  const { status, data, error } = useGetMateBoardList(matePageNumber);
-  // const useGetMateBoardList = (matePageNumber:string) => {
-  function useGetMateBoardList(matePageNumber:string) {
-      return useQuery({
-        queryKey: ['mateBoardList'],
-        queryFn: async () => {
-          const result = await controller.mateBoardList(matePageNumber);
-          return result.data;
-        }
-      });
-  }
+  // React Query hook 
+  // 임시 주석
+  // hook으로 사용할 경우, backend의 auth 함수가 실행되기 전에 실행이 되므로
+  // header에 token이 저장되지 않는다.
+  // const { token } = request.signedCookies; 를 사용하는 방법 등을 사용하면 해결할 수 있다.
+  // const temp = useGetMateBoardListQuery({matePageNumber});
+  // console.log('temp ', temp);
+
+  // React Query default
+  // 임시 주석
+  // const { status, data, error } = useGetMateBoardList(matePageNumber);
+  // function useGetMateBoardList(matePageNumber:string) {
+  //     return useQuery({
+  //       queryKey: ['mateBoardList'],
+  //       queryFn: async () => {
+  //         const result = await controller.mateBoardList(matePageNumber);
+  //         return result.data;
+  //       }
+  //     });
+  // }
 
   return (
     <div className={style.wrap}>
