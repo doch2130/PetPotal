@@ -1,8 +1,11 @@
 const multer = require("multer");
 
 const Animals = require("../models/Animals");
+const Users = require("../models/Users");
+
 const CheckToken = require("../middleware/CheckToken");
 const CurrentDate = require("../middleware/CurrentDate");
+
 
 const ConvertAnimalsCategory2 = (animalsCategory2) => {
     let result = "";
@@ -88,29 +91,46 @@ exports.findByUsersIndexNumber = async(request, result) => {
     const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
     
     if(checkTokenResult.result == true) {
-        await Animals.findAll({
-            // attributes: ["animalsUsersIndexNumber"],
-            where: { 
-                animalsUsersIndexNumber: request.params.animalsUsersIndexNumber
+        const usersAccount = await Users.findOne({
+            attributes: [ "account" ],
+            where: {
+                usersIndexNumber: request.params.animalsUsersIndexNumber
             }
-        }).then((response) => {
-            if(response == null) {
-                result.send({
-                    responseCode: 304,
-                    message: "no result"
-                })
-            }
-            else {
-                result.send({
-                    responseCode: 200,
-                    data: response
-                })
-            }
-        })
-    }
-    else {
-        result.send({
+        });
+        // console.log(usersAccount.dataValues.account);
+        if(usersAccount.dataValues.account == checkTokenResult.account) {
+            await Animals.findAll({
+                // attributes: ["animalsUsersIndexNumber"],
+                where: { 
+                    animalsUsersIndexNumber: request.params.animalsUsersIndexNumber
+                }
+            }).then((response) => {
+                if(response == null) {
+                    result.status(304).send({
+                        responseCode: 304,
+                        data: false,
+                        message: "no result"
+                    })
+                } else {
+                    result.status(200).send({
+                        responseCode: 200,
+                        data: response
+                    })
+                }
+            })
+        } else {
+            result.status(403).send({
+                responseCode: 403,
+                data: false,
+                message: "요청한 사용자는 해당 데이터에 대한 권한이 없습니다."
+            })
+        }
+
+        
+    } else {
+        result.status(400).send({
             responseCode: 400,
+            data: false,
             message: "Incorrect Auth Key"
         })
     }
