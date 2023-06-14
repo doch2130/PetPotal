@@ -443,6 +443,7 @@ exports.updateUsers = async (request, response) => {
  */
 exports.selectUsersProfileImage = async (request, response) => {
   // console.log(request.query);
+  // console.log(request);
   await Users.findOne({
     attributes: ['profileImageFileName'],
     where: { account: request.query.account },
@@ -451,7 +452,7 @@ exports.selectUsersProfileImage = async (request, response) => {
       response.status(200).send({
         responseCode: 200,
         message: 'profileImage Loading complete',
-        data: `http://${request.hostname}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
+        data: `http://${request.hostname}:${request.socket.localPort}${request._parsedOriginalUrl.pathname}/${res.dataValues.profileImageFileName}`,
       });
     })
     .catch((err) => {
