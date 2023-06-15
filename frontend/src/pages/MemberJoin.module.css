@@ -98,3 +98,26 @@
 .joinSubmitButton:hover {
     background-color: var(--main-default-dark-color);
 }
+
+@media (max-width: 576px) {
+    .joinContainer {
+        min-width: auto;
+    }
+    .joinTitle {
+        margin-bottom: 1rem;
+    }
+    .joinButton {
+        flex-basis: 75px;
+    }
+    .inputColumnWrapper {
+        padding: 1rem 5px 0;
+    }
+    .joinLabel {
+        flex-basis: 25%;
+        font-size: 0.9rem;
+    }
+    .joinInput {
+        padding: 0 5px 0px 5px;
+        font-size: 1rem;
+    }
+}

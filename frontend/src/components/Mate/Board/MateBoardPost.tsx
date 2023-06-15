@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import writeImage from '../../../assets/icon/pencil.png';
 import AnimalCard from '../../UI/AnimalCard';
 import style from './MateBoardPost.module.css';
@@ -8,6 +8,8 @@ import { UserType, userState } from '../../../recoil/user';
 import { useConfirm } from '../../../hooks/useConfirm';
 import Controller from '../../../api/controller';
 import { useAlert } from '../../../hooks/useAlert';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
 
 export default function MateBoardPost() {
   const navigater = useNavigate();
@@ -59,11 +61,43 @@ export default function MateBoardPost() {
     }
 
     if(userInfo[0].account !== '') {
-      getMateLikeBoardList();
+      // 일단 주석처리
+      // 개인 좋아요 메이트 리스트 가져오기
+      // getMateLikeBoardList();
     }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo[0].account]);
+
+  const historyValue = useParams();
+  const [ matePageNumber, setMatePageNumber ] = useState<string>('1');
+  useEffect(():void => {
+    const historyKeyword = historyValue.pageNumber;
+
+    if(historyKeyword) setMatePageNumber(historyKeyword);
+
+  }, [historyValue]);
+
+  // React Query hook 
+  // 임시 주석
+  // hook으로 사용할 경우, backend의 auth 함수가 실행되기 전에 실행이 되므로
+  // header에 token이 저장되지 않는다.
+  // const { token } = request.signedCookies; 를 사용하는 방법 등을 사용하면 해결할 수 있다.
+  // const temp = useGetMateBoardListQuery({matePageNumber});
+  // console.log('temp ', temp);
+
+  // React Query default
+  // 임시 주석
+  // const { status, data, error } = useGetMateBoardList(matePageNumber);
+  // function useGetMateBoardList(matePageNumber:string) {
+  //     return useQuery({
+  //       queryKey: ['mateBoardList'],
+  //       queryFn: async () => {
+  //         const result = await controller.mateBoardList(matePageNumber);
+  //         return result.data;
+  //       }
+  //     });
+  // }
 
   return (
     <div className={style.wrap}>

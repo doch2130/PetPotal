@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       {path: '/search/:keyword', element: <Search />},
       {path: '/login', element: <RestrictedPage><LoginPage /></RestrictedPage>},
       {path: '/mypage/:page', element: <PrivatePage><MyPage /></PrivatePage>},
-      {path: '/mate', element: <MatePage />},
+      {path: '/mate/:pageNumber', element: <MatePage />},
       {path: '/mate/write', element: <PrivatePage><MateWritePage /></PrivatePage>},
       {path: '/mate/detail/1', element: <MateDetailPage />},
     ]
