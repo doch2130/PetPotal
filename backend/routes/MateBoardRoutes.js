@@ -12,5 +12,7 @@ router.post('/textEditorImgFileUpload', MateBoardController.textEditorImgFileUpl
 router.get('/findAllContent/:pageNumber', MateBoardController.findAllMateBoard);
 router.get('/findByUser/:usersIndexNumber', MateBoardController.findByUsersIndexNumber);
 router.get("/findByIndex/:mateBoardIndexNumber", MateBoardController.findByIndexNumber);
+router.put('/updateContent', uploadInsertContentHandler, MateBoardController.updateMateBoard);
+router.put("/deleteContent", MateBoardController.deleteMateBoard);
 
 module.exports = router;

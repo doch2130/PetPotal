@@ -57,4 +57,10 @@ const Animals = sequelize.define("Animals", {
     }
 );
 
+// Animals.hasMany(MateBoard, {
+//     foreignKey: "usersIndexNumber", 
+//     targetKey: "usersIndexNumber", 
+//     as: "MateBoard"
+// });
+
 module.exports = Animals;

@@ -109,8 +109,16 @@ exports.findByUsersIndexNumber = async(request, result) => {
                 usersIndexNumber: parseInt(request.params.animalsUsersIndexNumber),
             }
         });
+        console.log(usersAccount);
         // console.log(usersAccount.dataValues.account);
-        if(usersAccount.dataValues.account == checkTokenResult.account) {
+        if(usersAccount == null) {
+            result.status(403).send({
+                responseCode: 403,
+                data: false,
+                message: "데이터가 없습니다."
+            })
+        }
+        else if(usersAccount.dataValues.account == checkTokenResult.account) {
             await Animals.findAll({
                 // attributes: ["animalsUsersIndexNumber"],
                 where: { 
@@ -180,9 +188,9 @@ exports.updateInfo = async(request, response) => {
                 animalsModifyDate: currentTimeStamp,
             },
             {
-            where: {
-                animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
-            },
+                where: {
+                    animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
+                }
             }
         )
         .then((res) => {

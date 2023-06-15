@@ -36,56 +36,89 @@ exports.insertMateBoard = async (request, result) => {
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
   if(checkTokenResult.result == true) {
+    
     let matePhotosList = new Array(request.files.length);
+    
     for (let i = 0; i < request.files.length; i++) {
       matePhotosList[i] = request.files[i].filename;
     }
 
-    await MateBoard.create({
-      mateBoardTitle: request.body.title,
-      mateBoardFee: parseInt(request.body.amount),
-      mateBoardContent1: request.body.detailContent,
-      mateBoardContent2: request.body.cautionContent,
-      mateBoardPhotos: matePhotosList.toString(),
-      mateBoardCategory: parseInt(request.body.mateBoardCategory),
-      mateBoardRegistDate: currentTimeStamp,
-      mateBoardModifyDate: currentTimeStamp,
-      usersIndexNumber: parseInt(request.body.usersIndexNumber),
-      animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
-      // mateBoardTitle: request.body.mateBoardTitle,
-      // mateBoardFee: parseInt(request.body.mateBoardFee),
-      // mateBoardContent1: request.body.mateBoardContent1,
-      // mateBoardContent2: request.body.mateBoardContent2,
-      // mateBoardPhotos: matePhotosList.toString(),
-      // mateBoardCategory: parseInt(request.body.mateBoardCategory),
-      // mateBoardRegistDate: currentTimeStamp,
-      // mateBoardModifyDate: currentTimeStamp,
-      // usersIndexNumber: parseInt(request.body.usersIndexNumber),
-      // animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
-    })
-      .then((response) => {
-        if (response == null) {
-          result.send({
+    let createMateBoard;
+
+    if(request.body.animalsIndexNumber === null || request.body.animalsIndexNumber === undefined) {      
+      createMateBoard = await MateBoard.create({
+        mateBoardTitle: request.body.title,
+        mateBoardFee: parseInt(request.body.amount),
+        mateBoardContent1: request.body.detailContent,
+        mateBoardContent2: request.body.cautionContent,
+        mateBoardPhotos: matePhotosList.toString(),
+        mateBoardCategory: parseInt(request.body.mateBoardCategory),
+        mateBoardRegistDate: currentTimeStamp,
+        mateBoardModifyDate: currentTimeStamp,
+        usersIndexNumber: parseInt(request.body.usersIndexNumber)
+      })
+      .then(res => {
+        if(res == null) {
+          result.status(403).send({
             responseCode: 403,
             data: false,
-            message: 'no result',
+            message: "게시글 등록 실패",
           });
-        } else {
-          result.send({
+        }
+        else {
+          result.status(200).send({
             responseCode: 200,
             data: true,
+            message: "게시글 등록 완료"
           });
         }
       })
-      .catch((error) => {
-        if (error != null) {
-          result.send({
-            responseCode: 400,
-            message: 'Something wrong...',
-            error: error,
+      .catch(err => {
+        result.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "게시글 등록 실패 데이터베이스 오류",
+          error: err
+        });
+      })  
+    } else {
+      createMateBoard = await MateBoard.create({
+        mateBoardTitle: request.body.title,
+        mateBoardFee: parseInt(request.body.amount),
+        mateBoardContent1: request.body.detailContent,
+        mateBoardContent2: request.body.cautionContent,
+        mateBoardPhotos: matePhotosList.toString(),
+        mateBoardCategory: parseInt(request.body.mateBoardCategory),
+        mateBoardRegistDate: currentTimeStamp,
+        mateBoardModifyDate: currentTimeStamp,
+        usersIndexNumber: parseInt(request.body.usersIndexNumber),
+        animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
+      })
+      .then(res => {
+        if(res == null) {
+          result.status(403).send({
+            responseCode: 403,
+            data: false,
+            message: "게시글 등록 실패",
           });
         }
-      });
+        else {
+          result.status(200).send({
+            responseCode: 200,
+            data: true,
+            message: "게시글 등록 완료"
+          });
+        }
+      })
+      .catch(err => {
+        result.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "게시글 등록 실패 데이터베이스 오류",
+          error: err
+        });
+      })
+    }
   } else {
     result.send({
       responseCode: 400,
@@ -94,6 +127,12 @@ exports.insertMateBoard = async (request, result) => {
   }
 };
 
+/**
+ * 모든 글 목록을 조회하는 함수  
+ * 게시글 등록 날짜 기준 최신순으로 10개씩 출력합니다.
+ * @param {*} request 
+ * @param {*} result 
+ */
 exports.findAllMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
@@ -116,6 +155,9 @@ exports.findAllMateBoard = async (request, result) => {
           attributes: [ "account" ]
         }
       ],
+      where: {
+        mateBoardStatus: 1,
+      },
       offset: offset,
       limit: 10,
       order: [['mateBoardRegistDate', 'DESC']],
@@ -140,6 +182,11 @@ exports.findAllMateBoard = async (request, result) => {
   }
 };
 
+/**
+ * 사용자 색인번호를 매개변수로 글 목록을 조회하는 함수
+ * @param {*} request 
+ * @param {*} result 
+ */
 exports.findByUsersIndexNumber = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
@@ -155,6 +202,7 @@ exports.findByUsersIndexNumber = async (request, result) => {
         }
       ],
       where: {
+        mateBoardStatus: 1,
         usersIndexNumber: request.params.usersIndexNumber,
       },
     }).then((response) => {
@@ -178,6 +226,11 @@ exports.findByUsersIndexNumber = async (request, result) => {
   }
 };
 
+/**
+ * 게시글 내부 에디터의 첨부파일을 위한 함수
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.textEditorImgFileUpload = (req, res) => {
   try {
     if (!fs.existsSync('./data')) {
@@ -207,6 +260,11 @@ exports.textEditorImgFileUpload = (req, res) => {
   }
 };
 
+/**
+ * 게시글 상세 조회를 위한 메서드 (색인번호를 매개변수로 활용)
+ * @param {*} request 
+ * @param {*} result 
+ */
 exports.findByIndexNumber = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
@@ -217,7 +275,7 @@ exports.findByIndexNumber = async (request, result) => {
       include: [
         {
           model: Animals,
-          as: "Pets",
+          as: "Animals",
           attributes: [
             "animalsName", "animalsGender", "animalsNeutered",
             "animalsAge", "animalsWeight",
@@ -256,6 +314,177 @@ exports.findByIndexNumber = async (request, result) => {
       });
     })
   } else {
+    result.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
+  }
+};
+
+/**
+ * 게시글 수정을 위한 메서드
+ * @param {*} request 
+ * @param {*} result 
+ */
+exports.updateMateBoard = async (request, result) => {
+  let inputToken = request.headers.token;
+  let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+  let currentTimeStamp = CurrentDate.CurrentTimeStamp();
+
+  if(checkTokenResult.result == true) {
+    
+    let matePhotosList = new Array(request.files.length);
+    
+    for (let i = 0; i < request.files.length; i++) {
+      matePhotosList[i] = request.files[i].filename;
+    }
+
+    let createMateBoard;
+
+    if(request.body.animalsIndexNumber === null || request.body.animalsIndexNumber === undefined) {      
+      createMateBoard = await MateBoard.update(
+        {
+          mateBoardTitle: request.body.title,
+          mateBoardFee: parseInt(request.body.amount),
+          mateBoardContent1: request.body.detailContent,
+          mateBoardContent2: request.body.cautionContent,
+          mateBoardPhotos: matePhotosList.toString(),
+          mateBoardCategory: parseInt(request.body.mateBoardCategory),
+          mateBoardModifyDate: currentTimeStamp,
+          usersIndexNumber: parseInt(request.body.usersIndexNumber)
+        },
+        {
+          where: {
+            mateBoardIndexNumber: parseInt(request.body.mateBoardIndexNumber)
+          }
+        }
+      )
+      .then(res => {
+        if(res == null) {
+          result.status(403).send({
+            responseCode: 403,
+            data: false,
+            message: "게시글 수정 실패",
+          });
+        }
+        else {
+          result.status(200).send({
+            responseCode: 200,
+            data: true,
+            message: "게시글 수정 완료"
+          });
+        }
+      })
+      .catch(err => {
+        result.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "게시글 수정 실패 데이터베이스 오류",
+          error: err
+        });
+      })  
+    } else {
+      createMateBoard = await MateBoard.update(
+        {
+          mateBoardTitle: request.body.title,
+          mateBoardFee: parseInt(request.body.amount),
+          mateBoardContent1: request.body.detailContent,
+          mateBoardContent2: request.body.cautionContent,
+          mateBoardPhotos: matePhotosList.toString(),
+          mateBoardCategory: parseInt(request.body.mateBoardCategory),
+          mateBoardModifyDate: currentTimeStamp,
+          usersIndexNumber: parseInt(request.body.usersIndexNumber),
+          animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
+        },
+        {
+          where: {
+            mateBoardIndexNumber: parseInt(request.body.mateBoardIndexNumber)
+          }
+        }
+      )
+      .then(res => {
+        if(res == null) {
+          result.status(403).send({
+            responseCode: 403,
+            data: false,
+            message: "게시글 수정 실패",
+          });
+        }
+        else {
+          result.status(200).send({
+            responseCode: 200,
+            data: true,
+            message: "게시글 수정 완료"
+          });
+        }
+      })
+      .catch(err => {
+        result.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "게시글 수정 실패 데이터베이스 오류",
+          error: err
+        });
+      })
+    }
+  } else {
+    result.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
+  }
+};
+
+/**
+ * 게시글 삭제를 위한 메서드
+ * @param {*} request 
+ * @param {*} result 
+ */
+exports.deleteMateBoard = async (request, result) => {
+  let inputToken = request.headers.token;
+  let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+  let currentTimeStamp = CurrentDate.CurrentTimeStamp();
+
+  if(checkTokenResult.result == true) {
+    console.log(request.body);
+    await MateBoard.update(
+        {
+          mateBoardModifyDate: currentTimeStamp,
+          mateBoardStatus: parseInt(3)
+        },
+        {
+          where: {
+            mateBoardIndexNumber: parseInt(request.body.mateBoardIndexNumber)
+          }
+        }
+      )
+      .then(res => {
+        console.log(res);
+        if(res[0] !== 1) {
+          result.status(403).send({
+            responseCode: 403,
+            data: false,
+            message: "게시글 삭제 실패",
+          });
+        }
+        else {
+          result.status(200).send({
+            responseCode: 200,
+            data: true,
+            message: "게시글 삭제 완료"
+          });
+        }
+      })
+      .catch(err => {
+        result.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "게시글 삭제 실패 데이터베이스 오류",
+          error: err
+        });
+      })  
+  }
+  else {
     result.send({
       responseCode: 400,
       message: 'Incorrect Key',
