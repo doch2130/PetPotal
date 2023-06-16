@@ -2,18 +2,48 @@ import style from './AnimalCard.module.css';
 import animalImage from '../../assets/matepage/MateImg_3.png';
 import emptyHeart from '../../assets/icon/empty_heart.png';
 import fullHeart from '../../assets/icon/full_heart.png';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useState } from 'react';
+import { useConfirm } from '../../hooks/useConfirm';
 
 interface animalCardInterface {
   detailPostMoveHandler: Function;
 }
 
 export default function AnimalCard(props:animalCardInterface) {
+  const [ heart, setHeart ] = useState<Boolean>(false);
+  const { openConfirm, closeConfirm } = useConfirm();
+  const postHeartHandler = (event:any) => {
+    // 상위 엘리먼트들로의 이벤트 전파를 중단
+    event.stopPropagation();
+    if(heart) {
+      openConfirm({
+        title: 'mateBoardHeart',
+        content: '좋아요를 해제하시겠습니까?',
+        callback: () => {
+          setHeart(false);
+          closeConfirm();
+        }
+      });
+    } else {
+      openConfirm({
+        title: 'mateBoardHeart',
+        content: '좋아요를 등록하시겠습니까?',
+        callback: () => {
+          setHeart(true);
+          closeConfirm();
+        }
+      });
+    }
+  }
+
+  const heartStyle = `${style.heart} ${heart ? style.heartActive : ''}`;
+
   return (
     <div className={style.wrap} onClick={props.detailPostMoveHandler as MouseEventHandler}>
       <div className={style.image}>
         <img src={animalImage} alt='animalImage' />
-        <img src={emptyHeart} alt='emptyHeart'  />
+        {heart ? <img src={fullHeart} alt='fullHeart' className={heartStyle} onClick={postHeartHandler}/> 
+        : <img src={emptyHeart} alt='emptyHeart' className={heartStyle} onClick={postHeartHandler}/> }
         {/* <img src={fullHeart} alt='fullHeart' /> */}
       </div>
       <div className={style.wrapText}>
