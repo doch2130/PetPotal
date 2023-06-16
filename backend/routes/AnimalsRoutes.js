@@ -13,7 +13,7 @@ const uploadMulty = MulterFileHandler.MultiFileHandler("animals");
 const uploadSingle = MulterFileHandler.SingleFileHandler("animals");
 const multiFileUploadHandler = uploadMulty.array("animalsPhotos", 5);
 const singleFileUploadHandler = uploadSingle.single("animalsPhotos");
-const animalsPhotoUpload = AnimalsPhotosFileHandler.profileImageFileHandler();
+const animalsPhotoUpload = AnimalsPhotosFileHandler.ImageFileHandler();
 const animalsPhotoUploadController = animalsPhotoUpload.single("animalsPhotos");
 
 router.get("/findByUser/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);

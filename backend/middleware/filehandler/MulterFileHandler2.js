@@ -2,13 +2,13 @@ const multer = require('multer');
 const path = require('path');
 const fs = require("fs");
 
-const profileImageFileHandler = () => {
-    if(!fs.existsSync("./data/profile")) {
-        fs.mkdirSync("./data/profile");
+const ImageFileHandler = (dirName) => {
+    if(!fs.existsSync(`./data/${dirName}`)) {
+        fs.mkdirSync(`./data/${dirName}`);
         return multer({
             storage: multer.diskStorage({
             destination(req, file, res) {
-                res(null, `./data/profile/`);
+                res(null, `./data/${dirName}`);
             },
             filename(req, file, res) {
                 console.log("file req:", req);
@@ -17,13 +17,13 @@ const profileImageFileHandler = () => {
                 res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
             },
             }),
-            // limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한
+            limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한
       });
     } else {
         return multer({
             storage: multer.diskStorage({
             destination(req, file, res) {
-                res(null, `./data/profile/`);
+                res(null, `./data/${dirName}`);
             },
             filename(req, file, res) {
                 const ext = path.extname(file.originalname);
@@ -31,11 +31,11 @@ const profileImageFileHandler = () => {
                 res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
             },
             }),
-            // limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한
+            limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한
       });
     }    
 };
 
 module.exports = {
-    profileImageFileHandler
+    ImageFileHandler
 }

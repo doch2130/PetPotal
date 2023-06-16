@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require("fs");
 
-const profileImageFileHandler = () => {
+const ImageFileHandler = () => {
     if(!fs.existsSync("./data/animals")) {
         fs.mkdirSync("./data/animals");
         return multer({
@@ -37,5 +37,5 @@ const profileImageFileHandler = () => {
 };
 
 module.exports = {
-    profileImageFileHandler
+    ImageFileHandler
 }
