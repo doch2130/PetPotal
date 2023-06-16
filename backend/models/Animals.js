@@ -43,6 +43,10 @@ const Animals = sequelize.define("Animals", {
         },
         animalsUsersIndexNumber: {
             type: DataTypes.BIGINT
+        },
+        animalsInfoActivate: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
         }
     },
     {
@@ -52,5 +56,11 @@ const Animals = sequelize.define("Animals", {
         modelName: "Animals"
     }
 );
+
+// Animals.hasMany(MateBoard, {
+//     foreignKey: "usersIndexNumber", 
+//     targetKey: "usersIndexNumber", 
+//     as: "MateBoard"
+// });
 
 module.exports = Animals;

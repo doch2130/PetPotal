@@ -1,0 +1,21 @@
+{
+  "name": "petpotal",
+  "version": "0.0.1",
+  "description": "2023 Study Project",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PetPotal/PetPotal.git#develop"
+  },
+  "author": "gruzam0615, doch2130, tux31337",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PetPotal/PetPotal/issues"
+  },
+  "homepage": "https://github.com/PetPotal/PetPotal/tree/develop#readme",
+  "dependencies": {
+  }
+}

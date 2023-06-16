@@ -34,7 +34,7 @@ const MateBoard = sequelize.define("MateBoard", {
         mateBoardModifyDate: {
             type: DataTypes.STRING
         },
-        mateBoardModifyDate: {
+        mateBoardStatus: {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
@@ -54,10 +54,16 @@ const MateBoard = sequelize.define("MateBoard", {
     }
 );
 
-// MateBoard.belongsTo(Users, { 
-//     foreignKey: "usersIndexNumber", 
-//     targetKey: "usersIndexNumber" ,
-//     as: "Users"
-// });
+MateBoard.belongsTo(Users, { 
+    foreignKey: "usersIndexNumber", 
+    targetKey: "usersIndexNumber", 
+    as: "Users"
+});
+
+MateBoard.belongsTo(Animals, {
+    foreignKey: "animalsIndexNumber",
+    targetKey: "animalsIndexNumber",
+    as: "Animals"
+})
 
 module.exports = MateBoard;

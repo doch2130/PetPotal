@@ -443,6 +443,7 @@ exports.updateUsers = async (request, response) => {
  */
 exports.selectUsersProfileImage = async (request, response) => {
   // console.log(request.query);
+  // console.log(request);
   await Users.findOne({
     attributes: ['profileImageFileName'],
     where: { account: request.query.account },
@@ -451,7 +452,7 @@ exports.selectUsersProfileImage = async (request, response) => {
       response.status(200).send({
         responseCode: 200,
         message: 'profileImage Loading complete',
-        data: `http://${request.hostname}:3010${request.originalUrl}/${res.dataValues.profileImageFileName}`,
+        data: `http://${request.hostname}:${request.socket.localPort}${request._parsedOriginalUrl.pathname}/${res.dataValues.profileImageFileName}`,
       });
     })
     .catch((err) => {
@@ -484,7 +485,7 @@ exports.updateProfileImage = async (request, response) => {
   // console.log(previousProfileFileName.dataValues.profileImageFileName);
 
   if (checkTokenResult) {
-    if (
+    if(
       previousProfileFileName.dataValues.profileImageFileName === undefined ||
       previousProfileFileName.dataValues.profileImageFileName == '' ||
       previousProfileFileName.dataValues.profileImageFileName == null ||
@@ -499,21 +500,20 @@ exports.updateProfileImage = async (request, response) => {
             account: uploaderAccount,
           },
         }
-      )
-        .then((res) => {
-          response.status(200).send({
-            responseCode: 200,
-            message: 'profile update success',
-            data: true,
-          });
-        })
-        .catch((err) => {
-          response.status(403).send({
-            responseCode: 403,
-            message: 'profile update failure',
-            data: false,
-          });
+      ).then((res) => {
+        response.status(200).send({
+          responseCode: 200,
+          message: 'profile update success',
+          data: true,
         });
+      })
+      .catch((err) => {
+        response.status(403).send({
+          responseCode: 403,
+          message: 'profile update failure',
+          data: false,
+        });
+      });
     } else {
       // console.log("existsSync:", await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`)); // return true or false
       const fileExistCheck = await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`);
