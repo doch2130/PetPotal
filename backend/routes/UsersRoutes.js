@@ -2,10 +2,10 @@ const express = require('express');
 const passport = require('passport');
 
 const UsersController = require('../controller/UsersController');
-const ProfileFileHandler = require('../middleware/filehandler/ProfileFileHandler');
+const MulterFileHandler2 = require('../middleware/filehandler/MulterFileHandler2');
 
 const router = express.Router();
-const userProfileImageUpload = ProfileFileHandler.profileImageFileHandler();
+const userProfileImageUpload = MulterFileHandler2.ImageFileHandler("profile");
 const userProfileImageUploadController = userProfileImageUpload.single('usersProfile');
 const { signInState, noSignInState, } = require('../middleware/passport/SignInState');
 
