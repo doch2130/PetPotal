@@ -4,34 +4,46 @@ import emptyHeart from '../../assets/icon/empty_heart.png';
 import fullHeart from '../../assets/icon/full_heart.png';
 import { MouseEventHandler, useState } from 'react';
 import { useConfirm } from '../../hooks/useConfirm';
+import { useAlert } from '../../hooks/useAlert';
 
 interface animalCardInterface {
   detailPostMoveHandler: Function;
+  userId? : String;
 }
 
 export default function AnimalCard(props:animalCardInterface) {
+  const { userId } = props;
   const [ heart, setHeart ] = useState<Boolean>(false);
   const { openConfirm, closeConfirm } = useConfirm();
+  const { openAlert } = useAlert();
   const postHeartHandler = (event:any) => {
     // 상위 엘리먼트들로의 이벤트 전파를 중단
     event.stopPropagation();
-    if(heart) {
-      openConfirm({
-        title: 'mateBoardHeart',
-        content: '좋아요를 해제하시겠습니까?',
-        callback: () => {
-          setHeart(false);
-          closeConfirm();
-        }
-      });
+    if(userId !== '' && userId !== undefined) {
+      if(heart) {
+        openConfirm({
+          title: 'mateBoardHeart',
+          content: '좋아요를 해제하시겠습니까?',
+          callback: () => {
+            setHeart(false);
+            closeConfirm();
+          }
+        });
+      } else {
+        openConfirm({
+          title: 'mateBoardHeart',
+          content: '좋아요를 등록하시겠습니까?',
+          callback: () => {
+            setHeart(true);
+            closeConfirm();
+          }
+        });
+      }
     } else {
-      openConfirm({
-        title: 'mateBoardHeart',
-        content: '좋아요를 등록하시겠습니까?',
-        callback: () => {
-          setHeart(true);
-          closeConfirm();
-        }
+      openAlert({
+        title: 'mateBoardHeart Login',
+        type: 'error',
+        content: '로그인 이후 사용할 수 있습니다'
       });
     }
   }

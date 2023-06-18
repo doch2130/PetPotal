@@ -24,6 +24,7 @@ export default function MateBoardPost() {
   const controller = new Controller();
   const [ likeBoardList, setLikeBoardList ] = useState();
   const { openAlert } = useAlert();
+  const [ viewChange, setViewChange ] = useState<Boolean>(true);
 
   const detailPostMoveHandler = () => {
     navigater('/mate/detail/1');
@@ -44,6 +45,10 @@ export default function MateBoardPost() {
         return ;
       }
     });
+  }
+
+  const viewChangeFunction = ():void => {
+    setViewChange(!viewChange);
   }
 
   useEffect(() => {
@@ -111,11 +116,31 @@ export default function MateBoardPost() {
           </select>
         </div>
       </div>
+      <div className={style.viewChange}>
+          <span>보기</span>
+          {viewChange ? 
+          <svg width="21" height="21" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="appsAltIconTitle" onClick={viewChangeFunction}>
+            <rect x="5" y="5" width="2" height="2"/>
+            <rect x="11" y="5" width="2" height="2"/>
+            <rect x="17" y="5" width="2" height="2"/>
+            <rect x="5" y="11" width="2" height="2"/>
+            <rect x="11" y="11" width="2" height="2"/>
+            <rect x="17" y="11" width="2" height="2"/>
+            <rect x="5" y="17" width="2" height="2"/>
+            <rect x="11" y="17" width="2" height="2"/>
+            <rect x="17" y="17" width="2" height="2"/>
+          </svg>
+           :
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="21" height="21" onClick={viewChangeFunction}>
+            <path d="M8.75 5.5h11.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1 0-1.5Zm0 6h11.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1 0-1.5Zm0 6h11.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1 0-1.5ZM5 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM4 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path>
+          </svg>
+          }
+        </div>
       <div className={style.body}>
         {tempData.map((el, index) => {
           return (
             <div className={style.AnimalCardWrap} key={index}>
-              <AnimalCard detailPostMoveHandler={detailPostMoveHandler} />
+              <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} />
             </div>
           );
         })}
