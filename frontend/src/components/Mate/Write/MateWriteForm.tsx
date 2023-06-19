@@ -8,6 +8,7 @@ import style from './MateWriteForm.module.css';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
+import { useAlert } from '../../../hooks/useAlert';
 
 interface mateWriteFormInterface {
   imgFile: Array<File>;
@@ -46,6 +47,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   const wrtieType = watch("writeType");
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
+  const { openAlert } = useAlert();
   const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
   const [ mapData, setMapData ] = useState<mapDataInterface>({
     x: 0,
@@ -53,6 +55,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
     _lng: 0,
     _lat: 0,
   });
+  
 
   const onSubmit = async (data:MateWriteFormInput):Promise<void> => {
     if(wrtieType === '구함') {
@@ -79,7 +82,21 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           formData.append('mateBoardPhotos', el);
         });
         const result = await controller.mateWrite(formData);
-        console.log('result : ', result);
+        // console.log('result : ', result);
+        if(result.data.responseCode === 200) {
+          openAlert({
+            title: 'Mate Board Create Success',
+            type: 'success',
+            content: '메이트 게시글이 등록되었습니다.'
+          });
+          navigate('/mate/1');
+        } else {
+          openAlert({
+            title: 'Mate Board Create Error',
+            type: 'error',
+            content: '글 생성 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
+          });
+        }
       }
     });
 
