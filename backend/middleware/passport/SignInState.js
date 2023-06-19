@@ -4,8 +4,10 @@ module.exports = {
             next();
         }
         else {
+            res.clearCookie('token');
             res.status(403).send({
                 responseCode: 403,
+                data: false,
                 message: "Need SignIn"
             });
         }
@@ -17,6 +19,7 @@ module.exports = {
         else {
             res.status(403).send({
                 responseCode: 403,
+                data: false,
                 message: "Already Sign In"
             });
         }

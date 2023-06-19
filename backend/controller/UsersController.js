@@ -474,87 +474,97 @@ exports.selectUsersProfileImage = async (request, response) => {
  */
 exports.updateProfileImage = async (request, response) => {
   // console.log(request.file);
-  console.log(request.body);
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token
-  );
-  const uploaderAccount = request.body.account;
-  const previousProfileFileName = await Users.findOne({
-    attributes: ['profileImageFileName'],
-    where: { account: uploaderAccount },
-  });
-  // console.log(previousProfileFileName.dataValues.profileImageFileName);
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+    const uploaderAccount = checkTokenResult.account;
 
-  if (checkTokenResult) {
-    if(
-      previousProfileFileName.dataValues.profileImageFileName === undefined ||
-      previousProfileFileName.dataValues.profileImageFileName == '' ||
-      previousProfileFileName.dataValues.profileImageFileName == null ||
-      previousProfileFileName.dataValues.profileImageFileName == 'null'
-    ) {
-      await Users.update(
-        {
-          profileImageFileName: request.file.filename,
-        },
-        {
-          where: {
-            account: uploaderAccount,
+  if(checkTokenResult.result) {
+    await Users.findOne({
+      attributes: ['profileImageFileName'],
+      where: { account: uploaderAccount },
+    })
+    .then((res) => {
+      if(
+        res.dataValues.profileImageFileName === undefined ||
+        res.dataValues.profileImageFileName == '' ||
+        res.dataValues.profileImageFileName == null ||
+        res.dataValues.profileImageFileName == 'null'
+      ) {
+        Users.update(
+          {
+            profileImageFileName: request.file.filename,
           },
-        }
-      ).then((res) => {
-        response.status(200).send({
-          responseCode: 200,
-          message: 'profile update success',
-          data: true,
-        });
-      })
-      .catch((err) => {
-        response.status(403).send({
-          responseCode: 403,
-          message: 'profile update failure',
-          data: false,
-        });
-      });
-    } else {
-      // console.log("existsSync:", await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`)); // return true or false
-      const fileExistCheck = await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`);
-      if(fileExistCheck == true) { await fs.rmSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`); }
-      await Users.update(
-        {
-          profileImageFileName: request.file.filename,
-        },
-        {
-          where: {
-            account: uploaderAccount,
-          },
-        }
-      )
-      .then((res) => {
-        if(res[0] == 1) {
+          {
+            where: {
+              account: uploaderAccount,
+            },
+          }
+        ).then((res) => {
           response.status(200).send({
             responseCode: 200,
             message: 'profile update success',
             data: true,
           });
-        } else {
+        })
+        .catch((err) => {
           response.status(403).send({
             responseCode: 403,
-            message: 'profile update fail',
+            message: 'profile update failure',
             data: false,
+            error: err
           });
-        }
-      })
-      .catch((err) => {
-        response.status(403).send({
-          responseCode: 403,
-          message: 'profile update failure',
-          data: false,
         });
+      }
+      else {
+        // console.log("existsSync:", await fs.existsSync(`./data/profile/$res.dataValues.profileImageFileName}`)); // return true or false
+        const fileExistCheck = fs.existsSync(`./data/profile/${res.dataValues.profileImageFileName}`);
+        if(fileExistCheck == true) { fs.rmSync(`./data/profile/${res.dataValues.profileImageFileName}`); }
+          Users.update(
+          {
+            profileImageFileName: request.file.filename,
+          },
+          {
+            where: {
+              account: uploaderAccount,
+            },
+          }
+        )
+        .then((res) => {
+          if(res[0] == 1) {
+            response.status(200).send({
+              responseCode: 200,
+              message: 'profile update success',
+              data: true,
+            });
+          } else {
+            response.status(403).send({
+              responseCode: 403,
+              message: 'profile update fail',
+              data: false,
+            });
+          }
+        })
+        .catch((err) => {
+          response.status(403).send({
+            responseCode: 403,
+            message: 'profile update fail - DB server error',
+            data: false,
+            error: err
+          });
+        })
+      }
+    })
+    .catch((err) => {
+      response.status(403).send({
+        responseCode: 403,
+        message: "프로필 업데이트 실패 - 유저 불일치",
+        data: false,
+        error: err
       });
-    }
+    })
   } else {
     response.status(500).send({
       responseCode: 500,
-      message: 'Invalid Key',
+      message: "Invalid Key",
       data: false,
     });
   }

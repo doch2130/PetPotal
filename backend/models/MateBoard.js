@@ -22,6 +22,30 @@ const MateBoard = sequelize.define("MateBoard", {
         mateBoardContent2: {
             type: DataTypes.TEXT
         },
+        mateBoardAddress1: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        mateBoardAddress2: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        mateBoardAddress3: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        mateBoardAddress4: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        mateBoardLat: {
+            type: DataTypes.FLOAT,
+            allowNull: true
+        },
+        mateBoardLng: {
+            type: DataTypes.FLOAT,
+            allowNull: true
+        },
         mateBoardPhotos: {
             type: DataTypes.TEXT
         },
