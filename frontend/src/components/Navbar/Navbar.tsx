@@ -58,11 +58,6 @@ export default function Navbar() {
       title: '로그아웃',
       content: '로그아웃 하시겠습니까?',
       callback: async () => {
-        openAlert({
-          title: '로그아웃 실패',
-          type: 'error',
-          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
-        });
         const result = await controller.logout();
         if(result.data.responseCode === 200) {
           closeConfirm();

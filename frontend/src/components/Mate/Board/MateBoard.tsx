@@ -7,19 +7,19 @@ import close from '../../../assets/icon/plus.png';
 import MateBoardPost from './MateBoardPost';
 
 export default function MateBoard() {
-  const [ showBoxRegion, setShowBoxRegion ] = useState<Boolean>(false);
-  const [ showBoxKinds, setShowBoxKinds ] = useState<Boolean>(false);
+  const [ showBoxRegion, setIsShowBoxRegion ] = useState<Boolean>(false);
+  const [ showBoxKinds, setIsShowBoxKinds ] = useState<Boolean>(false);
   const [ boxRegion, setBoxRegion ] = useState<string>('서울');
   const [ regionDataList, setRegionDataList ] = useState<String[]>([]);
   const [ kindDataList, setKindDataList ] = useState<String[]>([]);
 
-  const showBoxRegionHandler = () => {
-    setShowBoxRegion(!showBoxRegion);
+  const isShowBoxRegionHandler = () => {
+    setIsShowBoxRegion(!showBoxRegion);
   }
-  const showBoxKindsHandler = () => {
-    setShowBoxKinds(!showBoxKinds);
+  const isShowBoxKindsHandler = () => {
+    setIsShowBoxKinds(!showBoxKinds);
   }
-
+ 
   const regionChange = (region:string) => {
     setBoxRegion(region);
   }
@@ -31,34 +31,72 @@ export default function MateBoard() {
       return ;
     }
 
-    // 서울 전체 클릭 시 서울 들어가는 곳은 삭제 되게 설정
-    // 코드 수정 필요 (다른 지역도 해야 함)
-    // 그리고 전체 클릭 이후 다른 지역 클릭 시 전체 삭제되어야 함
-    // if(updateData === '서울 전체') {
-    //   setRegionDataList([updateData]);
-    //   return ;
-    // }
+    if(updateData.includes('전체')) {
+      // xx 전체 항목 추가 시 xx xx구는 전부 삭제 되게 설정
+      // console.log(updateData.indexOf('전체'));
+      // console.log(updateData.slice(0, updateData.indexOf('전체')-1));
+      const allFilterData = updateData.slice(0, updateData.indexOf('전체')-1);
+      const lastUpdateData = regionDataList.filter((el) => !el.includes(allFilterData));
+      // console.log('lastUpdateData ', lastUpdateData);
+      lastUpdateData.push(updateData);
+      setRegionDataList(lastUpdateData);
+      return ;
+    }
+
+    if(regionDataList.includes(`${region} 전체`)){
+      // xx 전체 항목이 있을 때 다른 xx xx구 추가 시 xx 전체 항목 삭제
+      const allDeleteFilterData = regionDataList.filter((el) => !el.includes(`${region} 전체`));
+      // console.log('allDeleteFilterData ', allDeleteFilterData);
+      allDeleteFilterData.push(updateData);
+      setRegionDataList(allDeleteFilterData);
+      return ;
+    }
+
     setRegionDataList([...regionDataList, updateData]);
+    // console.log('regionDataList ', regionDataList);
+    // console.log('regionDataList.includes() ', regionDataList.includes(updateData));
   }
 
   const boxRegionGu = RegionData.filter((el) => Object.keys(el)[0] === boxRegion)[0];
 
-  const regionDelete = (regionGu:String) => {
+  const regionDelete = (regionGu:String):void => {
     const updateData = regionDataList.filter((el) => el !== regionGu);
     setRegionDataList(updateData);
   }
 
-  const kindAdd = (addKind:String) => {
+  const kindAdd = (addKind:String):void => {
     if(kindDataList.includes(addKind)) {
+      // 이미 있는 항목 추가 시 함수 종료
+      return ;
+    }
+
+    if(addKind === '전체') {
+      // 전체 선택 시 전체만 체크, 나머지 삭제
+      setKindDataList([addKind]);
+      return ;
+    }
+
+    if(kindDataList.includes('전체')) {
+      // 전체 선택 상태에서 다른 항목 선택 시 전체 항목만 삭제
+      setKindDataList([addKind]);
       return ;
     }
 
     setKindDataList([...kindDataList, addKind]);
   }
 
-  const kindDelete = (deleteKind:String) => {
+  const kindDelete = (deleteKind:String):void => {
     const updateData = kindDataList.filter((el) => el !== deleteKind);
     setKindDataList(updateData);
+  }
+
+  const boxReset = ():void => {
+    setIsShowBoxRegion(false);
+    setIsShowBoxKinds(false);
+    setRegionDataList([]);
+    setKindDataList([]);
+    // 구함 지원 체크 해제 추가 작업 필요
+    // 금액 0원 초기화 작업 필요
   }
 
   return (
@@ -72,7 +110,7 @@ export default function MateBoard() {
         <div className={style.boxWrap}>
           <div className={style.boxRegion}>
             <span>지역</span>
-            <div onClick={showBoxRegionHandler}>
+            <div onClick={isShowBoxRegionHandler}>
               {regionDataList.length === 0 ? <span>지역을 선택하세요</span> :
                 <div className={style.boxRegionTextList}>
                   {regionDataList.map((el, index) => {
@@ -130,13 +168,13 @@ export default function MateBoard() {
               })}
             </div>
             <div className={style.innerBoxClose}>
-              <img src={close} alt='closeButton' onClick={showBoxRegionHandler} />
+              <img src={close} alt='closeButton' onClick={isShowBoxRegionHandler} />
             </div>
           </div>
           }
           <div className={style.boxKinds}>
             <span>종류</span>
-            <div onClick={showBoxKindsHandler}>
+            <div onClick={isShowBoxKindsHandler}>
               {kindDataList.length === 0 ? <span>종류를 선택하세요</span> :
               <div className={style.boxRegionTextList}>
               {kindDataList.map((el, index) => {
@@ -182,7 +220,7 @@ export default function MateBoard() {
               })}
             </div>
             <div className={style.innerBoxClose}>
-              <img src={close} alt='closeButton' onClick={showBoxKindsHandler} />
+              <img src={close} alt='closeButton' onClick={isShowBoxKindsHandler} />
             </div>
           </div>
           }
@@ -204,7 +242,7 @@ export default function MateBoard() {
           </div>
           <div className={style.boxButtonGroup}>
             <button type='button'>검색</button>
-            <button type='button'>초기화</button>
+            <button type='button' onClick={boxReset}>초기화</button>
           </div>
         </div>
         <MateBoardPost />
