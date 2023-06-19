@@ -11,7 +11,30 @@ import { useAlert } from '../../../hooks/useAlert';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
 
-export default function MateBoardPost() {
+interface MateBoardPostInterface {
+  postList: Array<MateBoardPostListInterface>;
+}
+
+interface MateBoardPostListInterface {
+  mateBoardIndexNumber: number;
+  mateBoardTitle: string;
+  mateBoardFee: number;
+  mateBoardContent: string;
+  mateBoardContent2: string;
+  mateBoardPhotos: string;
+  mateBoardCategory: string;
+  mateBoardRegistDate: string;
+  mateBoardModifyDate: string;
+  mateBoardStatus: number;
+  animalsIndexNumber?: number;
+  mateBoardAddress: string;
+  mateBoardLng: number;
+  mateBoardLat: number;
+}
+
+
+export default function MateBoardPost(props:MateBoardPostInterface) {
+  const { postList } = props;
   const navigater = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
@@ -25,6 +48,7 @@ export default function MateBoardPost() {
   const [ likeBoardList, setLikeBoardList ] = useState();
   const { openAlert } = useAlert();
   const [ viewChange, setViewChange ] = useState<Boolean>(true);
+  const [ timeSort, setTimeSort ] = useState<string>('최신순');
 
   const detailPostMoveHandler = () => {
     navigater('/mate/detail/1');
@@ -49,6 +73,13 @@ export default function MateBoardPost() {
 
   const viewChangeFunction = ():void => {
     setViewChange(!viewChange);
+    return ;
+  }
+
+  const timeSortChangeFunction = (e:any):void => {
+    console.log('e.target.value ', e.target.value);
+    setTimeSort(e.target.value);
+    return ;
   }
 
   useEffect(() => {
@@ -74,14 +105,14 @@ export default function MateBoardPost() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo[0].account]);
 
-  const historyValue = useParams();
-  const [ matePageNumber, setMatePageNumber ] = useState<string>('1');
-  useEffect(():void => {
-    const historyKeyword = historyValue.pageNumber;
+  // const historyValue = useParams();
+  // const [ matePageNumber, setMatePageNumber ] = useState<string>('1');
+  // useEffect(():void => {
+  //   const historyKeyword = historyValue.pageNumber;
 
-    if(historyKeyword) setMatePageNumber(historyKeyword);
+  //   if(historyKeyword) setMatePageNumber(historyKeyword);
 
-  }, [historyValue]);
+  // }, [historyValue]);
 
   // React Query hook 
   // 임시 주석
@@ -103,14 +134,16 @@ export default function MateBoardPost() {
   //       }
   //     });
   // }
+  console.log('postList.reverse() ', postList.reverse())
 
   return (
     <div className={style.wrap}>
       <div className={style.header}>
-        <p>55개 게시글</p>
+        {/* <p>55개 게시글</p> */}
+        <p>{postList.length}개 게시글</p>
         <div className={style.headerSort}>
           <p>정렬</p>
-          <select>
+          <select onChange={timeSortChangeFunction}>
             <option defaultValue='최신순'>최신순</option>
             <option defaultValue='오래된순'>오래된 순</option>
           </select>
@@ -137,13 +170,37 @@ export default function MateBoardPost() {
           }
         </div>
       <div className={style.body}>
-        {tempData.map((el, index) => {
+        {/* {tempData.map((el, index) => {
           return (
             <div className={style.AnimalCardWrap} key={index}>
               <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} />
             </div>
           );
-        })}
+        })} */}
+        {
+          timeSort === '최신순' ? postList.map((el:MateBoardPostListInterface, index:number) => {
+            const reverseIndex = postList.length - index - 1;
+            const reverseElement = postList[reverseIndex];
+            // console.log('timeSort ', timeSort);
+            // console.log('reverseElement ', reverseElement);
+            return (
+              <div className={style.AnimalCardWrap} key={reverseElement.mateBoardIndexNumber}>
+                <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={reverseElement} />
+              </div>
+            );
+          })
+          :
+          <></>
+        //   postList.map((el:MateBoardPostListInterface, index:number) => {
+        //   // console.log('timeSort ', timeSort);
+        //   // console.log('el ', el);
+        //   return (
+        //     <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
+        //       <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
+        //     </div>
+        //   );
+        // })
+        }
       </div>
       <div className={style.bottom}>
         <div></div>
