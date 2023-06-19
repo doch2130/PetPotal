@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RegionData from './RegionData';
 import KindData from './KindData';
 import style from './MateBoard.module.css';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
 import close from '../../../assets/icon/plus.png';
 import MateBoardPost from './MateBoardPost';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
+import { useParams } from 'react-router-dom';
+import Controller from '../../../api/controller';
 
 export default function MateBoard() {
   const [ showBoxRegion, setIsShowBoxRegion ] = useState<Boolean>(false);
@@ -12,6 +16,7 @@ export default function MateBoard() {
   const [ boxRegion, setBoxRegion ] = useState<string>('서울');
   const [ regionDataList, setRegionDataList ] = useState<String[]>([]);
   const [ kindDataList, setKindDataList ] = useState<String[]>([]);
+  const controller = new Controller();
 
   const isShowBoxRegionHandler = () => {
     setIsShowBoxRegion(!showBoxRegion);
@@ -98,6 +103,37 @@ export default function MateBoard() {
     // 구함 지원 체크 해제 추가 작업 필요
     // 금액 0원 초기화 작업 필요
   }
+
+  const historyValue = useParams();
+  const [ matePageNumber, setMatePageNumber ] = useState<string>('1');
+  useEffect(():void => {
+    const historyKeyword = historyValue.pageNumber;
+
+    if(historyKeyword) setMatePageNumber(historyKeyword);
+
+  }, [historyValue]);
+
+  // React Query default
+  // 임시 주석
+  const { status, data, error } = useGetMateBoardList(matePageNumber);
+  function useGetMateBoardList(matePageNumber:string) {
+    return useQuery({
+      queryKey: ['mateBoardList'],
+      queryFn: async () => {
+        const result = await controller.mateBoardList(matePageNumber);
+        return result.data;
+      }
+    });
+  }
+
+  if (status === 'loading') return <div>'Loading...'</div>;
+ 
+  if (error) return <div>'An error has occurred: ' + error</div>;
+
+  // const status: "error" | "success" | "loading"
+
+  // console.log('react query data ', data.data);
+  // console.log('react query data ', typeof data.data);
 
   return (
     <div className={style.wrap}>
@@ -245,7 +281,7 @@ export default function MateBoard() {
             <button type='button' onClick={boxReset}>초기화</button>
           </div>
         </div>
-        <MateBoardPost />
+        <MateBoardPost postList={data.data} />
       </div>
     </div>
   )

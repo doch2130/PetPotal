@@ -16,9 +16,9 @@ const Users = sequelize.define("Users",
         password: {
             type: DataTypes.STRING
         },
-        // salt: {
-        //     type: DataTypes.STRING
-        // },
+        salt: {
+            type: DataTypes.STRING
+        },
         name: {
             type: DataTypes.STRING
         },

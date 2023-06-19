@@ -19,7 +19,7 @@ export default class Controller {
   // 회원가입
   async join(object) {
     // console.log('object ', object);
-    return this.httpClient.post(`users/signup`, object);
+    return this.httpClient.post(`users/signUp`, object);
   }
 
   // 중복검사
