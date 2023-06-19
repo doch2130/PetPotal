@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 
-interface propsData {
+interface mateWriteFormInterface {
   imgFile: Array<File>;
 }
 
@@ -31,14 +31,14 @@ interface MateWriteFormInput {
   lat: number;
 }
 
-interface mapData {
+interface mapDataInterface {
   x: number;
   y: number;
   _lng: number;
   _lat: number;
 }
 
-export default function MateWriteForm(props:propsData) {
+export default function MateWriteForm(props:mateWriteFormInterface) {
   const { imgFile } = props;
   const navigate = useNavigate();
   const { register, setValue, watch, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
@@ -47,14 +47,14 @@ export default function MateWriteForm(props:propsData) {
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
   const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
-  const [ mapData, setMapData ] = useState<mapData>({
+  const [ mapData, setMapData ] = useState<mapDataInterface>({
     x: 0,
     y: 0,
     _lng: 0,
     _lat: 0,
   });
 
-  const onSubmit = async (data:MateWriteFormInput) => {
+  const onSubmit = async (data:MateWriteFormInput):Promise<void> => {
     if(wrtieType === '구함') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
@@ -86,7 +86,7 @@ export default function MateWriteForm(props:propsData) {
     return ;
   }
 
-  const handleSubmitCancle = () => {
+  const handleSubmitCancle = ():void => {
     openConfirm({
       title: '글 작성 취소',
       content: '글 작성을 취소하시겠습니까?',
@@ -97,9 +97,9 @@ export default function MateWriteForm(props:propsData) {
     });
   }
 
-  useEffect(() => {
+  useEffect(():void => {
     // console.log('userInfo ', userInfo);
-    const mapGeocoding = async () => {
+    const mapGeocoding = async ():Promise<void> => {
       const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
       // console.log('address ', address);
       if (address !== '') {
@@ -118,11 +118,11 @@ export default function MateWriteForm(props:propsData) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
-  useEffect(() => {
+  useEffect(():void => {
     const petInfoLoad = async () => {
       const result = await controller.myPetInfoLoad();
     }
-    petInfoLoad();
+    // petInfoLoad();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
