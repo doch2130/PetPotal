@@ -13,7 +13,6 @@ const ImageFileHandler = () => {
             filename(req, file, res) {
                 console.log("file req:", req);
                 const ext = path.extname(file.originalname);
-                // res(null, `${req.headers.animalsIndexNumber}_${file.fieldname}_${Date.now()}${ext}`);
                 res(null, `${req.body.animalsIndexNumber}_${file.fieldname}_${Date.now()}${ext}`);
             },
             }),
