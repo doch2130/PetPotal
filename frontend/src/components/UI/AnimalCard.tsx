@@ -1,10 +1,11 @@
 import style from './AnimalCard.module.css';
-import animalImage from '../../assets/matepage/MateImg_3.png';
+// import animalImage from '../../assets/matepage/MateImg_3.png';
 import emptyHeart from '../../assets/icon/empty_heart.png';
 import fullHeart from '../../assets/icon/full_heart.png';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { MouseEvent, MouseEventHandler, useState } from 'react';
 import { useConfirm } from '../../hooks/useConfirm';
 import { useAlert } from '../../hooks/useAlert';
+import mateDefaultImage from '../../assets/matepage/MateDefaultImage.png';
 
 interface animalCardInterface {
   detailPostMoveHandler: Function;
@@ -34,7 +35,9 @@ export default function AnimalCard(props:animalCardInterface) {
   const [ heart, setHeart ] = useState<Boolean>(false);
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
-  const postHeartHandler = (event:any) => {
+  const [ postRepresentativeImage, setPostRepresentativeImage ] = useState<string>(postData.mateBoardPhotos.split(',')[0]);
+
+  const postHeartHandler = (event:MouseEvent) => {
     // 상위 엘리먼트들로의 이벤트 전파를 중단
     event.stopPropagation();
     if(userId !== '' && userId !== undefined) {
@@ -66,19 +69,14 @@ export default function AnimalCard(props:animalCardInterface) {
     }
   }
 
-  // <p>{`${postData.mateBoardRegistDate.split('T')[0].split('-')[0]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[1]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[2]} ${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}`}</p>
-  // console.log(postData.mateBoardRegistDate);
-  // console.log(postData.mateBoardRegistDate.split('T')[1].split(':')[0]);
-  // console.log(`${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}`);
-  // console.log(`${postData.mateBoardRegistDate.split('T')[1].split('-')[0]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[1]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[2]} ${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}`);
-
-
   const heartStyle = `${style.heart} ${heart ? style.heartActive : ''}`;
 
   return (
     <div className={style.wrap} onClick={props.detailPostMoveHandler as MouseEventHandler}>
       <div className={style.image}>
-        <img src={animalImage} alt='animalImage' />
+        {/* <img src={animalImage} alt='animalImage' /> */}
+        {postData.mateBoardPhotos === '' ? <img src={mateDefaultImage} alt='mateDefaultImage' /> :
+        <img src={`${process.env.REACT_APP_BACK_AXIOS}/static3/${postRepresentativeImage}`} alt='postData.mateBoardPhotos' />}
         {heart ? <img src={fullHeart} alt='fullHeart' className={heartStyle} onClick={postHeartHandler}/> 
         : <img src={emptyHeart} alt='emptyHeart' className={heartStyle} onClick={postHeartHandler}/> }
         {/* <img src={fullHeart} alt='fullHeart' /> */}
@@ -86,9 +84,9 @@ export default function AnimalCard(props:animalCardInterface) {
       <div className={style.wrapText}>
         <div className={style.wrapCategory}>
           {/* <p>구함</p> */}
-          <p>{postData.mateBoardCategory}</p>
+          <p>{postData.mateBoardCategory === '1' ? '구함' : '지원'}</p>
           {/* <p>100,000원</p> */}
-          <p>{postData.mateBoardFee}원</p>
+          <p>{postData.mateBoardFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</p>
         </div>
         <div className={style.title}>
           {/* <p>강아지 산책하실분 구합니다.강아지 산책하실분 구합니다.</p> */}

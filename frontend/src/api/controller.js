@@ -1,9 +1,11 @@
 import axios from 'axios';
+import qs from 'qs';
 
 export default class Controller {
   constructor() {
     this.httpClient = axios.create({
-      baseURL: 'http://localhost:3010/api/',
+      // baseURL: 'http://localhost:3010/api/',
+      baseURL: `${process.env.REACT_APP_BACK_AXIOS}/api/`,
       withCredentials: true,
     });
   }
@@ -134,12 +136,23 @@ export default class Controller {
   }
 
   // 메이트 게시판 - 전체 글 가져오기
-  async mateBoardList(pageNumber) {
-    return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`);
+  async mateBoardList(pageNumber, searchQuery) {
+    // return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`);
+    return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`,
+    {
+      params: searchQuery,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'brackets' })
+      }
+    })
   }
 
   // 메이트 게시판 - 좋아요 게시글 가져오기
   async mateLikeBoardList(account) {
     return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
+  }
+
+  async mateBoardListCount() {
+    return this.httpClient.get(`mateBoard/findAllContentCount`);
   }
 }
