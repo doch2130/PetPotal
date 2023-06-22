@@ -6,9 +6,11 @@ import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import { useAlert } from '../../../hooks/useAlert';
+import { useModal } from '../../../hooks/useModal';
+import MateWritePetAdd from './MateWritePetAdd';
 
 interface mateWriteFormInterface {
   imgFile: Array<File>;
@@ -48,7 +50,10 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
-  const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+  const { openModal, closeModal } = useModal();
+  // const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+  const userInfo = useRecoilValue<UserType[]>(userState);
+  const [ myPetList, setMyPetList ] = useState([]);
   const [ mapData, setMapData ] = useState<mapDataInterface>({
     x: 0,
     y: 0,
@@ -56,7 +61,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
     _lat: 0,
   });
   
-
   const onSubmit = async (data:MateWriteFormInput):Promise<void> => {
     if(writeType === '1') {
       if((getValues('petAge').includes('선택'))) {
@@ -75,14 +79,12 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
       content: '작성한 내용으로 등록하시겠습니까?',
       callback: async () => {
         closeConfirm();
-        // console.log('data : ', data);
         const formData = new FormData();
         formData.append("data", JSON.stringify(data));
         imgFile.forEach((el) => {
           formData.append('mateBoardPhotos', el);
         });
         const result = await controller.mateWrite(formData);
-        // console.log('result : ', result);
         if(result.data.responseCode === 200) {
           openAlert({
             title: 'Mate Board Create Success',
@@ -109,19 +111,17 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
       content: '글 작성을 취소하시겠습니까?',
       callback: () => {
         closeConfirm();
-        navigate('/mate');
+        navigate('/mate/1');
+        return ;
       }
     });
   }
 
   useEffect(():void => {
-    // console.log('userInfo ', userInfo);
     const mapGeocoding = async ():Promise<void> => {
       const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
-      // console.log('address ', address);
       if (address !== '') {
         const result = await controller.naverMapGeocoding(address);
-        // console.log('result ', result.data);
         setMapData({
           x: result.data[0],
           y: result.data[1],
@@ -138,11 +138,22 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   useEffect(():void => {
     const petInfoLoad = async () => {
       const result = await controller.myPetInfoLoad();
+      setMyPetList(result.data);
     }
     // petInfoLoad();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const petAddModal = () => {
+    const ModalContent = ():JSX.Element => (
+      <MateWritePetAdd onClose={closeModal} />
+    );
+    openModal({
+      backDrop: false,
+      content: <ModalContent />
+    });
+  }
+  
   return (
     <>
       <form className={style.wrap} onSubmit={handleSubmit(onSubmit)}>
@@ -216,10 +227,13 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
             <h2>반려동물 정보</h2>
             <select id='petInfoLoad'>
               <option value="선택">반려동물 정보 가져오기</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
+              {myPetList.map((el, index) => {
+                return (
+                  <option value={index}>{el}</option>
+                )
+              })}
             </select>
+            <button type='button' className={style.petAddButton} onClick={petAddModal}>신규 등록</button>
           </div>
         </div>
 
