@@ -1,0 +1,118 @@
+.wrapRow {
+  margin: 10px 0px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.wrapCol {
+  /* flex: 1 0; */
+}
+
+.wrapRow:nth-of-type(1) > h2 {
+  text-align: center;
+  width: 100%;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.wrapRow label {
+  font-size: 1.4rem;
+  margin: 0px 2rem;
+}
+
+.wrapRow input[type="text"] {
+  width: 350px;
+  height: 25px;
+  font-size: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.wrapRow:not(:nth-of-type(1)) input[type="text"] {
+  width: 180px;
+}
+
+.wrapRow .wrapCol select {
+  width: 200px;
+}
+
+
+@media (min-width: 660px) {
+  .wrapCol {
+    min-width: 490px;
+  }
+}
+
+.mateWriteWraning {
+  color: red;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+.wrapPetGender label:not(:nth-of-type(1)) {
+  margin: 0 5px;
+}
+
+.wrapPetGender input:nth-of-type(2) {
+  margin-left: 1rem;
+}
+
+.wrapRow .wrapCol select {
+  height: 35px;
+  font-size: 1rem;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.wrapPetWeight span {
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.wrapIsNeutered label:nth-of-type(1) {
+  margin-right: 1rem;
+}
+
+.wrapIsNeutered label:not(:nth-of-type(1)) {
+  margin: 0 5px;
+}
+
+.wrapIsNeutered input:not(:nth-of-type(1)) {
+  margin-left: 1rem;
+}
+
+.buttonGroup {
+  max-width: 850px;
+  text-align: center;
+  margin: 1rem auto 0;
+}
+
+.buttonGroup button {
+  background-color: #4AD645;
+  color: #FFF;
+  border: none;
+  border-radius: 10px;
+  width: 80px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.buttonGroup button:hover {
+  background-color: var(--main-default-dark-color);
+}
+
+@media (max-width: 660px) {
+  form .wrapRow:nth-of-type(1) .wrapCol {
+    width: 100%;
+  }
+  form .wrapRow:nth-of-type(1) .wrapCol input {
+    width: 60%;
+  }
+}

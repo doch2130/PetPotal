@@ -117,7 +117,8 @@ export default class Controller {
 
   // 마이 페이지 - 펫 등록
   async myPetAdd(object) {
-    return this.httpClient.post('animals/petAdd', object);
+    // return this.httpClient.post('animals/petAdd', object);
+    return this.httpClient.post('animals/insertContent', object);
   }
 
   // 메이트 글쓰기 - 미리보기 이미지 업로드
