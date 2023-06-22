@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RegionData from './RegionData';
 import KindData from './KindData';
 import style from './MateBoard.module.css';
@@ -6,9 +6,16 @@ import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
 import close from '../../../assets/icon/plus.png';
 import MateBoardPost from './MateBoardPost';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
+// import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
 import { useParams } from 'react-router-dom';
 import Controller from '../../../api/controller';
+
+interface searchQueryInterface {
+  searchRegion: string;
+  searchKind: string;
+  searchType: string;
+  searchAmount: number;
+}
 
 export default function MateBoard() {
   const [ showBoxRegion, setIsShowBoxRegion ] = useState<Boolean>(false);
@@ -16,7 +23,17 @@ export default function MateBoard() {
   const [ boxRegion, setBoxRegion ] = useState<string>('서울');
   const [ regionDataList, setRegionDataList ] = useState<String[]>([]);
   const [ kindDataList, setKindDataList ] = useState<String[]>([]);
+  const [ boxPostType, setBoxPostType ] = useState<String[]>([]);
   const controller = new Controller();
+  const boxPostAmount = useRef<HTMLInputElement>(null);
+  const [ searchQuery, setSearchQuery] = useState<searchQueryInterface>({
+    searchRegion: '',
+    searchKind: '',
+    searchType: '',
+    searchAmount: 0,
+  });
+
+  const [ postTotalCount, setPostTotalCount ] = useState<number>(0);
 
   const isShowBoxRegionHandler = () => {
     setIsShowBoxRegion(!showBoxRegion);
@@ -100,8 +117,16 @@ export default function MateBoard() {
     setIsShowBoxKinds(false);
     setRegionDataList([]);
     setKindDataList([]);
-    // 구함 지원 체크 해제 추가 작업 필요
-    // 금액 0원 초기화 작업 필요
+    setBoxPostType([]);
+    if (boxPostAmount.current) {
+      boxPostAmount.current.value = '0';
+    }
+    setSearchQuery({
+      searchRegion: '',
+      searchKind: '',
+      searchType: '',
+      searchAmount: 0,
+    });
   }
 
   const historyValue = useParams();
@@ -113,14 +138,26 @@ export default function MateBoard() {
 
   }, [historyValue]);
 
+
+  
+  useEffect(() => {
+    const mateBoardListCount = async () => {
+      const result = await controller.mateBoardListCount();
+      console.log('result ', result);
+      setPostTotalCount(result.data.count);
+    }
+    mateBoardListCount();
+  }, []);
+
+
   // React Query default
   // 임시 주석
   const { status, data, error } = useGetMateBoardList(matePageNumber);
   function useGetMateBoardList(matePageNumber:string) {
     return useQuery({
-      queryKey: ['mateBoardList'],
+      queryKey: [`mateBoardList/${matePageNumber}`, searchQuery],
       queryFn: async () => {
-        const result = await controller.mateBoardList(matePageNumber);
+        const result = await controller.mateBoardList(matePageNumber, searchQuery);
         return result.data;
       }
     });
@@ -130,10 +167,34 @@ export default function MateBoard() {
  
   if (error) return <div>'An error has occurred: ' + error</div>;
 
-  // const status: "error" | "success" | "loading"
+  const postTypeChangeFunction = (e:React.ChangeEvent<HTMLInputElement>):void => {
+    // console.log(e.target.value);
+    // console.log(e.target.checked);
 
-  // console.log('react query data ', data.data);
-  // console.log('react query data ', typeof data.data);
+    if(e.target.checked) {
+      setBoxPostType([...boxPostType, e.target.value]);
+    } else {
+      // postType
+      setBoxPostType(boxPostType.filter(el => el !== e.target.value));
+    }
+    return ;
+  }
+
+  const boxSearch = ():void => {
+    const boxPostAmountValue = Number(boxPostAmount.current?.value);
+    let boxPostTypeValue = '';
+    if(boxPostType.length === 1 ) {
+      boxPostTypeValue = boxPostType[0].toString();
+    }
+    
+    setSearchQuery({
+      searchRegion: regionDataList.toString(),
+      searchKind: kindDataList.toString(),
+      searchType: boxPostTypeValue,
+      searchAmount: boxPostAmountValue,
+    })
+    return ;
+  }
 
   return (
     <div className={style.wrap}>
@@ -235,9 +296,9 @@ export default function MateBoard() {
               {KindData.map((el, index) => {
                 return (
                   <div className={style.innerBoxColKind} key={index}>
-                    {!kindDataList.includes(el) && <span onClick={() => kindAdd(el)}>{el}</span>}
+                    {!kindDataList.includes(el) && <span onClick={():void => kindAdd(el)}>{el}</span>}
                     {kindDataList.includes(el) && 
-                    <span className={style.active} onClick={() => kindDelete(el)}>
+                    <span className={style.active} onClick={():void => kindDelete(el)}>
                       <svg fill="#000000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
                         width="13px" height="13px" viewBox="0 0 305.002 305.002"
                         xmlSpace="preserve">
@@ -263,25 +324,25 @@ export default function MateBoard() {
           <div className={style.boxCategory}>
             <span>구분</span>
             <div>
-              <input type='checkbox' value='구함' id='boxCategoryWanted' />
+              <input type='checkbox' value='구함' id='boxCategoryWanted' onChange={postTypeChangeFunction} />
               <label htmlFor='boxCategoryWanted'>구함</label>
-              <input type='checkbox' value='지원' id='boxCategorySupport' />
+              <input type='checkbox' value='지원' id='boxCategorySupport' onChange={postTypeChangeFunction} />
               <label htmlFor='boxCategorySupport'>지원</label>
             </div>
           </div>
           <div className={style.boxAmount}>
             <span>금액</span>
             <div>
-              <input type='number' placeholder='0' min='0' />
+              <input ref={boxPostAmount} type='number' placeholder='0' min='0' defaultValue='0' />
               <span>원 이상</span>
             </div>
           </div>
           <div className={style.boxButtonGroup}>
-            <button type='button'>검색</button>
+            <button type='button' onClick={boxSearch}>검색</button>
             <button type='button' onClick={boxReset}>초기화</button>
           </div>
         </div>
-        <MateBoardPost postList={data.data} />
+        <MateBoardPost postList={data.data} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} />
       </div>
     </div>
   )

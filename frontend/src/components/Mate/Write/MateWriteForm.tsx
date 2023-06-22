@@ -44,7 +44,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   const navigate = useNavigate();
   const { register, setValue, watch, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
   // const {getValues, register, handleSubmit, formState: { isSubmitting, errors }} = useForm({mode: 'onChange'});
-  const wrtieType = watch("writeType");
+  const writeType = watch("writeType");
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
@@ -58,7 +58,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   
 
   const onSubmit = async (data:MateWriteFormInput):Promise<void> => {
-    if(wrtieType === '구함') {
+    if(writeType === '1') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
         return ;
@@ -170,7 +170,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '글 구분을 선택해주세요' }
               },
               )}
-              type="radio" id='typeWanted' value="구함"
+              type="radio" id='typeWanted' value="1"
             />
             <label htmlFor='typeWanted'>구함</label>
             <input 
@@ -179,7 +179,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '글 구분을 선택해주세요' }
               },
               )}
-              type="radio" id='typeSupport' value="지원"
+              type="radio" id='typeSupport' value="2"
             />
             <label htmlFor='typeSupport'>지원</label>
             <p className={style.mateWriteWraning}>{errors.writeType?.message}</p>
@@ -210,15 +210,15 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           </div>
         </div>
 
-      {wrtieType === '구함' ? <>
+      {writeType === '1' ? <>
         <div className={style.wrapRow + ' ' + style.wrapPet}>
           <div className={style.wrapCol}>
             <h2>반려동물 정보</h2>
             <select id='petInfoLoad'>
-              <option defaultValue="선택">반려동물 정보 가져오기</option>
-              <option defaultValue="1">1</option>
-              <option defaultValue="2">2</option>
-              <option defaultValue="3">3</option>
+              <option value="선택">반려동물 정보 가져오기</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
             </select>
           </div>
         </div>
@@ -272,18 +272,18 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               },
               )}
               id='petAge'>
-              <option defaultValue="선택">나이를 선택해주세요</option>
-              <option defaultValue="0">알수없음</option>
-              <option defaultValue="1">1</option>
-              <option defaultValue="2">2</option>
-              <option defaultValue="3">3</option>
-              <option defaultValue="4">4</option>
-              <option defaultValue="5">5</option>
-              <option defaultValue="6">6</option>
-              <option defaultValue="7">7</option>
-              <option defaultValue="8">8</option>
-              <option defaultValue="9">9</option>
-              <option defaultValue="10">10</option>
+              <option value="선택">나이를 선택해주세요</option>
+              <option value="0">알수없음</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
             </select>
             <p className={style.mateWriteWraning}>{errors.petAge?.message}</p>
           </div>
@@ -298,10 +298,10 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               },
               )}
               id='petSpecies'>
-              <option defaultValue="선택">종류를 선택해주세요</option>
-              <option defaultValue="강아지">강아지</option>
-              <option defaultValue="고양이">고양이</option>
-              <option defaultValue="기타">기타</option>
+              <option value="선택">종류를 선택해주세요</option>
+              <option value="강아지">강아지</option>
+              <option value="고양이">고양이</option>
+              <option value="기타">기타</option>
             </select>
             <p className={style.mateWriteWraning}>{errors.petSpecies?.message}</p>
           </div>
