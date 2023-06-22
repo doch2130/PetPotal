@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import writeImage from '../../../assets/icon/pencil.png';
 import AnimalCard from '../../UI/AnimalCard';
 import style from './MateBoardPost.module.css';
@@ -8,8 +8,6 @@ import { UserType, userState } from '../../../recoil/user';
 import { useConfirm } from '../../../hooks/useConfirm';
 import Controller from '../../../api/controller';
 import { useAlert } from '../../../hooks/useAlert';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
 import MateBoardPostButton from './MateBoardPostButton';
 
 interface MateBoardPostInterface extends MateBoardPageNumberInterface {
@@ -62,11 +60,12 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
 
 
 
-  const detailPostMoveHandler = () => {
+  const detailPostMoveHandler = ():void => {
     navigater('/mate/detail/1');
+    return ;
   }
 
-  const mateBoardWriteMove = () => {
+  const mateBoardWriteMove = ():void => {
     if(userInfo[0].account !== '') {
       navigater('/mate/write');
       return ;
@@ -81,6 +80,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
         return ;
       }
     });
+    return ;
   }
 
   const viewChangeFunction = ():void => {
@@ -156,25 +156,27 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           }
         </div>
       <div className={style.body}>
+        {postList.length === 0 && 
+        <div className={style.noneAnimalCard}>
+          <h1>등록된 게시글이 없습니다</h1>
+        </div>
+        }
         {timeSort === 'newest' &&
-          // postList.map((el:MateBoardPostListInterface, index:number) => {
-            // postList.slice(startIndex, endIndex).map((el: MateBoardPostListInterface) => {
-            // postList.slice(-endIndex).map((el: MateBoardPostListInterface) => {
-            postList.map((el: MateBoardPostListInterface) => {
+          postList.map((el: MateBoardPostListInterface) => {
             return (
-              <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
-                <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
-              </div>
-              );
-            })
+            <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
+              <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
+            </div>
+            );
+          })
         }
         {timeSort === 'oldest' &&
-          // postList.map((el:MateBoardPostListInterface, index:number) => {
+        // 백엔드 코드 재호출 기능으로 적용 필요하다고 판단
           postList.slice(-endIndex, -startIndex).map((el: MateBoardPostListInterface, index:number) => {
             return (
-              <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
-                <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
-              </div>
+            <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
+              <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
+            </div>
             );
           })
         }
@@ -182,7 +184,9 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
       <div className={style.bottom}>
         <div></div>
         <div className={style.bottomPageButton}>
+          {props.postTotalCount > 0 && 
           <MateBoardPostButton postLength={postList.length} matePageNumber={props.matePageNumber} setMatePageNumber={props.setMatePageNumber} postTotalCount={props.postTotalCount}/>
+          }
         </div>
         <div className={style.bottomWriteButton}>
           <button type='button' onClick={mateBoardWriteMove}><img src={writeImage} alt='writeImage' />

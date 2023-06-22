@@ -167,8 +167,6 @@ export default function MateBoard() {
  
   if (error) return <div>'An error has occurred: ' + error</div>;
 
-  // const status: "error" | "success" | "loading"
-
   const postTypeChangeFunction = (e:React.ChangeEvent<HTMLInputElement>):void => {
     // console.log(e.target.value);
     // console.log(e.target.checked);
