@@ -155,7 +155,7 @@ export default function MateBoard() {
   const { status, data, error } = useGetMateBoardList(matePageNumber);
   function useGetMateBoardList(matePageNumber:string) {
     return useQuery({
-      queryKey: ['mateBoardList', searchQuery],
+      queryKey: [`mateBoardList/${matePageNumber}`, searchQuery],
       queryFn: async () => {
         const result = await controller.mateBoardList(matePageNumber, searchQuery);
         return result.data;

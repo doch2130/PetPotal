@@ -90,6 +90,10 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
 
   const timeSortChangeFunction = (e:any):void => {
     // console.log('e.target.value ', e.target.value);
+
+    // 정렬에 따라서 데이터 호출을 다시 해야할 듯
+    // offset으로 데이터를 가져오기 때문에 전체 데이터에 대한 정렬이 아니라서 1페이지 기준으로만 변경이 된다.
+
     setTimeSort(e.target.value);
     return ;
   }
@@ -116,22 +120,13 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo[0].account]);
-
-  console.log(postList);
-  console.log(postList.slice(-endIndex,));
-  console.log('endIndex ', endIndex);
-  console.log('-endIndex ', -endIndex);
-  console.log('startIndex ', startIndex);
-  console.log('-startIndex ', -startIndex);
-  console.log('postList.slice(-endIndex, -startIndex) ', postList.slice(-endIndex, -startIndex));
-  console.log('postList.slice(-endIndex) ', postList.slice(-endIndex));
-  console.log('postList.slice(-postList.length, startIndex) ', postList.slice(-postList.length, endIndex));
-
+  
   return (
     <div className={style.wrap}>
       <div className={style.header}>
         {/* <p>55개 게시글</p> */}
-        <p>{postList.length}개 게시글</p>
+        {/* <p>{postList.length}개 게시글</p> */}
+        <p>{props.postTotalCount}개 게시글</p>
         <div className={style.headerSort}>
           <p>정렬</p>
           <select onChange={timeSortChangeFunction}>
@@ -163,7 +158,9 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
       <div className={style.body}>
         {timeSort === 'newest' &&
           // postList.map((el:MateBoardPostListInterface, index:number) => {
-            postList.slice(startIndex, endIndex).map((el: MateBoardPostListInterface) => {
+            // postList.slice(startIndex, endIndex).map((el: MateBoardPostListInterface) => {
+            // postList.slice(-endIndex).map((el: MateBoardPostListInterface) => {
+            postList.map((el: MateBoardPostListInterface) => {
             return (
               <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
                 <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
@@ -179,13 +176,6 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
                 <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
               </div>
             );
-          // const reverseIndex = postList.length - index - 1;
-          // const reverseElement = postList[reverseIndex];
-          // return (
-          //   <div className={style.AnimalCardWrap} key={reverseElement.mateBoardIndexNumber}>
-          //     <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={reverseElement} />
-          //   </div>
-          //   );
           })
         }
       </div>
