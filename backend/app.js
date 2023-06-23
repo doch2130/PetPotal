@@ -28,7 +28,6 @@ app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 
-Passport();
 app.use(
   session({
     name: 'petpotal',
@@ -37,11 +36,12 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 1,
-    },
+    }
   })
 );
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
+Passport();
 
 app.use('/static', express.static(__dirname + '/data/mateTextEditorImg'));
 app.use('/static2', express.static('./data/profile'));

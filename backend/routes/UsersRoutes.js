@@ -1,49 +1,18 @@
 const express = require('express');
-const passport = require('passport');
 
 const UsersController = require('../controller/UsersController');
 const MulterFileHandler2 = require('../middleware/filehandler/MulterFileHandler2');
 
 const router = express.Router();
+
+const { signInState, noSignInState, } = require('../middleware/passport/SignInState'); // Session기반 로그인 상태관리의 경우 사용
 const userProfileImageUpload = MulterFileHandler2.ImageFileHandler("profile");
 const userProfileImageUploadController = userProfileImageUpload.single('usersProfile');
-const { signInState, noSignInState, } = require('../middleware/passport/SignInState');
 
-router.post('/signIn', noSignInState, (req, res, next) => {
-  passport.authenticate('local', function (err, users) {
-    if (users === false) {
-      res.status(403).send({
-        responseCode: 403,
-        message: 'Login Failed...',
-        // error: err
-      });
-    } else {
-      return req.login(users, (err) => {
-        if (err) {
-          console.error('signIn Request Failed:\n', err);
-          return res.status(403).send({
-            responseCode: 403,
-            message: 'Login Failure',
-          });
-        } else {
-          UsersController.signInTimeUpdate(req.body.account);
-          res.cookie('token', users, {
-            httpOnly: true,
-            signed: true,
-            // expires: new Date(Date.now() + 86400),
-            maxAge: 1000 * 60 * 60 * 24 * 1,
-          });
-          return res.status(200).send({
-            responseCode: 200,
-            message: 'Login Success',
-            data: users,
-          });
-        }
-      });
-    }
-  })(req, res, next);
-});
-router.post('/signOut', signInState, UsersController.signOut);
+// router.post("signIn", noSignInState, UsersController.signIn);
+router.post("/signIn", UsersController.signIn);
+// router.post('/signOut', signInState, UsersController.signOut); // signInState는 Session 기반 로그인 상태 관리에서 사용
+router.post('/signOut', UsersController.signOut);
 router.post('/signUp', UsersController.insertUsers);
 router.post('/duplicateAccount', UsersController.findByAccount);
 router.post('/duplicateNickName', UsersController.findByNickName);
@@ -67,5 +36,6 @@ router.get('/sessionGet', (req, res) => {
 });
 
 router.post("/defaultPass", UsersController.defaultPassword);
+router.post("/jwtTest", UsersController.jwtTest);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const passport = require("passport");
 const Local = require("./LocalAuth");
+const JWT = require("./JwtAuth");
 const Users = require("../../models/Users");
 
 module.exports = () => {    
@@ -27,3 +28,4 @@ module.exports = () => {
 }
 
 Local();
+JWT();
