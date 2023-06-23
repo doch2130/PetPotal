@@ -291,20 +291,22 @@ const findByPhone = (request, response) => {
 const findUsersInfo = async (request, response) => {
   await CheckToken.CheckToken(1, request.headers.token)
   .then((res) => {
-    if((res.result == true) && (res.account == request.body.account)) {
+    if((res.result == true) && (res.account == request.body.account)) {    
       Users.findOne({
-        attributes: [
-          'account',
-          'name',
-          'nickName',
-          'phone',
-          'email',
-          'address1',
-          'address2',
-          'address3',
-          'address4',
-        ],
-        where: { account: request.body.account },
+          attributes: [
+            'account',
+            'name',
+            'nickName',
+            'phone',
+            'email',
+            'address1',
+            'address2',
+            'address3',
+            'address4',
+          ],
+          where: { 
+            account: request.body.account, 
+          },
       })
       .then((res) => {
         response.status(200).send({
@@ -320,8 +322,7 @@ const findUsersInfo = async (request, response) => {
           data: err,
         });
       });
-    }
-    else {
+    } else {
       response.status(500).send({
         responseCode: 500,
         message: 'API키가 일치하지 않거나 요청자가 정확하지 않습니다.',
