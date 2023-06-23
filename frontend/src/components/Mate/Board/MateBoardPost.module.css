@@ -41,6 +41,7 @@
 .viewChange svg {
   height: 21px;
   cursor: pointer;
+  margin-right: 5px;
 }
 
 .viewChange svg:hover {
