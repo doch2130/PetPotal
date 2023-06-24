@@ -116,9 +116,13 @@ export default class Controller {
   // }
 
   // 마이 페이지 - 펫 등록
-  async myPetAdd(object) {
-    // return this.httpClient.post('animals/petAdd', object);
-    return this.httpClient.post('animals/insertContent', object);
+  async myPetAdd(account, object) {
+    return this.httpClient.post('animals/insertContent', object, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        account: account
+      },
+    });
   }
 
   // 메이트 글쓰기 - 미리보기 이미지 업로드
