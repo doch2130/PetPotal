@@ -53,7 +53,7 @@ app.use('/api/users/profile', express.static('./data/profile'));
 app.use('/api/animals', AnimalsRoute);
 app.use("/api/animals/animalsPhotos", express.static("./data/animals"));
 app.use('/api/mateBoard', MateBoardRoute); // 회원용 메이트 게시글 Api
-app.use("api/openMateBoard", OpenMateBoardRoute); // 비회원용 메이트 게시글 Api
+app.use("/api/openMateBoard", OpenMateBoardRoute); // 비회원용 메이트 게시글 Api
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
