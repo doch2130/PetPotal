@@ -36,10 +36,7 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
       setError('animalsCategory1', {message: '종류를 선택해주세요'}, {shouldFocus: true });
       return ;
     }
-
-    console.log('data : ', data);
-
-
+    
     openConfirm({
       title: '펫 신규 등록',
       content: '작성한 내용으로 등록하시겠습니까?',
