@@ -137,7 +137,6 @@ const insertUsers = async (request, response) => {
       Users.create({
         account: request.body.account,
         password: hashedPass,
-        salt: "",
         name: request.body.name,
         nickName: request.body.nickName,
         phone: request.body.phone,
@@ -283,7 +282,8 @@ const findByPhone = (request, response) => {
 };
 
 /**
- * 아이디를 통해 해당 사용자의 정보를 조회하는 메서드
+ * 아이디, 비밀번호를 활용해 사용자를 인증하고  
+ * 해당 사용자의 정보를 조회하는 메서드  
  * [아이디, 이름, 닉네임, 전화번호, 이메일, 주소] 정보를 조회
  * @param {String} request
  * @param {*} response
@@ -291,44 +291,71 @@ const findByPhone = (request, response) => {
 const findUsersInfo = async (request, response) => {
   await CheckToken.CheckToken(1, request.headers.token)
   .then((res) => {
-    if((res.result == true) && (res.account == request.body.account)) {    
-      Users.findOne({
-          attributes: [
-            'account',
-            'name',
-            'nickName',
-            'phone',
-            'email',
-            'address1',
-            'address2',
-            'address3',
-            'address4',
-          ],
-          where: { 
-            account: request.body.account, 
-          },
-      })
-      .then((res) => {
-        response.status(200).send({
-          responseCode: 200,
-          message: 'Success',
-          data: res,
-        });
-      })
-      .catch((err) => {
-        response.status(400).send({
-          responseCode: 400,
-          message: 'Failed',
-          data: err,
-        });
-      });
-    } else {
-      response.status(500).send({
-        responseCode: 500,
-        message: 'API키가 일치하지 않거나 요청자가 정확하지 않습니다.',
+    Users.findOne({
+      attributes: [
+        "password"
+      ],
+      where: {
+        account: res.account
+      }
+    }).then((res) => {
+      const dbPassword = res.dataValues.password;
+      const inputPassword = request.body.password; 
+      if(dbPassword !== null) {
+        const comparePasswordResult = bcrypt.compareSync(inputPassword, dbPassword);
+        if(comparePasswordResult) {    
+          Users.findOne({
+              attributes: [
+                'account',
+                'name',
+                'nickName',
+                'phone',
+                'email',
+                'address1',
+                'address2',
+                'address3',
+                'address4',
+              ],
+              where: { 
+                account: request.body.account, 
+              },
+          })
+          .then((res) => {
+            response.status(200).send({
+              responseCode: 200,
+              message: 'Success',
+              data: res,
+            });
+          })
+          .catch((err) => {
+            response.status(400).send({
+              responseCode: 400,
+              message: 'Failed',
+              data: err,
+            });
+          });
+        } else {
+          response.status(500).send({
+            responseCode: 500,
+            message: '마이페이지 조회를 위한 패스워드가 일치하지 않습니다.',
+            data: false,
+          });
+        }
+      } else {
+        response.status(403).send({
+          responseCode: 403,
+          data: false,
+          message: "해당 회원이 존재하지 않습니다."
+        })
+      }
+    }).catch((err) => {
+      response.status(403).send({
+        responseCode: 403,
         data: false,
-      });
-    }
+        message: "마이페이지 조회를 위한 DB조회 실패",
+        error: err
+      })
+    })
   })
   .catch((err) => {
     response.status(403).send({

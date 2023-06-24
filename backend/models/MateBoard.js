@@ -14,7 +14,8 @@ const MateBoard = sequelize.define("MateBoard", {
             type: DataTypes.STRING
         },
         mateBoardFee: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         },
         mateBoardContent1: {
             type: DataTypes.TEXT
