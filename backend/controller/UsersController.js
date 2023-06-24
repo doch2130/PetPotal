@@ -288,66 +288,124 @@ const findByPhone = (request, response) => {
  * @param {String} request
  * @param {*} response
  */
+// const findUsersInfo = async (request, response) => {
+//   await CheckToken.CheckToken(1, request.headers.token)
+//   .then((res) => {
+//     Users.findOne({
+//       attributes: [
+//         "password"
+//       ],
+//       where: {
+//         account: res.account
+//       }
+//     }).then((res) => {
+//       const dbPassword = res.dataValues.password;
+//       const inputPassword = request.body.password; 
+//       if(dbPassword !== null) {
+//         const comparePasswordResult = bcrypt.compareSync(inputPassword, dbPassword);
+//         if(comparePasswordResult) {    
+//           Users.findOne({
+//               attributes: [
+//                 'account',
+//                 'name',
+//                 'nickName',
+//                 'phone',
+//                 'email',
+//                 'address1',
+//                 'address2',
+//                 'address3',
+//                 'address4',
+//               ],
+//               where: { 
+//                 account: request.body.account, 
+//               },
+//           })
+//           .then((res) => {
+//             response.status(200).send({
+//               responseCode: 200,
+//               message: 'Success',
+//               data: res,
+//             });
+//           })
+//           .catch((err) => {
+//             response.status(400).send({
+//               responseCode: 400,
+//               message: 'Failed',
+//               data: err,
+//             });
+//           });
+//         } else {
+//           response.status(500).send({
+//             responseCode: 500,
+//             message: '마이페이지 조회를 위한 패스워드가 일치하지 않습니다.',
+//             data: false,
+//           });
+//         }
+//       } else {
+//         response.status(403).send({
+//           responseCode: 403,
+//           data: false,
+//           message: "해당 회원이 존재하지 않습니다."
+//         })
+//       }
+//     }).catch((err) => {
+//       response.status(403).send({
+//         responseCode: 403,
+//         data: false,
+//         message: "마이페이지 조회를 위한 DB조회 실패",
+//         error: err
+//       })
+//     })
+//   })
+//   .catch((err) => {
+//     response.status(403).send({
+//       responseCode: 403,
+//       message: 'Invalid Key',
+//       data: false,
+//     });
+//   })
+// };
 const findUsersInfo = async (request, response) => {
   await CheckToken.CheckToken(1, request.headers.token)
   .then((res) => {
-    Users.findOne({
-      attributes: [
-        "password"
-      ],
-      where: {
-        account: res.account
-      }
-    }).then((res) => {
-      const dbPassword = res.dataValues.password;
-      const inputPassword = request.body.password; 
-      if(dbPassword !== null) {
-        const comparePasswordResult = bcrypt.compareSync(inputPassword, dbPassword);
-        if(comparePasswordResult) {    
-          Users.findOne({
-              attributes: [
-                'account',
-                'name',
-                'nickName',
-                'phone',
-                'email',
-                'address1',
-                'address2',
-                'address3',
-                'address4',
-              ],
-              where: { 
-                account: request.body.account, 
-              },
-          })
-          .then((res) => {
-            response.status(200).send({
-              responseCode: 200,
-              message: 'Success',
-              data: res,
-            });
-          })
-          .catch((err) => {
-            response.status(400).send({
-              responseCode: 400,
-              message: 'Failed',
-              data: err,
-            });
-          });
-        } else {
-          response.status(500).send({
-            responseCode: 500,
-            message: '마이페이지 조회를 위한 패스워드가 일치하지 않습니다.',
-            data: false,
-          });
-        }
-      } else {
-        response.status(403).send({
-          responseCode: 403,
-          data: false,
-          message: "해당 회원이 존재하지 않습니다."
-        })
-      }
+    if(request.body.account == res.account) {
+      Users.findOne({
+          attributes: [
+            'account',
+            'name',
+            'nickName',
+            'phone',
+            'email',
+            'address1',
+            'address2',
+            'address3',
+            'address4',
+          ],
+          where: { 
+            account: request.body.account, 
+          },
+      })
+      .then((res) => {
+        response.status(200).send({
+          responseCode: 200,
+          message: 'Success',
+          data: res,
+        });
+      })
+      .catch((err) => {
+        response.status(400).send({
+          responseCode: 400,
+          message: 'Failed',
+          data: err,
+        });
+      });
+    } else {
+      response.status(403).send({
+        responseCode: 403,
+        data: false,
+        message: "해당 회원이 존재하지 않습니다."
+      })
+    }
     }).catch((err) => {
       response.status(403).send({
         responseCode: 403,
@@ -356,14 +414,6 @@ const findUsersInfo = async (request, response) => {
         error: err
       })
     })
-  })
-  .catch((err) => {
-    response.status(403).send({
-      responseCode: 403,
-      message: 'Invalid Key',
-      data: false,
-    });
-  })
 };
 /**
  * 회원정보를 변경하는 메서드
