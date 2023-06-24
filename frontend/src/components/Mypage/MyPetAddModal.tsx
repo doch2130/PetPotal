@@ -7,6 +7,8 @@ import { useForm, SubmitHandler} from 'react-hook-form';
 import { useAlert } from '../../hooks/useAlert';
 import { useConfirm } from '../../hooks/useConfirm';
 import Controller from '../../api/controller';
+import { useRecoilValue } from 'recoil';
+import { UserType, userState } from '../../recoil/user';
 
 interface props {
   onClose: Function;
@@ -30,6 +32,7 @@ export default function MyPetAddModal(props:props) {
   const { openConfirm, closeConfirm } = useConfirm();
   const controller = new Controller();
   const [ imgUrl, setImgUrl ] = useState<string>(defaultImg);
+  const [userInfo] = useRecoilValue<UserType[]>(userState);
 
   const imgFileHandler = async (e:ChangeEvent<HTMLInputElement>):Promise<void> => {
     const files:any = e.target.files;
@@ -59,9 +62,23 @@ export default function MyPetAddModal(props:props) {
       return ;
     }
 
-    console.log('data : ', data);
-    const result = await controller.myPetAdd(data);
+    // console.log('data : ', data);
+    const result = await controller.myPetAdd(userInfo.account, data);
     console.log('result : ', result);
+    if(result.data.responseCode === 200) {
+      openAlert({
+        title: 'My Pet Add Success',
+        type: 'success',
+        content: '펫이 등록되었습니다.'
+      });
+      onClose();
+    } else {
+      openAlert({
+        title: 'My Pet Add Error',
+        type: 'error',
+        content: '펫 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요.'
+      });
+    }
   }
 
   useEffect(() => {
@@ -94,7 +111,7 @@ export default function MyPetAddModal(props:props) {
               }
             }
           )}
-          type='text' defaultValue='' placeholder='반려동물 이름을 입력하세요' />
+          type='text' placeholder='반려동물 이름을 입력하세요' />
           <p className={style.petAddWarning}>{errors.animalsName?.message}</p>
         </div>
         <div className={style.myPetGender}>
@@ -126,18 +143,18 @@ export default function MyPetAddModal(props:props) {
             }
           )}
           id='petAge' name='animalsAge'>
-            <option defaultValue="선택">나이를 선택해주세요</option>
-            <option defaultValue="0">알수없음</option>
-            <option defaultValue="1">1</option>
-            <option defaultValue="2">2</option>
-            <option defaultValue="3">3</option>
-            <option defaultValue="4">4</option>
-            <option defaultValue="5">5</option>
-            <option defaultValue="6">6</option>
-            <option defaultValue="7">7</option>
-            <option defaultValue="8">8</option>
-            <option defaultValue="9">9</option>
-            <option defaultValue="10">10</option>
+            <option value="선택">나이를 선택해주세요</option>
+            <option value="0">알수없음</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
           </select>
           <p className={style.petAddWarning}>{errors.animalsAge?.message}</p>
         </div>
@@ -150,10 +167,10 @@ export default function MyPetAddModal(props:props) {
             }
           )}
           id='petSpecies' name='animalsCategory1'>
-            <option defaultValue="선택">종류를 선택해주세요</option>
-            <option defaultValue="1">강아지</option>
-            <option defaultValue="2">고양이</option>
-            <option defaultValue="3">기타</option>
+            <option value="선택">종류를 선택해주세요</option>
+            <option value="1">강아지</option>
+            <option value="2">고양이</option>
+            <option value="3">기타</option>
           </select>
           <p className={style.petAddWarning}>{errors.animalsCategory1?.message}</p>
         </div>
@@ -173,7 +190,7 @@ export default function MyPetAddModal(props:props) {
               }
             }
           )}
-          type='text' defaultValue='' placeholder='반려동물 품종을 입력하세요' />
+          type='text' placeholder='반려동물 품종을 입력하세요' />
           <p className={style.petAddWarning}>{errors.animalsCategory2?.message}</p>
         </div>
         <div className={style.myPetWeight}>
