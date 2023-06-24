@@ -46,7 +46,7 @@ exports.insertAnimal = async(request, result) => {
         });
 
         let animalsPhotosList;
-        if(request.files.length == undefined || null) {
+        if(request.files == undefined) {
             animalsPhotosList = "";
         } else {
             animalsPhotosList = new Array(request.files.length);

@@ -35,6 +35,13 @@ exports.insertMateBoard = async (request, result) => {
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
 
+  const usersIndexNumber = await Users.findOne({
+    attributes: [ "usersIndexNumber" ],
+    where: {
+        account: checkTokenResult.account
+    }
+  });
+
   if(checkTokenResult.result == true) {
     
     let matePhotosList = new Array(request.files.length);
@@ -55,7 +62,7 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
         mateBoardRegistDate: currentTimeStamp,
         mateBoardModifyDate: currentTimeStamp,
-        usersIndexNumber: parseInt(request.body.usersIndexNumber)
+        usersIndexNumber: parseInt(usersIndexNumber)
       })
       .then(res => {
         if(res == null) {
@@ -92,7 +99,7 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardRegistDate: currentTimeStamp,
         mateBoardModifyDate: currentTimeStamp,
         usersIndexNumber: parseInt(request.body.usersIndexNumber),
-        animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
+        animalsIndexNumber: parseInt(usersIndexNumber),
       })
       .then(res => {
         if(res == null) {
@@ -261,7 +268,7 @@ exports.textEditorImgFileUpload = (req, res) => {
 };
 
 /**
- * 게시글 상세 조회를 위한 메서드 (색인번호를 매개변수로 활용)
+ * 게시글 상세 조회를 위한 메서드 (게시글의 색인번호를 매개변수로 활용)
  * @param {*} request 
  * @param {*} result 
  */
