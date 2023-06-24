@@ -146,7 +146,7 @@ export default function MateBoard() {
       console.log('result ', result);
       setPostTotalCount(result.data.count);
     }
-    mateBoardListCount();
+    // mateBoardListCount();
   }, []);
 
 
@@ -158,7 +158,11 @@ export default function MateBoard() {
       queryKey: [`mateBoardList/${matePageNumber}`, searchQuery],
       queryFn: async () => {
         const result = await controller.mateBoardList(matePageNumber, searchQuery);
-        return result.data;
+        // console.log('result ', result);
+        // console.log('result ', result.data.data.rows);
+        setPostTotalCount(result.data.data.count);
+        // return result.data;
+        return result.data.data;
       }
     });
   }
@@ -342,7 +346,8 @@ export default function MateBoard() {
             <button type='button' onClick={boxReset}>초기화</button>
           </div>
         </div>
-        <MateBoardPost postList={data.data} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} />
+        {/* <MateBoardPost postList={data.data} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} /> */}
+        <MateBoardPost postList={data.rows} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} />
       </div>
     </div>
   )
