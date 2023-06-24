@@ -80,8 +80,8 @@ export default class Controller {
   }
 
   // 마이 페이지 - 회원정보 가져오기
-  async userInfoLoad(account) {
-    return this.httpClient.post('users/mypageUsersInfo', { account });
+  async userInfoLoad(account, password) {
+    return this.httpClient.post('users/mypageUsersInfo', { account, password });
   }
 
   // 마이 페이지 - 프로필 사진 가져오기

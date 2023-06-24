@@ -6,11 +6,11 @@ import { useModal } from '../../hooks/useModal';
 import { useAlert } from '../../hooks/useAlert';
 import { useConfirm } from '../../hooks/useConfirm';
 import Controller from '../../api/controller';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserType, userState } from '../../recoil/user';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+// import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface userDataInterface {
   account: '',
@@ -24,25 +24,19 @@ interface userDataInterface {
   address4: '',
 }
 
-export default function MyInfo() {
+interface MyInfoInterface {
+  userData: userDataInterface;
+  setUserData: Function;
+}
+
+export default function MyInfo(props:MyInfoInterface) {
+  const { userData, setUserData } = props;
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const { openAlert } = useAlert();
   const { openConfirm, closeConfirm } = useConfirm();
   const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
   const controller = new Controller();
-  const [userData, setUserData] = useState<userDataInterface>({
-    account: '',
-    name: '',
-    nickName: '',
-    phone: '',
-    email: '',
-    address1: '',
-    address2: '',
-    address3: '',
-    address4: '',
-  });
-
   const [profileImage, setProfileImage] = useState<string>(defaultImg);
 
   // 회원탈퇴
@@ -94,22 +88,7 @@ export default function MyInfo() {
     });
   }
 
-  // 회원정보 불러오기
   useEffect(() => {
-    const userInfoGet = async (account: String) => {
-      const result = await controller.userInfoLoad(account);
-      // console.log('result : ', result);
-      if(result.data.responseCode !== 200) {
-        openAlert({
-          title: '회원정보 로드 실패',
-          type: 'error',
-          content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
-        });
-        return ;
-      }
-      setUserData(result.data.data);
-    }
-
      // 프로필 사진 가져오기
      const userProfileGet = async (account: String) => {
       const result = await controller.userProfileLoad(account);
@@ -132,9 +111,7 @@ export default function MyInfo() {
       }
     }
 
-    // console.log('userInfo : ', userInfo[0]);
     if(userInfo[0].account !== '') {
-      userInfoGet(userInfo[0].account);
       userProfileGet(userInfo[0].account);
     }
 
@@ -142,16 +119,16 @@ export default function MyInfo() {
   }, [userInfo]);
 
   // 리액트 쿼리 테스트
-  const { status, data, error } = useInfo(userInfo[0].account);
-  function useInfo(account:String) {
-      return useQuery({
-        queryKey: ['userInfo'],
-        queryFn: async () => {
-          const res = await controller.userInfoLoad(account);
-          return res.data;
-        }
-      });
-  }
+  // const { status, data, error } = useInfo(userInfo[0].account);
+  // function useInfo(account:String) {
+  //     return useQuery({
+  //       queryKey: ['userInfo'],
+  //       queryFn: async () => {
+  //         const res = await controller.userInfoLoad(account);
+  //         return res.data;
+  //       }
+  //     });
+  // }
   // console.log('data ', data);
   // console.log('status ', status);
   // console.log('error ', error);
