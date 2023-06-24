@@ -35,7 +35,7 @@ export default function AnimalCard(props:animalCardInterface) {
   const [ heart, setHeart ] = useState<Boolean>(false);
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
-  const [ postRepresentativeImage, setPostRepresentativeImage ] = useState<string>(postData.mateBoardPhotos.split(',')[0]);
+  const [ postRepresentativeImage, setPostRepresentativeImage ] = useState<string>(postData.mateBoardPhotos === null || undefined ? '' : postData.mateBoardPhotos.split(',')[0]);
 
   const postHeartHandler = (event:MouseEvent) => {
     // 상위 엘리먼트들로의 이벤트 전파를 중단
