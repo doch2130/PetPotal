@@ -1,0 +1,43 @@
+.wrap {
+    background-color: #F0F0F0;
+    padding-top: 1rem;
+    max-width: 768px;
+    margin: auto;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wrap label {
+  font-size: 1.5rem;
+}
+
+.wrap input {
+  height: 24px;
+  font-size: 1rem;
+  margin: 0px 1rem;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.wrap button {
+  cursor: pointer;
+  width: 55px;
+  height: 32px;
+  font-size: 1rem;
+  background-color: var(--main-default-color);
+  color: #FFF;
+  border: none;
+  border-radius: 5px;
+}
+
+.wrap button:hover {
+  background-color: var(--main-default-dark-color);
+}
+
+@media (min-width: 576px) {
+  .wrap {
+    margin-top: 3rem;
+  }
+}

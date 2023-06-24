@@ -136,6 +136,7 @@ export default function Navbar() {
               </button>
             </form>
             <ul className={style.headerItem}>
+              {/* 아이콘123 미사용으로 인한 임시 display none 설정 */}
               <li>아이콘1</li>
               <li>아이콘2</li>
               <li>아이콘3</li>

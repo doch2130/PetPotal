@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { KeyboardEvent, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { UserType, userState } from '../../recoil/user';
 import { useAlert } from '../../hooks/useAlert';
@@ -82,14 +82,21 @@ export default function MyInfoCertification() {
     }
   }
 
+  const formEnterEvent = (e:KeyboardEvent<HTMLInputElement>):void => {
+    if (e.key === 'Enter') {
+      userInfoGet();
+    }
+    return ;
+  }
+
   return (
     <>
     {!certification ? 
-    <form>
+    <div className={style.wrap}>
       <label htmlFor='myPassword'>비밀번호</label>
-      <input type='password' id='myPassword' name='password' ref={password} />
+      <input type='password' id='myPassword' name='password' ref={password} onKeyDown={formEnterEvent}/>
       <button type='button' onClick={userInfoGet}>확인</button>
-    </form>
+    </div>
     : <MyInfo userData={userData} setUserData={setUserData} />
     }
     </>

@@ -103,10 +103,13 @@
 .registerButton span {
   font-weight: 500;
   font-size: 16px;
-  /* color: rgb(95, 0, 128); */
   color: #4AD645;
 }
 
+/* 네이버, 구글 로그인 미사용으로 인한 none 설정 */
+.loginLine, .oauthLoginWrap {
+  display: none;
+}
 
 .oauthLoginWrap {
   width: 400px;

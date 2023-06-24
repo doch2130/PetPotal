@@ -103,6 +103,11 @@ header a {
     justify-content: space-between;
 }
 
+/* 아이콘123 미사용으로 인한 임시 display none 설정 */
+.headerItem li {
+    display: none;
+}
+
 .menu {
     display: flex;
     justify-content: space-between;
