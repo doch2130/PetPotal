@@ -1,3 +1,5 @@
+const passport = require('passport');
+
 const fs = require('fs');
 const bcrypt = require("bcrypt");
 const nodeMailer = require("nodemailer");
@@ -16,11 +18,46 @@ dotenv.config({
   path: './config/.env',
 });
 
+const signIn = (request, response, done) => {
+  passport.authenticate('local', function (error, users) {
+    if (users === false) {
+      response.status(403).send({
+        responseCode: 403,
+        message: 'Login Failed...',
+        error: error
+      });
+    } else {
+      return request.login(users, (err) => {
+        if (err) {
+          console.error('signIn Request Failed:\n', err);
+          return response.status(403).send({
+            responseCode: 403,
+            message: 'Login Failure',
+          });
+        } else {
+          // signInTimeUpdate(request.body.account);
+          response.cookie('token', users, {
+            httpOnly: true,
+            signed: true,
+            // expires: new Date(Date.now() + 86400),
+            maxAge: 1000 * 60 * 60 * 24 * 1,
+          });
+          return response.status(200).send({
+            responseCode: 200,
+            message: 'Login Success',
+            data: users,
+          });
+        }
+      });
+    }
+  }) (request, response, done);
+}
+
 /**
  * 로그인 시간을 최신화 하는 함수
  * @param {String} account - 로그인을 수행할 계정
  */
-exports.signInTimeUpdate = (account) => {
+const signInTimeUpdate = (account) => {
   const lastLoginDate = CurrentDate.CurrentTimeStamp();
   Users.update(
     { lastLoginDate: lastLoginDate },
@@ -40,7 +77,7 @@ exports.signInTimeUpdate = (account) => {
  * @param {*} request - request.headers.token Request Header에 token 삽입
  * @param {*} response
  */
-exports.signOut = (request, response) => {
+const signOut = (request, response) => {
   request.logout(async (err) => {
     if (err) {
       console.log('err ', err);
@@ -83,7 +120,7 @@ exports.signOut = (request, response) => {
  * @param {*} request - Request Body에 데이터 삽입 프론트에서 x-www-url-form-urlencoded 형식으로 요청(var urlencoded = new URLSearchParams();)
  * @param {*} response
  */
-exports.insertUsers = async (request, response) => {
+const insertUsers = async (request, response) => {
   const saltRounds = parseInt(process.env.USER_SALT);
   const hashedPass = bcrypt.hashSync(request.body.password, saltRounds);
   // let hashed = await Crypt.encrypt(request.body.password);
@@ -150,7 +187,7 @@ exports.insertUsers = async (request, response) => {
  * @param {*} response
  * @returns { boolean }
  */
-exports.findByAccount = (request, response) => {
+const findByAccount = (request, response) => {
   Users.findOne({
     attributes: ['account'],
     where: { account: request.body.account },
@@ -176,7 +213,7 @@ exports.findByAccount = (request, response) => {
  * @param {*} response
  * @returns { boolean }
  */
-exports.findByNickName = (request, response) => {
+const findByNickName = (request, response) => {
   Users.findOne({
     attributes: ['nickName'],
     where: { nickName: request.body.nickName },
@@ -201,7 +238,7 @@ exports.findByNickName = (request, response) => {
  * @param {*} response
  * @returns { boolean }
  */
-exports.findByEmail = (request, response) => {
+const findByEmail = (request, response) => {
   Users.findOne({
     attributes: ['email'],
     where: { email: request.body.email },
@@ -226,7 +263,7 @@ exports.findByEmail = (request, response) => {
  * @param {*} response
  * @returns { boolean }
  */
-exports.findByPhone = (request, response) => {
+const findByPhone = (request, response) => {
   Users.findOne({
     attributes: ['phone'],
     where: { phone: request.body.phone },
@@ -251,23 +288,25 @@ exports.findByPhone = (request, response) => {
  * @param {String} request
  * @param {*} response
  */
-exports.findUsersInfo = async (request, response) => {
+const findUsersInfo = async (request, response) => {
   await CheckToken.CheckToken(1, request.headers.token)
   .then((res) => {
-    if((res.result == true) && (res.account == request.body.account)) {
+    if((res.result == true) && (res.account == request.body.account)) {    
       Users.findOne({
-        attributes: [
-          'account',
-          'name',
-          'nickName',
-          'phone',
-          'email',
-          'address1',
-          'address2',
-          'address3',
-          'address4',
-        ],
-        where: { account: request.body.account },
+          attributes: [
+            'account',
+            'name',
+            'nickName',
+            'phone',
+            'email',
+            'address1',
+            'address2',
+            'address3',
+            'address4',
+          ],
+          where: { 
+            account: request.body.account, 
+          },
       })
       .then((res) => {
         response.status(200).send({
@@ -283,8 +322,7 @@ exports.findUsersInfo = async (request, response) => {
           data: err,
         });
       });
-    }
-    else {
+    } else {
       response.status(500).send({
         responseCode: 500,
         message: 'API키가 일치하지 않거나 요청자가 정확하지 않습니다.',
@@ -305,7 +343,7 @@ exports.findUsersInfo = async (request, response) => {
  * @param {*} request
  * @param {*} response
  */
-exports.updateUsers = async (request, response) => {
+const updateUsers = async (request, response) => {
   // console.log('request.body ', request.body);
   const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
@@ -441,7 +479,7 @@ exports.updateUsers = async (request, response) => {
  * @param {String} account 사용자 계정 
  * @param {*} response 
  */
-exports.selectUsersProfileImage = async (request, response) => {
+const selectUsersProfileImage = async (request, response) => {
   // console.log(request.query);
   // console.log(request);
   await Users.findOne({
@@ -472,89 +510,99 @@ exports.selectUsersProfileImage = async (request, response) => {
  * @param {*} request.files 요청 바디의 필수 키 usersProfile
  * @param {*} response
  */
-exports.updateProfileImage = async (request, response) => {
+const updateProfileImage = async (request, response) => {
   // console.log(request.file);
-  console.log(request.body);
-  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token
-  );
-  const uploaderAccount = request.body.account;
-  const previousProfileFileName = await Users.findOne({
-    attributes: ['profileImageFileName'],
-    where: { account: uploaderAccount },
-  });
-  // console.log(previousProfileFileName.dataValues.profileImageFileName);
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+    const uploaderAccount = checkTokenResult.account;
 
-  if (checkTokenResult) {
-    if(
-      previousProfileFileName.dataValues.profileImageFileName === undefined ||
-      previousProfileFileName.dataValues.profileImageFileName == '' ||
-      previousProfileFileName.dataValues.profileImageFileName == null ||
-      previousProfileFileName.dataValues.profileImageFileName == 'null'
-    ) {
-      await Users.update(
-        {
-          profileImageFileName: request.file.filename,
-        },
-        {
-          where: {
-            account: uploaderAccount,
+  if(checkTokenResult.result) {
+    await Users.findOne({
+      attributes: ['profileImageFileName'],
+      where: { account: uploaderAccount },
+    })
+    .then((res) => {
+      if(
+        res.dataValues.profileImageFileName === undefined ||
+        res.dataValues.profileImageFileName == '' ||
+        res.dataValues.profileImageFileName == null ||
+        res.dataValues.profileImageFileName == 'null'
+      ) {
+        Users.update(
+          {
+            profileImageFileName: request.file.filename,
           },
-        }
-      ).then((res) => {
-        response.status(200).send({
-          responseCode: 200,
-          message: 'profile update success',
-          data: true,
-        });
-      })
-      .catch((err) => {
-        response.status(403).send({
-          responseCode: 403,
-          message: 'profile update failure',
-          data: false,
-        });
-      });
-    } else {
-      // console.log("existsSync:", await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`)); // return true or false
-      const fileExistCheck = await fs.existsSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`);
-      if(fileExistCheck == true) { await fs.rmSync(`./data/profile/${previousProfileFileName.dataValues.profileImageFileName}`); }
-      await Users.update(
-        {
-          profileImageFileName: request.file.filename,
-        },
-        {
-          where: {
-            account: uploaderAccount,
-          },
-        }
-      )
-      .then((res) => {
-        if(res[0] == 1) {
+          {
+            where: {
+              account: uploaderAccount,
+            },
+          }
+        ).then((res) => {
           response.status(200).send({
             responseCode: 200,
             message: 'profile update success',
             data: true,
           });
-        } else {
+        })
+        .catch((err) => {
           response.status(403).send({
             responseCode: 403,
-            message: 'profile update fail',
+            message: 'profile update failure',
             data: false,
+            error: err
           });
-        }
-      })
-      .catch((err) => {
-        response.status(403).send({
-          responseCode: 403,
-          message: 'profile update failure',
-          data: false,
         });
+      }
+      else {
+        // console.log("existsSync:", await fs.existsSync(`./data/profile/$res.dataValues.profileImageFileName}`)); // return true or false
+        const fileExistCheck = fs.existsSync(`./data/profile/${res.dataValues.profileImageFileName}`);
+        if(fileExistCheck == true) { fs.rmSync(`./data/profile/${res.dataValues.profileImageFileName}`); }
+          Users.update(
+          {
+            profileImageFileName: request.file.filename,
+          },
+          {
+            where: {
+              account: uploaderAccount,
+            },
+          }
+        )
+        .then((res) => {
+          if(res[0] == 1) {
+            response.status(200).send({
+              responseCode: 200,
+              message: 'profile update success',
+              data: true,
+            });
+          } else {
+            response.status(403).send({
+              responseCode: 403,
+              message: 'profile update fail',
+              data: false,
+            });
+          }
+        })
+        .catch((err) => {
+          response.status(403).send({
+            responseCode: 403,
+            message: 'profile update fail - DB server error',
+            data: false,
+            error: err
+          });
+        })
+      }
+    })
+    .catch((err) => {
+      response.status(403).send({
+        responseCode: 403,
+        message: "프로필 업데이트 실패 - 유저 불일치",
+        data: false,
+        error: err
       });
-    }
+    })
   } else {
     response.status(500).send({
       responseCode: 500,
-      message: 'Invalid Key',
+      message: "Invalid Key",
       data: false,
     });
   }
@@ -565,7 +613,7 @@ exports.updateProfileImage = async (request, response) => {
  * @param {*} request
  * @param {*} response
  */
-exports.dormancyUsers = async (request, response) => {
+const dormancyUsers = async (request, response) => {
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
   const checkTokenResult = await CheckToken.CheckToken(
     1,
@@ -612,7 +660,7 @@ exports.dormancyUsers = async (request, response) => {
  * @param {*} request 
  * @param {*} response 
  */
-exports.requestDefaultPassword = async(request, response) => {
+const requestDefaultPassword = async(request, response) => {
   const tempPassword = RandomString.RandomString(6);
   console.log("temp Password:", tempPassword);
 
@@ -710,7 +758,7 @@ exports.requestDefaultPassword = async(request, response) => {
  * @param {*} request 
  * @param {*} response 
  */
-exports.defaultPassword = async(request, response) => {
+const defaultPassword = async(request, response) => {
   const usersAccount = request.body.account;
   console.log(`Reset ${usersAccount}'s password`);
   // const newHashed = await Crypt.encrypt("1234");
@@ -736,6 +784,34 @@ exports.defaultPassword = async(request, response) => {
       message: "failure"
     })
   })
+}
+
+const jwtTest = (request, response, done) => {
+  passport.authenticate("jwt", function(error, users) {
+    if (users === false) {
+      response.status(403).send({
+        responseCode: 403,
+        message: "Jwt와 일치하는 사용자가 없습니다.",
+        error: error
+      });
+    } else {
+      return request.login(users, (err) => {
+        if(err) {
+          console.error('signIn Request Failed:\n', err);
+          return response.status(403).send({
+            responseCode: 403,
+            message: 'JWT 인증 실패',
+          });
+        } else {
+          return response.status(200).send({
+            responseCode: 200,
+            message: "JWT 인증 성공",
+            data: users,
+          });
+        }
+      });
+    }
+  }) (request, response, done);
 }
 
 /*
@@ -777,7 +853,7 @@ let salt = crypto.randomBytes(16).toString("base64");
 */
 
 // 새로고침 또는 주소 직접 입력 시 로그인 유지 체크 함수
-exports.loginStatusCheck = async (req, res) => {
+const loginStatusCheck = async (req, res) => {
   try {
     const { token } = req.signedCookies;
     // console.log('token : ', token);
@@ -839,3 +915,23 @@ exports.loginStatusCheck = async (req, res) => {
     });
   }
 };
+
+module.exports = {
+  signIn,
+  signInTimeUpdate,
+  signOut,
+  insertUsers,
+  findByAccount,
+  findByNickName,
+  findByEmail,
+  findByPhone,
+  findUsersInfo,
+  updateUsers,
+  selectUsersProfileImage,
+  updateProfileImage,
+  requestDefaultPassword,
+  dormancyUsers,
+  loginStatusCheck,
+  defaultPassword,
+  jwtTest,
+}

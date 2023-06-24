@@ -2,20 +2,27 @@ const multer = require('multer');
 const path = require('path');
 const fs = require("fs");
 
+const CheckToken = require("../CheckToken");
+
 const ImageFileHandler = (dirName) => {
     if(!fs.existsSync(`./data/${dirName}`)) {
         fs.mkdirSync(`./data/${dirName}`);
         return multer({
             storage: multer.diskStorage({
-            destination(req, file, res) {
-                res(null, `./data/${dirName}`);
-            },
-            filename(req, file, res) {
-                console.log("file req:", req);
-                const ext = path.extname(file.originalname);
-                // res(null, `${req.headers.account}_${file.fieldname}_${Date.now()}${ext}`);
-                res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
-            },
+                destination(req, file, res) {
+                    res(null, `./data/${dirName}`);
+                },
+                async filename(req, file, res) {
+                    // console.log("filename() req:", req.headers.token);
+                    // console.log("filename() file:", file);
+                    const ext = path.extname(file.originalname);
+                    const checkTokenResult = await CheckToken.CheckToken(1, req.headers.token);
+                    console.log(checkTokenResult);
+
+                    // res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
+                    res(null, `${checkTokenResult.account}_${file.fieldname}_${Date.now()}${ext}`);
+
+                },
             }),
             limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한
       });
@@ -25,10 +32,15 @@ const ImageFileHandler = (dirName) => {
             destination(req, file, res) {
                 res(null, `./data/${dirName}`);
             },
-            filename(req, file, res) {
+            async filename(req, file, res) {
+                // console.log("filename() req:", req.headers.token);
+                // console.log("filename() file:", file);
                 const ext = path.extname(file.originalname);
-                // res(null, `${req.headers.account}_${file.fieldname}_${Date.now()}${ext}`);
-                res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
+                const checkTokenResult = await CheckToken.CheckToken(1, req.headers.token);
+                console.log(checkTokenResult);
+
+                // res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
+                res(null, `${checkTokenResult.account}_${file.fieldname}_${Date.now()}${ext}`);
             },
             }),
             limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한

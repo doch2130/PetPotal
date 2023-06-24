@@ -4,9 +4,10 @@ const jwt = require('jsonwebtoken');
 
 exports.CheckToken = async (dbNumber, inputToken) => {
   const redisConfig = require('../config/redisClient.json');
+  let account;
 
   if (inputToken != undefined || inputToken != null) {
-    const account = await jwt.decode(inputToken).account;
+    account = await jwt.decode(inputToken).account;
 
     const redisClient = redis.createClient(redisConfig[dbNumber]);
     await redisClient.connect();
