@@ -5,189 +5,98 @@ const MateBoard = require('../models/MateBoard');
 const CheckToken = require('../middleware/CheckToken');
 const CurrentDate = require('../middleware/CurrentDate');
 
-const {
-  SingleFileHandler,
-  MultiFileHandler,
-} = require('../middleware/filehandler/MulterFileHandler');
 const Animals = require('../models/Animals');
 const Users = require('../models/Users');
 
 /**
- * 게시글 작성 메서드
- * @description Mate 서비스 게시판의 글 작성 메서드
- * @param {*} request result를 제외한 아래 항목을 request.body로 받는다.
- * @param {String} mateBoardTitle 게시글 제목
- * @param {int} mateBoardFee 비용
- * @param {String} mateBoardContent1 본문
- * @param {String} mateBoardContent2 주의사항
- * @param {String} mateBoardPhotos 첨부 사진의 저장된 파일 이름
- * @param {int} mateBoardCategory 구인/구직 여부 구인=1, 구직=2
- * @param {String} mateBoardRegistDate 게시글 최초 작성일
- * (형태: yyyy-M-ddTHH:mm:s.ms)
- * @param {String} mateBoardModifyDate 게시글 최종 수정일
- * (형태: yyyy-M-ddTHH:mm:s.ms)
- * @param {BigInt} usersIndexNumber 작성자의 인덱스 번호
- * @param {BigInt} animalsIndexNumber 게시글과 연관된 반려동물의 인덱스 번호 
- * @param {*} result 메서드 결과를 전달하는 콜백함수
+ * 모든 글 목록을 조회하는 함수  
+ * 게시글 등록 날짜 기준 최신순으로 9개씩 출력합니다.
+ * @param {*} request 
+ * @param {*} response
  */
-exports.insertMateBoard = async (request, result) => {
-  let inputToken = request.headers.token;
-  let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
-  let currentTimeStamp = CurrentDate.CurrentTimeStamp();
+exports.findAllMateBoardDesc = async(request, response) => {
 
-  const usersIndexNumber = await Users.findOne({
-    attributes: [ "usersIndexNumber" ],
+  let pageNumber = parseInt(request.params.pageNumber);
+  let offset = 0;
+
+  if(pageNumber > 1) {
+    offset = 10 * (pageNumber - 1);
+  }
+
+  await MateBoard.findAndCountAll({
+    include: [
+      {
+        model: Users,
+        as: "Users",
+        attributes: [ "account" ]
+      }
+    ],
     where: {
-        account: checkTokenResult.account
+      mateBoardStatus: 1,
+    },
+    offset: offset,
+    limit: 9,
+    order: [['mateBoardRegistDate', 'DESC']],
+  }).then((res) => {
+    // console.log("res:", res);
+    if (res.count == 0) {
+      response.status(304).send({
+        responseCode: 304,
+        data: null,
+        message: "조회 결과가 존재하지 않습니다.",
+      });
+    } else {
+      response.status(200).send({
+        responseCode: 200,
+        data: res
+      });
     }
   });
-
-  if(checkTokenResult.result == true) {
-    
-    let matePhotosList = new Array(request.files.length);
-    
-    for (let i = 0; i < request.files.length; i++) {
-      matePhotosList[i] = request.files[i].filename;
-    }
-
-    let createMateBoard;
-
-    if(request.body.animalsIndexNumber === null || request.body.animalsIndexNumber === undefined) {      
-      createMateBoard = await MateBoard.create({
-        mateBoardTitle: request.body.title,
-        mateBoardFee: parseInt(request.body.amount),
-        mateBoardContent1: request.body.detailContent,
-        mateBoardContent2: request.body.cautionContent,
-        mateBoardPhotos: matePhotosList.toString(),
-        mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: currentTimeStamp,
-        mateBoardModifyDate: currentTimeStamp,
-        usersIndexNumber: parseInt(usersIndexNumber)
-      })
-      .then(res => {
-        if(res == null) {
-          result.status(403).send({
-            responseCode: 403,
-            data: false,
-            message: "게시글 등록 실패",
-          });
-        }
-        else {
-          result.status(200).send({
-            responseCode: 200,
-            data: true,
-            message: "게시글 등록 완료"
-          });
-        }
-      })
-      .catch(err => {
-        result.status(403).send({
-          responseCode: 403,
-          data: false,
-          message: "게시글 등록 실패 데이터베이스 오류",
-          error: err
-        });
-      })  
-    } else {
-      createMateBoard = await MateBoard.create({
-        mateBoardTitle: request.body.title,
-        mateBoardFee: parseInt(request.body.amount),
-        mateBoardContent1: request.body.detailContent,
-        mateBoardContent2: request.body.cautionContent,
-        mateBoardPhotos: matePhotosList.toString(),
-        mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: currentTimeStamp,
-        mateBoardModifyDate: currentTimeStamp,
-        usersIndexNumber: parseInt(request.body.usersIndexNumber),
-        animalsIndexNumber: parseInt(usersIndexNumber),
-      })
-      .then(res => {
-        if(res == null) {
-          result.status(403).send({
-            responseCode: 403,
-            data: false,
-            message: "게시글 등록 실패",
-          });
-        }
-        else {
-          result.status(200).send({
-            responseCode: 200,
-            data: true,
-            message: "게시글 등록 완료"
-          });
-        }
-      })
-      .catch(err => {
-        result.status(403).send({
-          responseCode: 403,
-          data: false,
-          message: "게시글 등록 실패 데이터베이스 오류",
-          error: err
-        });
-      })
-    }
-  } else {
-    result.send({
-      responseCode: 400,
-      message: 'Incorrect Key',
-    });
-  }
 };
 
 /**
  * 모든 글 목록을 조회하는 함수  
- * 게시글 등록 날짜 기준 최신순으로 10개씩 출력합니다.
+ * 게시글 등록 날짜 기준 최신순으로 9개씩 출력합니다.
  * @param {*} request 
- * @param {*} result 
+ * @param {*} response
  */
-exports.findAllMateBoardDesc = async (request, result) => {
-  let inputToken = request.headers.token;
-  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+exports.findAllMateBoardAsc = async (request, response) => {
 
-  if(checkTokenResult.result === true) {
-    let pageNumber = request.params.pageNumber;
-    let offset = 0;
+  let pageNumber = request.params.pageNumber;
+  let offset = 0;
 
-    if(pageNumber > 1) {
-      offset = 10 * (pageNumber - 1);
-    }
-
-    await MateBoard.findAndCountAll({
-      // await MateBoard.findAll
-      // await MateBoard.findAndCountAll({ // .findAndCountAll() 사용시 결과값으로 rows 개수를 결과에 포함하여 출력한다.
-      // attributes: ["animalsUsersIndexNumber"],
-      include: [
-        {
-          model: Users,
-          as: "Users",
-          attributes: [ "account" ]
-        }
-      ],
-      where: {
-        mateBoardStatus: 1,
-      },
-      offset: offset,
-      limit: 9,
-      order: [['mateBoardRegistDate', 'DESC']],
-    }).then((response) => {
-      if (response == null) {
-        result.send({
-          responseCode: 304,
-          message: 'no result',
-        });
-      } else {
-        result.send({
-          responseCode: 200,
-          data: response,
-        });
-      }
-    });
-  } else {
-    result.send({
-      responseCode: 400,
-      message: 'Incorrect Key',
-    });
+  if(pageNumber > 1) {
+    offset = 10 * (pageNumber - 1);
   }
+
+  await MateBoard.findAndCountAll({
+    include: [
+      {
+        model: Users,
+        as: "Users",
+        attributes: [ "account" ]
+      }
+    ],
+    where: {
+      mateBoardStatus: 1,
+    },
+    offset: offset,
+    limit: 9,
+    order: [['mateBoardRegistDate', 'ASC']],
+  }).then((res) => {
+    if (res == null) {
+      response.status(304).send({
+        responseCode: 304,
+        data: null,
+        message: "조회 결과가 존재하지 않습니다.",
+      });
+    } else {
+      response.status(200).send({
+        responseCode: 200,
+        data: response,
+      });
+    }
+  });
 };
 
 /**

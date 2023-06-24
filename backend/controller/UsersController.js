@@ -365,6 +365,56 @@ const findUsersInfo = async (request, response) => {
     });
   })
 };
+// const findUsersInfo = async (request, response) => {
+//   await CheckToken.CheckToken(1, request.headers.token)
+//   .then((res) => {
+//     if(request.body.account == res.account) {
+//       Users.findOne({
+//           attributes: [
+//             'account',
+//             'name',
+//             'nickName',
+//             'phone',
+//             'email',
+//             'address1',
+//             'address2',
+//             'address3',
+//             'address4',
+//           ],
+//           where: { 
+//             account: request.body.account, 
+//           },
+//       })
+//       .then((res) => {
+//         response.status(200).send({
+//           responseCode: 200,
+//           message: 'Success',
+//           data: res,
+//         });
+//       })
+//       .catch((err) => {
+//         response.status(400).send({
+//           responseCode: 400,
+//           message: 'Failed',
+//           data: err,
+//         });
+//       });
+//     } else {
+//       response.status(403).send({
+//         responseCode: 403,
+//         data: false,
+//         message: "해당 회원이 존재하지 않습니다."
+//       })
+//     }
+//     }).catch((err) => {
+//       response.status(403).send({
+//         responseCode: 403,
+//         data: false,
+//         message: "마이페이지 조회를 위한 DB조회 실패",
+//         error: err
+//       })
+//     })
+// };
 /**
  * 회원정보를 변경하는 메서드
  * @param {*} request
