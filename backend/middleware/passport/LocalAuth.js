@@ -45,6 +45,7 @@ module.exports = () => {
               );
               const data = {
                 account: account,
+                usersIndexNumber: response.dataValues.usersIndexNumber,
                 token: token
               }
 

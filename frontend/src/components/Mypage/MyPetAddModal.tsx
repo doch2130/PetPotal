@@ -105,7 +105,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '성별을 입력해주세요'},
             }
           )}
-          type="radio" id='petGenderMan' value="수컷" name='animalsGender' />
+          type="radio" id='petGenderMan' value="1" name='animalsGender' />
           <label htmlFor='petGenderMan'>수컷</label>
           <input
           {...register('animalsGender', 
@@ -113,7 +113,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '성별을 선택해주세요'},
             }
           )}
-          type="radio" id='petGenderWoman' value="암컷" name='animalsGender' />
+          type="radio" id='petGenderWoman' value="2" name='animalsGender' />
           <label htmlFor='petGenderWoman'>암컷</label>
           <p className={style.petAddWarning}>{errors.animalsGender?.message}</p>
         </div>
@@ -151,9 +151,9 @@ export default function MyPetAddModal(props:props) {
           )}
           id='petSpecies' name='animalsCategory1'>
             <option defaultValue="선택">종류를 선택해주세요</option>
-            <option defaultValue="강아지">강아지</option>
-            <option defaultValue="고양이">고양이</option>
-            <option defaultValue="기타">기타</option>
+            <option defaultValue="1">강아지</option>
+            <option defaultValue="2">고양이</option>
+            <option defaultValue="3">기타</option>
           </select>
           <p className={style.petAddWarning}>{errors.animalsCategory1?.message}</p>
         </div>
@@ -183,7 +183,7 @@ export default function MyPetAddModal(props:props) {
             {
               required: {value: true, message: '무게를 입력해주세요'},
               pattern: {
-                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,1}$/,
+                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,3}$/,
                 message: '입력한 무게를 다시 확인해주세요'
               },
               min: {
@@ -204,7 +204,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredTrue' value="예"
+            type="radio" id='isNeuteredTrue' value="1"
           />
           <label htmlFor='isNeuteredTrue'>예</label>
           <input 
@@ -213,7 +213,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredFalse' value="아니오"
+            type="radio" id='isNeuteredFalse' value="2"
           />
           <label htmlFor='isNeuteredFalse'>아니오</label>
           <input 
@@ -222,7 +222,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredUnknown' value="모름"
+            type="radio" id='isNeuteredUnknown' value="3"
           />
           <label htmlFor='isNeuteredUnknown'>모름</label>
           <p className={style.petAddWarning}>{errors.animalsNeutered?.message}</p>
