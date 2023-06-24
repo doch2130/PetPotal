@@ -45,6 +45,7 @@ export default function MyInfoModifyModal(props:propsData) {
     isNickName: true,
     nickName: userData.nickName,
   });
+  const [ modalProfileImage, setModalProfileImage ] = useState<string>(profileImage);
 
   // 프로필 이미지 변경
   const imgFileHandler = async (e:ChangeEvent<HTMLInputElement>):Promise<void> => {
@@ -56,16 +57,18 @@ export default function MyInfoModifyModal(props:propsData) {
     const formData = new FormData();
     formData.append('usersProfile', files[0]);
     const result = await controller.userProfileModify(formData);
-    console.log('imgFileHandler result :', result);
+    // console.log('imgFileHandler result :', result);
+    // console.log('imgFileHandler result :', result.data);
+    setProfileImage(result.data.data);
+    setModalProfileImage(result.data.data);
     return ;
   };
 
   const duplicateCheckHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
     if(userData.nickName === getValues('nickName')) {
       openAlert({
-        title: '닉네임 중복 검사',
+        title: '닉네임 중복 검사 실패',
         type: 'error',
-        // type: 'success',
         content: '기존과 동일한 닉네임입니다.',
       });
       return ;
@@ -75,7 +78,7 @@ export default function MyInfoModifyModal(props:propsData) {
     const result = await controller.duplicateCheck(id, getValues('nickName'));
     if(result.data.responseCode !== 200) {
       openAlert({
-        title: '닉네임 중복 검사',
+        title: '닉네임 중복 검사 실패',
         type: 'error',
         content: '중복된 닉네임입니다',
       });
@@ -85,7 +88,7 @@ export default function MyInfoModifyModal(props:propsData) {
     duplicateValue[0].isNickName = true;
     duplicateValue[0].nickName = getValues('nickName');
     openAlert({
-      title: '닉네임 중복 검사',
+      title: '닉네임 중복 검사 성공',
       type: 'success',
       content: '사용할 수 있는 닉네임입니다',
     });
@@ -205,7 +208,7 @@ export default function MyInfoModifyModal(props:propsData) {
   return (
     <div className={style.wrap}>
       <PictureBox width='100px' height='100px'>
-        <img src={profileImage} alt='MyProfileImage' />
+        <img src={modalProfileImage} alt='MyInfoModalProfileImage' />
       </PictureBox>
       <div className={style.fileUploadButtonWrap}>
         <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
