@@ -10,13 +10,13 @@ interface MateWritePetAddInterface {
 }
 
 interface MateWritePetAddFormInput {
-  petNameModal: String;
-  petGenderModal: String;
-  petAgeModal: String;
-  petSpeciesModal: String;
-  petBreedsModal: String;
-  petWeightModal: Number;
-  isNeuteredModal: String;
+  animalsName: String;
+  animalsGender: String;
+  animalsAge: String;
+  animalsCategory1: String;
+  animalsCategory2: String;
+  animalsWeight: Number;
+  animalsNeutered: String;
 }
 
 export default function MateWritePetAdd(props:MateWritePetAddInterface) {
@@ -27,13 +27,13 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
   const { openAlert } = useAlert();
 
   const onSubmit : SubmitHandler<MateWritePetAddFormInput> = async (data) => {
-    if((getValues('petAgeModal').includes('선택'))) {
-      setError('petAgeModal', {message: '나이를 선택해주세요'}, {shouldFocus: true });
+    if((getValues('animalsAge').includes('선택'))) {
+      setError('animalsAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
       return ;
     }
 
-    if((getValues('petSpeciesModal').includes('선택'))) {
-      setError('petSpeciesModal', {message: '종류를 선택해주세요'}, {shouldFocus: true });
+    if((getValues('animalsCategory1').includes('선택'))) {
+      setError('animalsCategory1', {message: '종류를 선택해주세요'}, {shouldFocus: true });
       return ;
     }
 
@@ -52,11 +52,12 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             type: 'success',
             content: '펫이 등록되었습니다.'
           });
+          onClose();
         } else {
           openAlert({
             title: 'Mate Write Pet Add Error',
             type: 'error',
-            content: '펫이 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
+            content: '펫이 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요.'
           });
         }
       }
@@ -72,14 +73,14 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol}>
           <label htmlFor='petNameModal'>이름</label>
           <input 
-            {...register('petNameModal',
+            {...register('animalsName',
             {
               required: {value: true, message: '이름을 입력해주세요'},
             },
             )}
             id='petNameModal' type='text' placeholder='이름을 입력해주세요'
           />
-          <p className={style.mateWriteWraning}>{errors.petNameModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsName?.message}</p>
         </div>
       </div>
 
@@ -87,24 +88,24 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol + ' ' + style.wrapPetGender}>
           <label>성별</label>
           <input 
-            {...register("petGenderModal",
+            {...register("animalsGender",
             {
               required: {value: true, message: '성별을 선택해주세요' }
             },
             )}
-            type="radio" id='petGenderManModal' value="수컷"
+            type="radio" id='petGenderManModal' value="1"
           />
           <label htmlFor='petGenderManModal'>수컷</label>
           <input 
-            {...register("petGenderModal",
+            {...register("animalsGender",
             {
               required: {value: true, message: '성별을 선택해주세요' }
             },
             )}
-            type="radio" id='petGenderWomanModal' value="암컷"
+            type="radio" id='petGenderWomanModal' value="2"
           />
           <label htmlFor='petGenderWomanModal'>암컷</label>
-          <p className={style.mateWriteWraning}>{errors.petGenderModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsGender?.message}</p>
         </div>
       </div>
 
@@ -112,7 +113,7 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol}>
           <label htmlFor='petAgeModal'>나이</label>
           <select
-            {...register("petAgeModal",
+            {...register("animalsAge",
             { required: {value: true, message: '나이를 선택해주세요'}
             },
             )}
@@ -130,7 +131,7 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             <option value="9">9</option>
             <option value="10">10</option>
           </select>
-          <p className={style.mateWriteWraning}>{errors.petAgeModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsAge?.message}</p>
         </div>
       </div>
 
@@ -138,17 +139,17 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol}>
           <label htmlFor='petSpeciesModal'>종류</label>
           <select
-            {...register("petSpeciesModal",
+            {...register("animalsCategory1",
             { required: {value: true, message: '종류를 선택해주세요'}
             },
             )}
             id='petSpeciesModal'>
             <option value="선택">종류를 선택해주세요</option>
-            <option value="강아지">강아지</option>
-            <option value="고양이">고양이</option>
-            <option value="기타">기타</option>
+            <option value="1">강아지</option>
+            <option value="2">고양이</option>
+            <option value="3">기타</option>
           </select>
-          <p className={style.mateWriteWraning}>{errors.petSpeciesModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsCategory1?.message}</p>
         </div>
       </div>
 
@@ -156,14 +157,14 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol}>
           <label htmlFor='petBreedsModal'>품종</label>
           <input 
-            {...register('petBreedsModal',
+            {...register('animalsCategory2',
             {
               required: {value: true, message: '품종을 입력해주세요'},
             },
             )}
             id='petBreedsModal' type='text' placeholder='품종을 입력해주세요'
           />
-          <p className={style.mateWriteWraning}>{errors.petBreedsModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsCategory2?.message}</p>
         </div>
       </div>
 
@@ -171,11 +172,11 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol + ' ' + style.wrapPetWeight}>
           <label htmlFor='petWeightModal'>무게</label>
           <input 
-            {...register('petWeightModal',
+            {...register('animalsWeight',
             {
               required: {value: true, message: '무게를 입력해주세요'},
               pattern: {
-                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,5}$/,
+                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,3}$/,
                 message: '입력한 무게를 다시 확인해주세요'
               },
               min: {
@@ -187,7 +188,7 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             id='petWeightModal' type='text' placeholder='무게를 입력해주세요'
           />
           <span>KG</span>
-          <p className={style.mateWriteWraning}>{errors.petWeightModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsWeight?.message}</p>
         </div>
       </div>
 
@@ -195,33 +196,33 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
         <div className={style.wrapCol + ' ' + style.wrapIsNeutered}>
           <label>중성화</label>
           <input 
-            {...register("isNeuteredModal",
+            {...register("animalsNeutered",
             {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredTrueModal' value="예"
+            type="radio" id='isNeuteredTrueModal' value="1"
           />
           <label htmlFor='isNeuteredTrueModal'>예</label>
           <input 
-            {...register("isNeuteredModal",
+            {...register("animalsNeutered",
             {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredFalseModal' value="아니오"
+            type="radio" id='isNeuteredFalseModal' value="2"
           />
           <label htmlFor='isNeuteredFalseModal'>아니오</label>
           <input 
-            {...register("isNeuteredModal",
+            {...register("animalsNeutered",
             {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredUnknownModal' value="모름"
+            type="radio" id='isNeuteredUnknownModal' value="3"
           />
           <label htmlFor='isNeuteredUnknownModal'>모름</label>
-          <p className={style.mateWriteWraning}>{errors.isNeuteredModal?.message}</p>
+          <p className={style.mateWriteWraning}>{errors.animalsNeutered?.message}</p>
         </div>
       </div>
       <div className={style.buttonGroup}>
