@@ -142,8 +142,8 @@ export default class Controller {
 
   // 메이트 게시판 - 전체 글 가져오기
   async mateBoardList(pageNumber, searchQuery) {
-    // return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`);
-    return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`,
+    // return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`,
+    return this.httpClient.get(`mateBoard/findAllContentDesc/${pageNumber}`,
     {
       params: searchQuery,
       paramsSerializer: params => {
