@@ -7,7 +7,6 @@ const Users = require("../models/Users");
 const CheckToken = require("../middleware/CheckToken");
 const CurrentDate = require("../middleware/CurrentDate");
 
-
 const ConvertAnimalsCategory2 = (animalsCategory2) => {
     let result = "";
     animalsCategory2 = animalsCategory2.toLowerCase();
@@ -21,6 +20,11 @@ const ConvertAnimalsCategory2 = (animalsCategory2) => {
     return result;
 }
 
+/**
+ * 반려동물 정보를 추가하는 함수
+ * @param {*} request 
+ * @param {*} result 
+ */
 exports.insertAnimal = async(request, result) => {
     let inputToken = request.headers.token;
     let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
@@ -40,10 +44,16 @@ exports.insertAnimal = async(request, result) => {
                 account: checkTokenResult.account
             }
         });
-        let animalsPhotosList = new Array(request.files.length);
-        for(let i = 0; i < request.files.length; i++) {
-            animalsPhotosList[i] = request.files[i].filename;
-        }
+
+        let animalsPhotosList;
+        if(request.files.length == undefined || null) {
+            animalsPhotosList = "";
+        } else {
+            animalsPhotosList = new Array(request.files.length);
+            for(let i = 0; i < request.files.length; i++) {
+                animalsPhotosList[i] = request.files[i].filename;
+            }
+        }       
 
         await Animals.create({
             animalsName: request.body.animalsName,

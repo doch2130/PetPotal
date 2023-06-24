@@ -137,7 +137,6 @@ const insertUsers = async (request, response) => {
       Users.create({
         account: request.body.account,
         password: hashedPass,
-        salt: "",
         name: request.body.name,
         nickName: request.body.nickName,
         phone: request.body.phone,
