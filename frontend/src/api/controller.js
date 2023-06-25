@@ -86,7 +86,7 @@ export default class Controller {
 
   // 마이 페이지 - 프로필 사진 가져오기
   async userProfileLoad(account) {
-    return this.httpClient.get(`users/profile?account=${account}`);
+    return this.httpClient.get(`users/loadProfile?account=${account}`);
   }
 
   // 마이 페이지 - 회원정보 수정

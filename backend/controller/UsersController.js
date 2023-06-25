@@ -557,18 +557,27 @@ const updateUsers = async (request, response) => {
  * @param {*} response 
  */
 const selectUsersProfileImage = async (request, response) => {
-  // console.log(request.query);
+  console.log('request.query.account' , request.query.account);
+  console.log('request.body.account' , request.body.account);
   // console.log(request);
   await Users.findOne({
     attributes: ['profileImageFileName'],
     where: { account: request.query.account },
   })
     .then((res) => {
-      response.status(200).send({
-        responseCode: 200,
-        message: 'profileImage Loading complete',
-        data: `http://${request.hostname}:${request.socket.localPort}${request._parsedOriginalUrl.pathname}/${res.dataValues.profileImageFileName}`,
-      });
+      if(res.dataValues.profileImageFileName != null) {
+        response.status(200).send({
+          responseCode: 200,
+          message: 'profileImage Loading complete',
+          data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res.dataValues.profileImageFileName}`,
+        });
+      } else {
+        response.status(300).send({
+          responseCode: 300,
+          message: "해당 사용자의 프로필 이미지가 존재하지 않습니다.",
+          data: null
+        });
+      }
     })
     .catch((err) => {
       response.status(403).send({
@@ -617,7 +626,7 @@ const updateProfileImage = async (request, response) => {
           response.status(200).send({
             responseCode: 200,
             message: 'profile update success',
-            data: true,
+            data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res2.dataValues.profileImageFileName}`,
           });
         })
         .catch((err) => {
@@ -645,11 +654,24 @@ const updateProfileImage = async (request, response) => {
         )
         .then((res) => {
           if(res[0] == 1) {
-            response.status(200).send({
-              responseCode: 200,
-              message: 'profile update success',
-              data: true,
-            });
+            Users.findOne({
+              attributes: ["profileImageFileName"],
+              where: {
+                account: uploaderAccount
+              }
+            }).then((res2) => {
+              response.status(200).send({
+                responseCode: 200,
+                message: "프로필 이미지 업데이트를 완료했습니다.",
+                data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res2.dataValues.profileImageFileName}`,
+              });
+            }).catch(err => {
+              response.status(403).send({
+                responseCode: 403,
+                message: "프로필 이미지는 업데이트 되었지만 업데이트된 이미지 정보를 불러오는데 실패했습니다.",
+                data: false
+              });
+            });            
           } else {
             response.status(403).send({
               responseCode: 403,
