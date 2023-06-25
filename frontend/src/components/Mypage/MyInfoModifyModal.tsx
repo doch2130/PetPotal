@@ -101,13 +101,24 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
 
   const daumPostCodeopen = useDaumPostcodePopup(POSTCODE_URL);
 
-  type Value = {sido: string, sigungu: string, roadname: string, zonecode: string, address: string};
+  type Value = {sido: string, sigungu: string, zonecode: string, jibunAddress:string, address: string, userSelectedType: string}
+
   const onComplete = (data : Value) => {
-    const fullAddress = `(${data.zonecode}) ${data.address}`;
-    setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
-    setValue('address1', data.sido);
-    setValue('address2', data.sigungu);
-    setValue('address3', fullAddress.slice(fullAddress.indexOf(data.roadname)).trim());
+    if(data.userSelectedType === 'R') {
+      // 도로명 주소
+      const fullAddress = `(${data.zonecode}) ${data.address}`;
+      setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      setValue('address1', data.sido);
+      setValue('address2', data.sigungu);
+      setValue('address3', data.address.slice(data.address.indexOf(data.sigungu) + data.sigungu.length + 1));
+    } else {
+      // 지번 주소
+      const fullAddress = `(${data.zonecode}) ${data.jibunAddress}`;
+      setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      setValue('address1', data.sido);
+      setValue('address2', data.sigungu);
+      setValue('address3', data.jibunAddress.slice(data.jibunAddress.indexOf(data.sigungu) + data.sigungu.length + 1));
+    }
   };
 
   const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
