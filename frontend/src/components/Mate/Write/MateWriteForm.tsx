@@ -74,6 +74,8 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
       }
     }
 
+    console.log('data ', data);
+
     openConfirm({
       title: '글 작성 등록',
       content: '작성한 내용으로 등록하시겠습니까?',

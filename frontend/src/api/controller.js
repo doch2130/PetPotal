@@ -146,23 +146,44 @@ export default class Controller {
   }
 
   // 메이트 게시판 - 전체 글 가져오기
-  async mateBoardList(pageNumber, searchQuery) {
+  async mateBoardList(pageNumber, searchQuery, account, timeSort) {
+    let sort = '';
+    if(timeSort === 'newest') {
+      sort = 'Desc';
+    } else {
+      sort = 'Asc';
+    }
+
+    if(account === '') {
+      return this.httpClient.get(`openMateBoard/findAllContent${sort}/${pageNumber}`,
+      {
+        params: searchQuery,
+        paramsSerializer: params => {
+          return qs.stringify(params, { arrayFormat: 'brackets' })
+        }
+      });
+    } else {
+      return this.httpClient.get(`mateBoard/findAllContent${sort}/${pageNumber}`,
+      {
+        params: searchQuery,
+        paramsSerializer: params => {
+          return qs.stringify(params, { arrayFormat: 'brackets' })
+        }
+      });
+    }
     // return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`,
-    return this.httpClient.get(`mateBoard/findAllContentDesc/${pageNumber}`,
-    {
-      params: searchQuery,
-      paramsSerializer: params => {
-        return qs.stringify(params, { arrayFormat: 'brackets' })
-      }
-    })
+    // return this.httpClient.get(`mateBoard/findAllContentDesc/${pageNumber}`,
+    // {
+    //   params: searchQuery,
+    //   paramsSerializer: params => {
+    //     return qs.stringify(params, { arrayFormat: 'brackets' })
+    //   }
+    // })
   }
 
-  // 메이트 게시판 - 좋아요 게시글 가져오기
-  async mateLikeBoardList(account) {
-    return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
-  }
+  // // 메이트 게시판 - 좋아요 게시글 가져오기
+  // async mateLikeBoardList(account) {
+  //   return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
+  // }
 
-  async mateBoardListCount() {
-    return this.httpClient.get(`mateBoard/findAllContentCount`);
-  }
 }

@@ -16,6 +16,7 @@ interface latlngInterface {
 }
 
 export default function MateWriteMap(props:naverMapInterface) {
+  const { setValueHandler } = props;
   const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -99,9 +100,9 @@ export default function MateWriteMap(props:naverMapInterface) {
               htmlAddresses.push((i+1) +'. '+ addrType +' '+ address);
 
               if(addrType === '[지번 주소]') {
-                props.setValueHandler('address', address.trim().replace(/ +/g, " "));
-                props.setValueHandler('lng', latlng._lng);
-                props.setValueHandler('lat', latlng._lat);
+                setValueHandler('address', address.trim().replace(/ +/g, " "));
+                setValueHandler('lng', latlng._lng);
+                setValueHandler('lat', latlng._lat);
               }
           }
   
@@ -127,14 +128,17 @@ export default function MateWriteMap(props:naverMapInterface) {
   
       if (hasArea(region.area1)) {
           sido = region.area1.name;
+          setValueHandler('address1', sido);
       }
   
       if (hasArea(region.area2)) {
           sigugun = region.area2.name;
+          setValueHandler('address2', sigugun);
       }
   
       if (hasArea(region.area3)) {
           dongmyun = region.area3.name;
+          setValueHandler('address3', dongmyun);
       }
   
       if (hasArea(region.area4)) {
@@ -152,6 +156,10 @@ export default function MateWriteMap(props:naverMapInterface) {
               if (hasData(land.number2)) {
                   rest += ('-' + land.number2);
               }
+
+              if( hasData(land.type) && land.type === '1') {
+                setValueHandler('address4', rest);
+              }
           }
   
           if (isRoadAddress === true) {
@@ -167,7 +175,7 @@ export default function MateWriteMap(props:naverMapInterface) {
               }
           }
       }
-  
+
       return [sido, sigugun, dongmyun, ri, rest].join(' ');
     }
 
@@ -187,6 +195,7 @@ export default function MateWriteMap(props:naverMapInterface) {
         return !!(addition && addition.value);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
