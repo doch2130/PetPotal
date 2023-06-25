@@ -557,7 +557,8 @@ const updateUsers = async (request, response) => {
  * @param {*} response 
  */
 const selectUsersProfileImage = async (request, response) => {
-  // console.log(request.query);
+  console.log('request.query.account' , request.query.account);
+  console.log('request.body.account' , request.body.account);
   // console.log(request);
   await Users.findOne({
     attributes: ['profileImageFileName'],
@@ -568,7 +569,7 @@ const selectUsersProfileImage = async (request, response) => {
         response.status(200).send({
           responseCode: 200,
           message: 'profileImage Loading complete',
-          data: `http://${request.hostname}:${request.socket.localPort}${request._parsedOriginalUrl.pathname}/${res.dataValues.profileImageFileName}`,
+          data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res.dataValues.profileImageFileName}`,
         });
       } else {
         response.status(300).send({
@@ -625,7 +626,7 @@ const updateProfileImage = async (request, response) => {
           response.status(200).send({
             responseCode: 200,
             message: 'profile update success',
-            data: true,
+            data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res2.dataValues.profileImageFileName}`,
           });
         })
         .catch((err) => {
