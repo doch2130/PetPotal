@@ -60,7 +60,7 @@ app.get('/', (req, res) => {
 });
 
 // NaverMap Geocoding
-app.get('/api/naverMapGeocoding', geocoding);
+// app.get('/api/naverMapGeocoding', geocoding);
 
 app.listen(port, () => {
   console.log(`pettotal backend listening on port ${port}`);

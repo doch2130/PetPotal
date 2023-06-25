@@ -11,6 +11,7 @@ const {
 } = require('../middleware/filehandler/MulterFileHandler');
 const Animals = require('../models/Animals');
 const Users = require('../models/Users');
+const { geocode } = require("../controller/NaverMapController");
 
 /**
  * 게시글 작성 메서드
@@ -43,6 +44,10 @@ exports.insertMateBoard = async (request, result) => {
   });
 
   if(checkTokenResult.result == true) {
+    let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
+    // console.log("geocode Keyword:", geocodeKeyword);
+    const geocodeResult = await geocode(geocodeKeyword);
+    // console.log("geocode Result:", geocodeResult);
     
     let matePhotosList = new Array(request.files.length);
     
@@ -62,13 +67,13 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardAddress2: request.body.mateBoardAddress2,
         mateBoardAddress3: request.body.mateBoardAddress3,
         mateBoardAddress4: request.body.mateBoardAddress4,
-        mateBoardLat: request.body.mateBoardLat,
-        mateBoardLng: request.body.mateBoardLng,
+        mateBoardLat: geocodeResult.lat,
+        mateBoardLng: geocodeResult.lng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
         mateBoardRegistDate: currentTimeStamp,
         mateBoardModifyDate: currentTimeStamp,
-        usersIndexNumber: parseInt(usersIndexNumber)
+        usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
       })
       .then(res => {
         if(res == null) {
