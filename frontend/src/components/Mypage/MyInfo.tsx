@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { UserType, userState } from '../../recoil/user';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import MyInfoPasswordChangeModal from './MyInfoPasswordChangeModal';
 // import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface userDataInterface {
@@ -27,10 +28,11 @@ interface userDataInterface {
 interface MyInfoInterface {
   userData: userDataInterface;
   setUserData: Function;
+  setCertification: Function;
 }
 
 export default function MyInfo(props:MyInfoInterface) {
-  const { userData, setUserData } = props;
+  const { userData, setUserData, setCertification } = props;
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const { openAlert } = useAlert();
@@ -40,7 +42,7 @@ export default function MyInfo(props:MyInfoInterface) {
   const [profileImage, setProfileImage] = useState<string>(defaultImg);
 
   // 회원탈퇴
-  const memberSignOut = () => {
+  const memberSignOut = ():void => {
     openConfirm({
       title: '회원탈퇴',
       content: '정말로 회원을 탈퇴하시겠습니까?',
@@ -76,7 +78,7 @@ export default function MyInfo(props:MyInfoInterface) {
   }
 
   // 회원수정 창 열기
-  const mermberModifyOpen = () => {
+  const mermberModifyOpen = ():void => {
     const ModalContent = () => (
       <MyInfoModifyModal onClose={closeModal} userData={userData} setUserData={setUserData}
         profileImage={profileImage} setProfileImage={setProfileImage} />
@@ -86,6 +88,19 @@ export default function MyInfo(props:MyInfoInterface) {
       backDrop: false,
       content: <ModalContent />
     });
+  }
+
+  // 비밀번호 변경
+  const memberChangePassword = ():void => {
+    const ModalContent = () => (
+      <MyInfoPasswordChangeModal onClose={closeModal} account={userInfo[0].account} setCertification={setCertification} />
+    );
+
+    openModal({
+      backDrop: false,
+      content: <ModalContent />
+    });
+    return ;
   }
 
   useEffect(() => {
@@ -151,7 +166,8 @@ export default function MyInfo(props:MyInfoInterface) {
         </div>
       </div>
       <div className={style.buttonGroup}>
-        <button type='button' className={style.fullButton} onClick={mermberModifyOpen}>수정</button>
+        <button type='button' className={style.fullButton} onClick={memberChangePassword}>비밀번호 변경</button>
+        <button type='button' className={style.fullButton} onClick={mermberModifyOpen}>정보수정</button>
         <button type='button' className={style.fullButton} onClick={memberSignOut}>탈퇴</button>
       </div>
     </div>

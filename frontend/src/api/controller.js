@@ -100,6 +100,11 @@ export default class Controller {
     return this.httpClient.post('users/updateProfile', object);
   }
 
+  // 마이 페이지 - 비밀번호 변경
+  async userChangePassword(data) {
+    return this.httpClient.post('users/updatePassword', data);
+  }
+
   // 마이 페이지 - 펫 정보 가져오기
   async myPetInfoLoad() {
     return this.httpClient.post('users/mypage/petInfoLoad');
