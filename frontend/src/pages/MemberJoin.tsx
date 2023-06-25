@@ -42,17 +42,28 @@ export default function MemberJoin() {
   const POST_WIDTH = 500;
   const POST_HEIGHT = 500;
 
-  type Value = {sido: string, sigungu: string, zonecode: string, address: string}
+  type Value = {sido: string, sigungu: string, zonecode: string, jibunAddress:string, address: string, userSelectedType: string}
 
   const onComplete = (data : Value) => {
-    const fullAddress = `(${data.zonecode}) ${data.address}`;
-    setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
-    setAddressObj({
+    if(data.userSelectedType === 'R') {
+      // 도로명 주소
+      const fullAddress = `(${data.zonecode}) ${data.address}`;
+      setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      setAddressObj({
         address1: data.sido,
         address2: data.sigungu,
-        // address3: data.address,
         address3: data.address.slice(data.address.indexOf(data.sigungu) + data.sigungu.length + 1),
-    });
+      });
+    } else {
+      // 지번 주소
+      const fullAddress = `(${data.zonecode}) ${data.jibunAddress}`;
+      setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      setAddressObj({
+        address1: data.sido,
+        address2: data.sigungu,
+        address3: data.jibunAddress.slice(data.jibunAddress.indexOf(data.sigungu) + data.sigungu.length + 1),
+      });
+    }
   };
 
   const daumPostCodeopen = useDaumPostcodePopup(POSTCODE_URL);
@@ -66,8 +77,7 @@ export default function MemberJoin() {
   //API Controller 객체 생성
   const controller = new Controller();
 
-
-  const onSubmit : SubmitHandler<JoinFormInput> = async (data) => {
+  const onSubmit:SubmitHandler<JoinFormInput> = async (data) => {
     if(!duplicateValue.account) {
       setError('account', {message: '중복확인을 해주세요'}, {shouldFocus: true })
     }

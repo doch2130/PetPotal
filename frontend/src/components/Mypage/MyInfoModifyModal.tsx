@@ -27,7 +27,7 @@ interface userFormInput extends userDataInterface {
   address: String;
 }
 
-interface propsData {
+interface MyInfoModifyModalInterface {
   onClose: Function;
   setUserData: Function;
   userData: userDataInterface;
@@ -35,7 +35,7 @@ interface propsData {
   setProfileImage: Function;
 }
 
-export default function MyInfoModifyModal(props:propsData) {
+export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
   const { onClose, userData, setUserData, profileImage, setProfileImage } = props;
   const controller = new Controller();
   const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<userFormInput>({mode: 'onChange'});
@@ -101,13 +101,24 @@ export default function MyInfoModifyModal(props:propsData) {
 
   const daumPostCodeopen = useDaumPostcodePopup(POSTCODE_URL);
 
-  type Value = {sido: string, sigungu: string, roadname: string, zonecode: string, address: string};
+  type Value = {sido: string, sigungu: string, zonecode: string, jibunAddress:string, address: string, userSelectedType: string}
+
   const onComplete = (data : Value) => {
-    const fullAddress = `(${data.zonecode}) ${data.address}`;
-    setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
-    setValue('address1', data.sido);
-    setValue('address2', data.sigungu);
-    setValue('address3', fullAddress.slice(fullAddress.indexOf(data.roadname)).trim());
+    if(data.userSelectedType === 'R') {
+      // 도로명 주소
+      const fullAddress = `(${data.zonecode}) ${data.address}`;
+      setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      setValue('address1', data.sido);
+      setValue('address2', data.sigungu);
+      setValue('address3', data.address.slice(data.address.indexOf(data.sigungu) + data.sigungu.length + 1));
+    } else {
+      // 지번 주소
+      const fullAddress = `(${data.zonecode}) ${data.jibunAddress}`;
+      setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      setValue('address1', data.sido);
+      setValue('address2', data.sigungu);
+      setValue('address3', data.jibunAddress.slice(data.jibunAddress.indexOf(data.sigungu) + data.sigungu.length + 1));
+    }
   };
 
   const onAddressClickHandle = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -115,7 +126,7 @@ export default function MyInfoModifyModal(props:propsData) {
     daumPostCodeopen({width : POST_WIDTH, height : POST_HEIGHT, onComplete, top: (window.screen.height / 2) - (POST_HEIGHT / 2), left: (window.screen.width / 2) - (POST_WIDTH / 2)});
   };
 
-  const onSubmit : SubmitHandler<userFormInput> = async (data) => {
+  const onSubmit:SubmitHandler<userFormInput> = async (data) => {
     // console.log(data);
 
     if(!duplicateValue[0].isNickName) {
@@ -151,7 +162,7 @@ export default function MyInfoModifyModal(props:propsData) {
             openAlert({
               title: '회원정보 수정 실패',
               type: 'error',
-              content: '회원정보 수정 중 에러가 발생했습니다\r\n다시 시도해주세요',
+              content: '회원정보 수정 중 에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요.',
             });
             return ;
           }
@@ -181,7 +192,7 @@ export default function MyInfoModifyModal(props:propsData) {
           openAlert({
             title: '회원정보 수정 실패',
             type: 'error',
-            content: '회원정보 수정에 실패했습니다. 다시 시도해주세요',
+            content: '회원정보 수정에 실패했습니다.\r\n새로고침 후 다시 시도해주세요.',
           });
           return ;
         }
@@ -233,7 +244,7 @@ export default function MyInfoModifyModal(props:propsData) {
             type='password' defaultValue='' placeholder='현재 비밀번호를 입력하세요' />
           <p className={style.joinWarning}>{errors.password?.message}</p>
         </div>
-        <div>
+        {/* <div>
           <label>비밀번호 변경</label>
           <input 
             {...register('changePassword',
@@ -247,7 +258,7 @@ export default function MyInfoModifyModal(props:propsData) {
             )}
             type='password' defaultValue='' placeholder='변경할 비밀번호를 입력하세요' />
           <p className={style.joinWarning}>{errors.changePassword?.message}</p>
-        </div>
+        </div> */}
         <div>
           <label>이름</label>
           <input 

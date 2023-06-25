@@ -86,7 +86,7 @@ export default class Controller {
 
   // 마이 페이지 - 프로필 사진 가져오기
   async userProfileLoad(account) {
-    return this.httpClient.get(`users/profile?account=${account}`);
+    return this.httpClient.get(`users/loadProfile?account=${account}`);
   }
 
   // 마이 페이지 - 회원정보 수정
@@ -98,6 +98,11 @@ export default class Controller {
   // 마이 페이지 - 회원정보 프로필 수정
   async userProfileModify(object) {
     return this.httpClient.post('users/updateProfile', object);
+  }
+
+  // 마이 페이지 - 비밀번호 변경
+  async userChangePassword(data) {
+    return this.httpClient.post('users/updatePassword', data);
   }
 
   // 마이 페이지 - 펫 정보 가져오기
@@ -141,23 +146,44 @@ export default class Controller {
   }
 
   // 메이트 게시판 - 전체 글 가져오기
-  async mateBoardList(pageNumber, searchQuery) {
+  async mateBoardList(pageNumber, searchQuery, account, timeSort) {
+    let sort = '';
+    if(timeSort === 'newest') {
+      sort = 'Desc';
+    } else {
+      sort = 'Asc';
+    }
+
+    if(account === '') {
+      return this.httpClient.get(`openMateBoard/findAllContent${sort}/${pageNumber}`,
+      {
+        params: searchQuery,
+        paramsSerializer: params => {
+          return qs.stringify(params, { arrayFormat: 'brackets' })
+        }
+      });
+    } else {
+      return this.httpClient.get(`mateBoard/findAllContent${sort}/${pageNumber}`,
+      {
+        params: searchQuery,
+        paramsSerializer: params => {
+          return qs.stringify(params, { arrayFormat: 'brackets' })
+        }
+      });
+    }
     // return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`,
-    return this.httpClient.get(`mateBoard/findAllContentDesc/${pageNumber}`,
-    {
-      params: searchQuery,
-      paramsSerializer: params => {
-        return qs.stringify(params, { arrayFormat: 'brackets' })
-      }
-    })
+    // return this.httpClient.get(`mateBoard/findAllContentDesc/${pageNumber}`,
+    // {
+    //   params: searchQuery,
+    //   paramsSerializer: params => {
+    //     return qs.stringify(params, { arrayFormat: 'brackets' })
+    //   }
+    // })
   }
 
-  // 메이트 게시판 - 좋아요 게시글 가져오기
-  async mateLikeBoardList(account) {
-    return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
-  }
+  // // 메이트 게시판 - 좋아요 게시글 가져오기
+  // async mateLikeBoardList(account) {
+  //   return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
+  // }
 
-  async mateBoardListCount() {
-    return this.httpClient.get(`mateBoard/findAllContentCount`);
-  }
 }

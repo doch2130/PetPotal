@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import RegionData from './RegionData';
-import KindData from './KindData';
-import style from './MateBoard.module.css';
-import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
-import close from '../../../assets/icon/plus.png';
-import MateBoardPost from './MateBoardPost';
+import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 // import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
-import { useParams } from 'react-router-dom';
+import RegionData from './RegionData';
+import KindData from './KindData';
 import Controller from '../../../api/controller';
+import MateBoardPost from './MateBoardPost';
+import close from '../../../assets/icon/plus.png';
+import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
+import style from './MateBoard.module.css';
 
 interface searchQueryInterface {
   searchRegion: string;
@@ -18,6 +20,7 @@ interface searchQueryInterface {
 }
 
 export default function MateBoard() {
+  const userInfo = useRecoilValue<UserType[]>(userState);
   const [ showBoxRegion, setIsShowBoxRegion ] = useState<Boolean>(false);
   const [ showBoxKinds, setIsShowBoxKinds ] = useState<Boolean>(false);
   const [ boxRegion, setBoxRegion ] = useState<string>('서울');
@@ -34,6 +37,7 @@ export default function MateBoard() {
   });
 
   const [ postTotalCount, setPostTotalCount ] = useState<number>(0);
+  const [ timeSort, setTimeSort ] = useState<string>('newest');
 
   const isShowBoxRegionHandler = () => {
     setIsShowBoxRegion(!showBoxRegion);
@@ -139,25 +143,14 @@ export default function MateBoard() {
   }, [historyValue]);
 
 
-  
-  useEffect(() => {
-    const mateBoardListCount = async () => {
-      const result = await controller.mateBoardListCount();
-      console.log('result ', result);
-      setPostTotalCount(result.data.count);
-    }
-    // mateBoardListCount();
-  }, []);
-
-
   // React Query default
   // 임시 주석
   const { status, data, error } = useGetMateBoardList(matePageNumber);
   function useGetMateBoardList(matePageNumber:string) {
     return useQuery({
-      queryKey: [`mateBoardList/${matePageNumber}`, searchQuery],
+      queryKey: [`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery],
       queryFn: async () => {
-        const result = await controller.mateBoardList(matePageNumber, searchQuery);
+        const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
         // console.log('result ', result);
         // console.log('result ', result.data.data.rows);
         setPostTotalCount(result.data.data.count);
@@ -347,7 +340,9 @@ export default function MateBoard() {
           </div>
         </div>
         {/* <MateBoardPost postList={data.data} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} /> */}
-        <MateBoardPost postList={data.rows} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} />
+        <MateBoardPost postList={data.rows} matePageNumber={matePageNumber}
+        setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount}
+        timeSort={timeSort} setTimeSort={setTimeSort} />
       </div>
     </div>
   )

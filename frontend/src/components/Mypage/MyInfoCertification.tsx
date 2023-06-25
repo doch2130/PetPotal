@@ -97,7 +97,7 @@ export default function MyInfoCertification() {
       <input type='password' id='myPassword' name='password' ref={password} onKeyDown={formEnterEvent}/>
       <button type='button' onClick={userInfoGet}>확인</button>
     </div>
-    : <MyInfo userData={userData} setUserData={setUserData} />
+    : <MyInfo userData={userData} setUserData={setUserData} setCertification={setCertification} />
     }
     </>
   )
