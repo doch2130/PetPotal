@@ -12,6 +12,8 @@ import MateBoardPostButton from './MateBoardPostButton';
 
 interface MateBoardPostInterface extends MateBoardPageNumberInterface {
   postList: Array<MateBoardPostListInterface>;
+  timeSort: string;
+  setTimeSort: Function;
 }
 
 interface MateBoardPostListInterface {
@@ -38,27 +40,17 @@ interface MateBoardPageNumberInterface {
 }
 
 export default function MateBoardPost(props:MateBoardPostInterface) {
-  const { postList } = props;
-  const navigater = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
+  const { postList, timeSort, setTimeSort } = props;
   const userInfo = useRecoilValue<UserType[]>(userState);
-  const { openConfirm, closeConfirm } = useConfirm();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ tempData, setTempData ] = useState<string[]>([
-    'test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8'
-  ]);
-  const controller = new Controller();
-  const [ likeBoardList, setLikeBoardList ] = useState();
-  const { openAlert } = useAlert();
+  const navigater = useNavigate();
   const [ viewChange, setViewChange ] = useState<Boolean>(true);
-  const [ timeSort, setTimeSort ] = useState<string>('newest');
+  const { openConfirm, closeConfirm } = useConfirm();
+  const controller = new Controller();
+  const { openAlert } = useAlert();
 
   const itemsPerPage = 9;
   const startIndex = (Number(props.matePageNumber) - 1) * itemsPerPage;
   const endIndex = Number(props.matePageNumber) * itemsPerPage;
-
-
 
   const detailPostMoveHandler = ():void => {
     navigater('/mate/detail/1');
@@ -98,28 +90,28 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
     return ;
   }
 
-  useEffect(() => {
-    const getMateLikeBoardList = async () => {
-      const result = await controller.mateLikeBoardList(userInfo[0].account);
-      if(result.data !== 200) {
-        openAlert({
-          title: 'getMateLikeBoardList Error',
-          type: 'error',
-          content: '에러가 발생하였습니다. 새로고침 후 다시 이용해주세요',
-        })
-        return ;
-      }
-      setLikeBoardList(result.data);
-    }
+  // useEffect(() => {
+  //   const getMateLikeBoardList = async () => {
+  //     const result = await controller.mateLikeBoardList(userInfo[0].account);
+  //     if(result.data !== 200) {
+  //       openAlert({
+  //         title: 'getMateLikeBoardList Error',
+  //         type: 'error',
+  //         content: '에러가 발생하였습니다. 새로고침 후 다시 이용해주세요',
+  //       })
+  //       return ;
+  //     }
+  //     setLikeBoardList(result.data);
+  //   }
 
-    if(userInfo[0].account !== '') {
-      // 일단 주석처리
-      // 개인 좋아요 메이트 리스트 가져오기
-      // getMateLikeBoardList();
-    }
+  //   if(userInfo[0].account !== '') {
+  //     // 일단 주석처리
+  //     // 개인 좋아요 메이트 리스트 가져오기
+  //     // getMateLikeBoardList();
+  //   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo[0].account]);
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [userInfo[0].account]);
   
   return (
     <div className={style.wrap}>
