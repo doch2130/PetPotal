@@ -44,9 +44,9 @@ exports.insertMateBoard = async (request, result) => {
   });
 
   if(checkTokenResult.result == true) {
-    let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
+    // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);
-    const geocodeResult = await geocode(geocodeKeyword);
+    // const geocodeResult = await geocode(geocodeKeyword);
     // console.log("geocode Result:", geocodeResult);
     
     let matePhotosList = new Array(request.files.length);
@@ -67,8 +67,8 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardAddress2: request.body.mateBoardAddress2,
         mateBoardAddress3: request.body.mateBoardAddress3,
         mateBoardAddress4: request.body.mateBoardAddress4,
-        mateBoardLat: geocodeResult.lat,
-        mateBoardLng: geocodeResult.lng,
+        mateBoardLat: request.body.mateBoardLat,
+        mateBoardLng: request.body.mateBoardLng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
         mateBoardRegistDate: currentTimeStamp,
