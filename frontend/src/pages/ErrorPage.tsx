@@ -5,7 +5,7 @@ export default function ErrorPage() {
 
     return (
         <div>
-            <h1>Error Page</h1>
+            <h1 style={{fontSize: '3rem', fontWeight: '700', textAlign: 'center'}}>Error Page</h1>
             <p>
             <i>
             {(error as Error)?.message ||

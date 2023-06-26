@@ -47,32 +47,60 @@ export default function MyInfo(props:MyInfoInterface) {
       title: '회원탈퇴',
       content: '정말로 회원을 탈퇴하시겠습니까?',
       callback: async () => {
-        const result = await controller.memberSignOut(userInfo[0].account);
-        if(result.data.responseCode !== 200) {
+        try {
+          const result = await controller.memberSignOut(userInfo[0].account);
+          // await controller.memberSignOut(userInfo[0].account);
+          closeConfirm();
           openAlert({
-            title: '회원탈퇴 실패',
-            type: 'error',
-            content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
+            title: '회원탈퇴 성공',
+            type: 'success',
+            content: '회원탈퇴가 정상적으로 완료되었습니다'
           });
-          return ;
+          setUserInfo([{
+            account: '',
+            address1: '',
+            address2: '',
+            address3: '',
+            address4: '',
+            message: '',
+            responseCode: result.data.responseCode,
+          }]);
+          navigate('/');
+        } catch (err:any) {
+          if(err.response.data.responseCode !== 200) {
+            openAlert({
+              title: '회원탈퇴 실패',
+              type: 'error',
+              content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
+            });
+            return ;
+          }
         }
+        // if(result.data.responseCode !== 200) {
+        //   openAlert({
+        //     title: '회원탈퇴 실패',
+        //     type: 'error',
+        //     content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
+        //   });
+        //   return ;
+        // }
 
-        closeConfirm();
-        openAlert({
-          title: '회원탈퇴 성공',
-          type: 'success',
-          content: '회원탈퇴가 정상적으로 완료되었습니다'
-        });
-        setUserInfo([{
-          account: '',
-          address1: '',
-          address2: '',
-          address3: '',
-          address4: '',
-          message: '',
-          responseCode: 0,
-        }]);
-        navigate('/');
+        // closeConfirm();
+        // openAlert({
+        //   title: '회원탈퇴 성공',
+        //   type: 'success',
+        //   content: '회원탈퇴가 정상적으로 완료되었습니다'
+        // });
+        // setUserInfo([{
+        //   account: '',
+        //   address1: '',
+        //   address2: '',
+        //   address3: '',
+        //   address4: '',
+        //   message: '',
+        //   responseCode: 0,
+        // }]);
+        // navigate('/');
       },
     });
   }
@@ -106,23 +134,23 @@ export default function MyInfo(props:MyInfoInterface) {
   useEffect(() => {
      // 프로필 사진 가져오기
      const userProfileGet = async (account: String) => {
-      const result = await controller.userProfileLoad(account);
-      if(result.data.responseCode !== 200) {
-        openAlert({
-          title: '회원정보 로드 실패',
-          type: 'error',
-          content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
-        });
-        return ;
-      }
-
-      const updataProfileImage = result.data.data.slice(result.data.data.lastIndexOf('/') + 1);
-      // console.log(updataProfileImage);
-
-      if(updataProfileImage === 'null') {
-        setProfileImage(defaultImg);
-      } else {
+      try {
+        // console.log('account ', account);
+        const result = await controller.userProfileLoad(account);
+        // console.log('result ', result);
         setProfileImage(result.data.data);
+      } catch (err:any) {
+        // console.log('err ', err);
+        if(err.response.data.responseCode === 300) {
+          setProfileImage(defaultImg);
+        }
+        else if (err.response.data.responseCode !== 200) {
+          openAlert({
+            title: '회원정보 로드 실패',
+            type: 'error',
+            content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
+          });
+        }
       }
     }
 
@@ -148,6 +176,7 @@ export default function MyInfo(props:MyInfoInterface) {
   // console.log('status ', status);
   // console.log('error ', error);
 
+  console.log('profileImage ', profileImage);
   return (
     <div className={style.wrap}>
       <h2>회원정보</h2>

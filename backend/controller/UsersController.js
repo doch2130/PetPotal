@@ -565,6 +565,7 @@ const selectUsersProfileImage = async (request, response) => {
   // console.log('request.query.account' , request.query.account);
   // console.log('request.body.account' , request.body.account);
   // console.log(request);
+
   await Users.findOne({
     attributes: ['profileImageFileName'],
     where: { account: request.query.account },

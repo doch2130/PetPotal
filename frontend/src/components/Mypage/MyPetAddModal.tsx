@@ -62,27 +62,49 @@ export default function MyPetAddModal(props:props) {
       return ;
     }
 
+    openConfirm({
+      title: 'pet Add Modal',
+      content: '반려동물을 등록하시겠습니까?',
+      callback: async () => {
+        try {
+          // const result = await controller.myPetAdd(userInfo.account, data);
+          await controller.myPetAdd(userInfo.account, data);
+          openAlert({
+            title: 'My Pet Add Success',
+            type: 'success',
+            content: '펫이 등록되었습니다.'
+          });
+          closeConfirm();
+          onClose();
+        } catch (err:any) {
+          openAlert({
+            title: 'My Pet Add Error',
+            type: 'error',
+            content: '펫 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요.'
+          });
+        }
+      }
+    })
     // console.log('data : ', data);
-    const result = await controller.myPetAdd(userInfo.account, data);
-    console.log('result : ', result);
-    if(result.data.responseCode === 200) {
-      openAlert({
-        title: 'My Pet Add Success',
-        type: 'success',
-        content: '펫이 등록되었습니다.'
-      });
-      onClose();
-    } else {
-      openAlert({
-        title: 'My Pet Add Error',
-        type: 'error',
-        content: '펫 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요.'
-      });
-    }
+    // const result = await controller.myPetAdd(userInfo.account, data);
+    // console.log('result : ', result);
+    // if(result.data.responseCode === 200) {
+    //   openAlert({
+    //     title: 'My Pet Add Success',
+    //     type: 'success',
+    //     content: '펫이 등록되었습니다.'
+    //   });
+    //   onClose();
+    // } else {
+    //   openAlert({
+    //     title: 'My Pet Add Error',
+    //     type: 'error',
+    //     content: '펫 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요.'
+    //   });
+    // }
   }
 
   useEffect(() => {
-
     return () => {
       URL.revokeObjectURL(imgUrl);
     }
