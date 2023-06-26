@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface userChangePasswordFormInput {
   account: String;
-  currentPassword: String;
+  password: String;
   changePassword: String;
   changePasswordCheck: String;
 }
@@ -80,15 +80,15 @@ export default function MyInfoPasswordChangeModal(props:MyInfoPasswordChangeModa
       <h2>비밀번호 변경</h2>
       <form className={style.wrapForm} onSubmit={handleSubmit(onSubmit)}>
         <div className={style.currentPwdWrap}>
-          <label htmlFor='currentPassword'>현재 비밀번호</label>
+          <label htmlFor='password'>현재 비밀번호</label>
           <input 
-            {...register('currentPassword',
+            {...register('password',
               {
                 required: {value: true, message: '현재 비밀번호를 입력해주세요'},
               }
             )}
-            type='password' defaultValue='' placeholder='현재 비밀번호를 입력하세요' id='currentPassword' />
-            <p className={style.warningText}>{errors.currentPassword?.message}</p>
+            type='password' defaultValue='' placeholder='현재 비밀번호를 입력하세요' id='password' />
+            <p className={style.warningText}>{errors.password?.message}</p>
         </div>
         <div className={style.changePwdWrap}>
           <label htmlFor='changePassword'>변경 비밀번호</label>

@@ -86,7 +86,7 @@ export default class Controller {
 
   // 마이 페이지 - 프로필 사진 가져오기
   async userProfileLoad(account) {
-    return this.httpClient.get(`users/loadProfile?account=${account}`);
+    return this.httpClient.get(`users/profile?account=${account}`);
     // return this.httpClient.post(`users/loadProfile`, {account});
   }
 
@@ -103,7 +103,7 @@ export default class Controller {
 
   // 마이 페이지 - 비밀번호 변경
   async userChangePassword(data) {
-    return this.httpClient.post('users/updatePassword', data);
+    return this.httpClient.put('users/updatePassword', data);
   }
 
   // 마이 페이지 - 펫 정보 가져오기

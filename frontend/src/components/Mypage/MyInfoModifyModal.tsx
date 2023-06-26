@@ -188,7 +188,15 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
 
           onClose();
 
-        } catch (err) {
+        } catch (err:any) {
+          if(err.response.data.responseCode === 403) {
+            openAlert({
+              title: '회원정보 수정 실패',
+              type: 'error',
+              content: '현재 비밀번호가 일치하지 않습니다.',
+            });
+            return ;
+          }
           openAlert({
             title: '회원정보 수정 실패',
             type: 'error',
