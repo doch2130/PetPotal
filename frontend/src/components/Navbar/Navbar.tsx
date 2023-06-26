@@ -87,6 +87,14 @@ export default function Navbar() {
     });
   }
 
+  const openPrepare = () => {
+    openAlert({
+      title: '오픈 준비 중',
+      type: 'error',
+      content: '오픈 준비 중입니다.'
+    })
+  }
+
   return (
     <header>
       <article className={style.navbarContainer}>
@@ -113,7 +121,7 @@ export default function Navbar() {
               </>
               }
               <li>
-                <Link to='/'>고객센터</Link>
+                <Link to='/' onClick={openPrepare}>고객센터</Link>
               </li>
             </ul>
           </div>
@@ -149,19 +157,19 @@ export default function Navbar() {
                 <Link to="/mate/1" className={style.menuItemLink}>메이트</Link>
               </li>
               <li className={style.menuItem}>
-                <Link to="#" className={style.menuItemLink}>병원</Link>
+                <Link to="#" className={style.menuItemLink} onClick={openPrepare}>병원</Link>
               </li>
               <li className={style.menuItem}>
-                <Link to="#" className={style.menuItemLink}>미용</Link>
+                <Link to="#" className={style.menuItemLink} onClick={openPrepare}>미용</Link>
               </li>
               <li className={style.menuItem}>
-                <Link to="#" className={style.menuItemLink}>호텔링</Link>
+                <Link to="#" className={style.menuItemLink} onClick={openPrepare}>호텔링</Link>
               </li>
               <li className={style.menuItem}>
-                <Link to="#" className={style.menuItemLink}>숙박</Link>
+                <Link to="#" className={style.menuItemLink} onClick={openPrepare}>숙박</Link>
               </li>
               <li className={style.menuItem}>
-                <Link to="#" className={style.menuItemLink}>음식</Link>
+                <Link to="#" className={style.menuItemLink} onClick={openPrepare}>음식</Link>
               </li>
             </ul>
           </nav>

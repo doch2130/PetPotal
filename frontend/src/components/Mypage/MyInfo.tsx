@@ -135,6 +135,7 @@ export default function MyInfo(props:MyInfoInterface) {
      // 프로필 사진 가져오기
      const userProfileGet = async (account: String) => {
       try {
+        // console.log('account ', account);
         const result = await controller.userProfileLoad(account);
         // console.log('result ', result);
         setProfileImage(result.data.data);
@@ -149,7 +150,6 @@ export default function MyInfo(props:MyInfoInterface) {
             type: 'error',
             content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
           });
-          return ;
         }
       }
     }
@@ -176,6 +176,7 @@ export default function MyInfo(props:MyInfoInterface) {
   // console.log('status ', status);
   // console.log('error ', error);
 
+  console.log('profileImage ', profileImage);
   return (
     <div className={style.wrap}>
       <h2>회원정보</h2>
