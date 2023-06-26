@@ -145,25 +145,35 @@ export default function MateBoard() {
 
 
   // React Query default
-  // 임시 주석
-  const { status, data, error } = useGetMateBoardList(matePageNumber);
-  function useGetMateBoardList(matePageNumber:string) {
-    return useQuery({
-      queryKey: [`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery],
-      queryFn: async () => {
-        const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
-        // console.log('result ', result);
-        // console.log('result ', result.data.data.rows);
-        setPostTotalCount(result.data.data.count);
-        // return result.data;
-        return result.data.data;
-      }
-    });
-  }
+  // useQuery({queryKey: '', queryFn: ()}) React Query V3 이전 방식
+  // const { status, data, error } = useGetMateBoardList(matePageNumber);
+  // function useGetMateBoardList(matePageNumber:string) {
+  //   return useQuery({
+  //     queryKey: [`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery],
+  //     queryFn: async () => {
+  //       const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
+  //       // console.log('result ', result);
+  //       // console.log('result ', result.data.data.rows);
+  //       setPostTotalCount(result.data.data.count);
+  //       // return result.data;
+  //       return result.data.data;
+  //     }
+  //   });
+  // }
 
-  if (status === 'loading') return <div>'Loading...'</div>;
+  const fetchMateBoardList = async () => {
+    const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
+    setPostTotalCount(result.data.data.count);
+    return result.data.data; 
+  }
+  // useQuery(key값, ()) Reacy Query V3 이후 방식
+  const { status, data, error } = useQuery(
+    [`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery], () => fetchMateBoardList()
+  )
+
+  if (status === 'loading') return <div className={style.reactQueryLoading}>Data Loading...</div>;
  
-  if (error) return <div>'An error has occurred: ' + error</div>;
+  if (error) return <div className={style.reactQueryError}>Data Load Error</div>;
 
   const postTypeChangeFunction = (e:React.ChangeEvent<HTMLInputElement>):void => {
     // console.log(e.target.value);

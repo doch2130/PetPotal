@@ -1,22 +1,20 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
+import { useModal } from '../../../hooks/useModal';
+import { Params, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import Controller from '../../../api/controller';
+import PictureBox from '../../UI/PictureBox';
+import MateDetailMap from './MateDetailMap';
 import style from './MateDetail.module.css';
+
 import emptyHeart from '../../../assets/icon/empty_heart.png';
 import share from '../../../assets/icon/share.png';
 import star from '../../../assets/icon/star.png';
 import interest from '../../../assets/icon/people.png';
 import chatting from '../../../assets/icon/chatting.png';
 import locationMap from '../../../assets/icon/location_map.png';
-import PictureBox from '../../UI/PictureBox';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import MateDetailMap from './MateDetailMap';
-import { useRecoilState } from 'recoil';
-import { UserType, userState } from '../../../recoil/user';
-import Controller from '../../../api/controller';
-import { useModal } from '../../../hooks/useModal';
-
-const tempData = [
-  '/static/media/default.0cb1e01d076d6e0fd830.png',
-  '/static/media/default.0cb1e01d076d6e0fd830.png',
-]
 
 interface mapData {
   x: number;
@@ -25,14 +23,12 @@ interface mapData {
   _lat: number;
 }
 
-export default function MateDetail(props:any) {
-  const { imgFile, setImgFile } = props;
-  const [mouseDownClientX, setMouseDownClientX] = useState(0);
-  const [mouseDownClientY, setMouseDownClientY] = useState(0);
-  const [mouseUpClientX, setMouseUpClientX] = useState(0);
-  const [mouseUpClientY, setMouseUpClientY] = useState(0);
-  const controller = new Controller();
-  const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
+export default function MateDetail() {
+  const [mouseDownClientX, setMouseDownClientX] = useState<number>(0);
+  const [mouseDownClientY, setMouseDownClientY] = useState<number>(0);
+  const [mouseUpClientX, setMouseUpClientX] = useState<number>(0);
+  const [mouseUpClientY, setMouseUpClientY] = useState<number>(0);
+  const userInfo = useRecoilValue<UserType[]>(userState);
   const [ mapData, setMapData ] = useState<mapData>({
     x: 0,
     y: 0,
@@ -40,24 +36,26 @@ export default function MateDetail(props:any) {
     _lat: 0,
   });
   const { openModal } = useModal();
-
-  // const [imgFile, setImgFile] = useState<File[]>([]);
-  // const [imgUrl, setImgUrl] = useState<string[]>([]);
   const [imgUrl, setImgUrl] = useState<string[]>([
     '/static/media/MainPage_Dog.1d0a30c4b1704ee37ebf.png',
     '/static/media/MainPage_Cat.9fed3dbb00482ebb7bdf.png',
   ]);
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const slideRef = useRef<any>([]);
+  const historyValue = useParams<Params<string>>();
+  const [ matePostDetailNumber, setMatePostDetailNumber ] = useState<number | null>(null);
+  const controller = new Controller();
 
-  const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>):void => {
     setMouseDownClientX(e.clientX);
     setMouseDownClientY(e.clientY);
+    return ;
   }, []);
 
-  const onMouseUp = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const onMouseUp = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>):void => {
     setMouseUpClientX(e.clientX);
     setMouseUpClientY(e.clientY);
+    return ;
   }, []);
 
   const handleNextBtn = ():void => {
@@ -83,6 +81,7 @@ export default function MateDetail(props:any) {
         }
       });
     }
+    return ;
   };
 
   const handlePrevBtn = ():void => {
@@ -107,9 +106,18 @@ export default function MateDetail(props:any) {
         }
       });
     }
+    return ;
   };
 
-  useEffect(() => {
+  const modalMapOpen = ():void => {
+    openModal({
+      backDrop: true,
+      content: <MateDetailMap height='350px' mapData={mapData} zoomControl={false} />
+    });
+    return ;
+  }
+
+  useEffect(():void => {
     const dragSpaceX = Math.abs(mouseDownClientX - mouseUpClientX);
     const dragSpaceY = Math.abs(mouseDownClientY - mouseUpClientY);
     const vector = dragSpaceX / dragSpaceY;
@@ -121,6 +129,7 @@ export default function MateDetail(props:any) {
         handlePrevBtn();
       }
     }
+    return ;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mouseUpClientX]);
 
@@ -131,8 +140,6 @@ export default function MateDetail(props:any) {
       if (address !== '') {
         const result = await controller.naverMapGeocoding(address);
         // console.log('result ', result.data);
-        // console.log('result ', result.data[0]);
-        // console.log('result ', result.data[1]);
         setMapData({
           x: result.data[0],
           y: result.data[1],
@@ -146,21 +153,36 @@ export default function MateDetail(props:any) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
-  const modalMapOpen = () => {
-    openModal({
-      backDrop: true,
-      content: <MateDetailMap height='350px' mapData={mapData} zoomControl={false} />
-    });
+  useEffect(():void => {
+    const historyKeyword = Number(historyValue.matePostNumber);
+    if(historyKeyword) {
+      setMatePostDetailNumber(historyKeyword);
+    }
+    return ;
+  }, [historyValue]);
+
+  // React Query default
+  const fetchMateBoardDetail = async (matePostDetailNumber:string) => {
+    const result = await controller.mateBoardDetailPost(matePostDetailNumber);
+    console.log('result detail ', result);
+    return result;
   }
 
-  // console.log('window.scrollY ', window.scrollY);
+  const { status, data, error, refetch } = useQuery(
+    [`mateBoardPostDetail`, matePostDetailNumber], () => fetchMateBoardDetail(String(matePostDetailNumber)),
+    { enabled: false } //초기에 데이터 요청을 하지 않음
+  );
 
-  // const [scrollY, setScrollY] = useState(window.scrollY);
+  useEffect(() => {
+    if(matePostDetailNumber) {
+      refetch();
+    }
+  }, [matePostDetailNumber, refetch]);
 
-  // useEffect(() => {
-  //   console.log('window.scrollY ', scrollY);
-  //   setScrollY(window.scrollY);
-  // }, [scrollY])
+  if(status === 'loading') return <div className={style.reactQueryLoading}>Data Loading...</div>
+
+  if(error) return <div className={style.reactQueryError}>Data Load Error</div>
+
 
   return (
     <div className={style.wrap}>
