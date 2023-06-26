@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import style from './Footer.module.css';
+import { useAlert } from '../../hooks/useAlert';
 
 const footTextArray = [
   ['PetPotal', 'Service', 'About', 'Contact'],
@@ -8,6 +9,29 @@ const footTextArray = [
 ];
 
 export default function Footer() {
+  const navigater = useNavigate();
+  const { openAlert } = useAlert();
+
+  const movePage = (address:string):void => {
+    // console.log('address ', address);
+    if(address === 'PetPotal') {
+      navigater(`/`);
+    } else if(address === 'Mate') {
+      navigater(`/mate/1`);
+    } else {
+      navigater(`/${address}`);
+    }
+    return ;
+  }
+  const openPrepare = ():void => {
+    openAlert({
+      title: '오픈 준비 중',
+      type: 'error',
+      content: '오픈 준비 중입니다.'
+    });
+    return ;
+  }
+  
   return (
     <div className={style.wrap}>
       <div className={style.row}>
@@ -27,8 +51,17 @@ export default function Footer() {
             {footTextArray.map((footText, index) => 
               <div className={style.col + ' ' + style.footText} key={index}>
                 <ul>
-                  {footText.map((el) => 
-                  <li key={el}>{el}</li>
+                  {footText.map((el) => {
+                    if(el === 'PetPotal' || el === 'Mate') {
+                      return (
+                        <li key={el} onClick={() => movePage(el)}>{el}</li>
+                      )
+                    } else {
+                      return (
+                        <li key={el} onClick={openPrepare}>{el}</li>
+                      )
+                    }
+                  }
                   )}
                 </ul>
               </div>

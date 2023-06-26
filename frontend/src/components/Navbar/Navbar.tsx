@@ -87,12 +87,13 @@ export default function Navbar() {
     });
   }
 
-  const openPrepare = () => {
+  const openPrepare = ():void => {
     openAlert({
       title: '오픈 준비 중',
       type: 'error',
       content: '오픈 준비 중입니다.'
-    })
+    });
+    return ;
   }
 
   return (
