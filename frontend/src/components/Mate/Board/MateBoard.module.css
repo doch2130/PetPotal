@@ -221,3 +221,16 @@
   background: var(--main-default-dark-color);
   color: white;
 }
+
+.reactQueryLoading {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.reactQueryError {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: red;
+}

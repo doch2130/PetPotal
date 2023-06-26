@@ -212,3 +212,16 @@
 .footer > button:hover {
   background-color: var(--main-default-dark-color);
 }
+
+.reactQueryLoading {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.reactQueryError {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: red;
+}

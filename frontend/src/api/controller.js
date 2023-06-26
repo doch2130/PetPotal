@@ -182,6 +182,11 @@ export default class Controller {
     // })
   }
 
+  // 메이트 게시판 - 상세 글 가져오기
+  async mateBoardDetailPost(mateBoardIndexNumber) {
+    return this.httpClient.get(`mateBoard/findOneContent?mateBoardIndexNumber=${mateBoardIndexNumber}`);
+  }
+
   // // 메이트 게시판 - 좋아요 게시글 가져오기
   // async mateLikeBoardList(account) {
   //   return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);

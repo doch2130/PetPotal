@@ -40,7 +40,7 @@ interface MateBoardPageNumberInterface {
 }
 
 export default function MateBoardPost(props:MateBoardPostInterface) {
-  const { postList, timeSort, setTimeSort } = props;
+  const { postList, timeSort, setTimeSort, matePageNumber } = props;
   const userInfo = useRecoilValue<UserType[]>(userState);
   const navigater = useNavigate();
   const [ viewChange, setViewChange ] = useState<Boolean>(true);
@@ -49,11 +49,13 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
   const { openAlert } = useAlert();
 
   const itemsPerPage = 9;
-  const startIndex = (Number(props.matePageNumber) - 1) * itemsPerPage;
-  const endIndex = Number(props.matePageNumber) * itemsPerPage;
+  const startIndex = (Number(matePageNumber) - 1) * itemsPerPage;
+  const endIndex = Number(matePageNumber) * itemsPerPage;
 
-  const detailPostMoveHandler = ():void => {
-    navigater('/mate/detail/1');
+  // const detailPostMoveHandler = (mateBoardIndexNumber:number):void => {
+  const detailPostMoveHandler = (el:MateBoardPostListInterface):void => {
+    // navigater('/mate/detail/1');
+    navigater(`/mate/detail/${el.mateBoardIndexNumber}`);
     return ;
   }
 
@@ -157,7 +159,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           postList.map((el: MateBoardPostListInterface) => {
             return (
             <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
-              <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
+              <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
             </div>
             );
           })
@@ -167,7 +169,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           postList.slice(-endIndex, -startIndex).map((el: MateBoardPostListInterface, index:number) => {
             return (
             <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
-              <AnimalCard detailPostMoveHandler={detailPostMoveHandler} userId={userInfo[0].account} postData={el} />
+              <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
             </div>
             );
           })
