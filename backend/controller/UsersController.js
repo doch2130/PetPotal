@@ -605,14 +605,16 @@ const selectUsersProfileImage = async (request, response) => {
 const updateProfileImage = async (request, response) => {
   // console.log(request.file);
   const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
-    const uploaderAccount = checkTokenResult.account;
+  console.log("tokenAccount:", checkTokenResult.account);
 
   if(checkTokenResult.result) {
     await Users.findOne({
       attributes: ['profileImageFileName'],
-      where: { account: uploaderAccount },
+      where: { account: checkTokenResult.account },
     })
     .then((res) => {
+      // console.log("res:", res);
+      // console.log("res.dataValues.profileImageFileName:", res.dataValues.profileImageFileName);
       if(
         res.dataValues.profileImageFileName === undefined ||
         res.dataValues.profileImageFileName == '' ||
@@ -625,22 +627,43 @@ const updateProfileImage = async (request, response) => {
           },
           {
             where: {
-              account: uploaderAccount,
+              account: checkTokenResult.account,
             },
           }
         ).then((res) => {
-          response.status(200).send({
-            responseCode: 200,
-            message: 'profile update success',
-            data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res2.dataValues.profileImageFileName}`,
-          });
+          if(res[0] == 1) {
+            Users.findOne({
+              attributes: ["profileImageFileName"],
+              where: {
+                account: checkTokenResult.account
+              }
+            }).then((res2) => {
+              response.status(200).send({
+                responseCode: 200,
+                message: "프로필 이미지 업데이트가 완료되었습니다.",
+                data: `http://${request.hostname}:${request.socket.localPort}/api/users/profile/${res2.dataValues.profileImageFileName}`,
+              });
+            })
+            .catch((err) => {
+              response.status(403).send({
+                responseCode: 403,
+                message: '업데이트한 프로필 이미지를 불러오는데 실패했습니다.',
+                data: false,
+              });
+            })            
+          } else {
+            response.status(403).send({
+              responseCode: 403,
+              message: "프로필 이미지 업데이트를 실패했습니다.",
+              data: false,
+            });
+          }          
         })
         .catch((err) => {
           response.status(403).send({
             responseCode: 403,
-            message: 'profile update failure',
+            message: "프로필 이미지 업데이트를 실패했습니다. 데이터 처리 요류",
             data: false,
-            error: err
           });
         });
       }
@@ -654,7 +677,7 @@ const updateProfileImage = async (request, response) => {
           },
           {
             where: {
-              account: uploaderAccount,
+              account: checkTokenResult.account,
             },
           }
         )
@@ -663,7 +686,7 @@ const updateProfileImage = async (request, response) => {
             Users.findOne({
               attributes: ["profileImageFileName"],
               where: {
-                account: uploaderAccount
+                account: checkTokenResult.account
               }
             }).then((res2) => {
               response.status(200).send({
@@ -699,7 +722,7 @@ const updateProfileImage = async (request, response) => {
     .catch((err) => {
       response.status(403).send({
         responseCode: 403,
-        message: "프로필 업데이트 실패 - 유저 불일치",
+        message: "요청한 토큰과 일치한 사용자가 없습니다.",
         data: false,
         error: err
       });

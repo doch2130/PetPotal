@@ -17,7 +17,7 @@ const ImageFileHandler = (dirName) => {
                     // console.log("filename() file:", file);
                     const ext = path.extname(file.originalname);
                     const checkTokenResult = await CheckToken.CheckToken(1, req.headers.token);
-                    console.log(checkTokenResult);
+                    // console.log(checkTokenResult);
 
                     // res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
                     res(null, `${checkTokenResult.account}_${file.fieldname}_${Date.now()}${ext}`);
@@ -37,7 +37,7 @@ const ImageFileHandler = (dirName) => {
                 // console.log("filename() file:", file);
                 const ext = path.extname(file.originalname);
                 const checkTokenResult = await CheckToken.CheckToken(1, req.headers.token);
-                console.log(checkTokenResult);
+                // console.log(checkTokenResult);
 
                 // res(null, `${req.body.account}_${file.fieldname}_${Date.now()}${ext}`);
                 res(null, `${checkTokenResult.account}_${file.fieldname}_${Date.now()}${ext}`);

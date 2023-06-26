@@ -21,7 +21,7 @@ router.post('/duplicatePhone', UsersController.findByPhone);
 router.post('/mypageUsersInfo', UsersController.findUsersInfo);
 router.post('/usersInfoModify', UsersController.updateUsers);
 router.put("/updatePassword", UsersController.updatePassword);
-router.get('/loadProfile', UsersController.selectUsersProfileImage);
+router.get('/profile', UsersController.selectUsersProfileImage);
 router.post('/updateProfile', userProfileImageUploadController, UsersController.updateProfileImage);
 router.post("/resetPass", UsersController.requestDefaultPassword);
 router.post('/terminate', UsersController.dormancyUsers);
