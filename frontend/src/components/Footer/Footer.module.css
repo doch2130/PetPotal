@@ -36,8 +36,7 @@ hr {
 }
 
 .footLogo a:hover {
-  /* color: #777; */
-  color: #00AF41;
+  color: var(--main-default-dark-color);
 }
 
 .footLogo a {
@@ -70,20 +69,6 @@ hr {
 .footText li:hover {
   color: var(--main-default-dark-color);
 }
-
-/* .footText:nth-of-type(1) li:nth-of-type(1) {
-  cursor: default;
-}
-
-.footText:nth-of-type(1) li:not(:nth-of-type(1)),
-.footText:not(:nth-of-type(1)) li {
-  cursor: pointer;
-}
-
-.footText:nth-of-type(1) li:not(:nth-of-type(1)):hover,
-.footText:not(:nth-of-type(1)) li:hover {
-  color: var(--main-default-dark-color);
-} */
 
 @media (max-width: 576px) {
   .wrap > .row:nth-of-type(1) > hr {

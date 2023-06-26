@@ -11,6 +11,7 @@ import MateBoardPost from './MateBoardPost';
 import close from '../../../assets/icon/plus.png';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
 import style from './MateBoard.module.css';
+import MateBoardSlideImage from './MateBoardSlideImage';
 
 interface searchQueryInterface {
   searchRegion: string;
@@ -197,7 +198,8 @@ export default function MateBoard() {
     <div className={style.wrap}>
       <div className={style.slideWrap}>
         {/* 슬라이드 이미지는 일단 보류 */}
-        <img src={mateSlideImage1} alt='mateSlideImage1' />
+        {/* <img src={mateSlideImage1} alt='mateSlideImage1' /> */}
+        <MateBoardSlideImage />
       </div>
       <div className={style.bodyWrap}>
         <h2>메이트</h2>
