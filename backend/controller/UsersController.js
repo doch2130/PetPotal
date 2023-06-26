@@ -557,13 +557,13 @@ const updateUsers = async (request, response) => {
  * @param {*} response 
  */
 const selectUsersProfileImage = async (request, response) => {
-  // console.log('request.query.account' , request.query.account);
-  // console.log('request.body.account' , request.body.account);
+  console.log('request.query.account' , request.query.account);
+  console.log('request.body.account' , request.body.account);
   // console.log(request);
 
   await Users.findOne({
     attributes: ['profileImageFileName'],
-    where: { account: request.body.account },
+    where: { account: request.query.account },
   })
     .then((res) => {
       if(res.dataValues.profileImageFileName != null) {
