@@ -119,7 +119,7 @@ exports.findByUsersIndexNumber = async(request, result) => {
                 usersIndexNumber: parseInt(request.params.animalsUsersIndexNumber),
             }
         });
-        console.log(usersAccount);
+        // console.log(usersAccount);
         // console.log(usersAccount.dataValues.account);
         if(usersAccount == null) {
             result.status(403).send({
