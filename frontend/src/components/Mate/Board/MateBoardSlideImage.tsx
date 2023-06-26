@@ -3,7 +3,8 @@ import style from './MateBoardSlideImage.module.css';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
 import mateSlideImage2 from '../../../assets/matepage/mateSlideImage_2.png';
 import mateSlideImage3 from '../../../assets/matepage/mateSlideImage_3.png';
-import topButton from '../../../assets/icon/topButton.png';
+import leftButton from '../../../assets/icon/leftButton.png';
+import rightButton from '../../../assets/icon/rightButton.png';
 
 const imageData = [mateSlideImage1, mateSlideImage2, mateSlideImage3];
 
@@ -96,7 +97,7 @@ export default function MateBoardSlideImage() {
       return ;
     }
   }, [currentImgIndex, imageDataList.length]);
-  
+
   return (
     <div className={style.wrap}>
       <div className={style.imageWrap}>
@@ -107,8 +108,8 @@ export default function MateBoardSlideImage() {
         })}
       </div>
       <div className={style.buttonGroup}>
-        <img src={topButton} alt='PrevButton' onClick={prevSlide} />
-        <img src={topButton} alt='NextButton' onClick={nextSlide} />
+        <img src={leftButton} alt='PrevButton' onClick={prevSlide} />
+        <img src={rightButton} alt='NextButton' onClick={nextSlide} />
       </div>
     </div>
   )
