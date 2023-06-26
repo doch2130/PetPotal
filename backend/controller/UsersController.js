@@ -428,120 +428,75 @@ const updateUsers = async (request, response) => {
   const salt = parseInt(process.env.USER_SALT);
 
   if (checkTokenResult.result == true) {
-    if (
-      (request.body.changePassword === undefined || request.body.changePassword == '')
-      &&
-      (request.body.password != undefined || request.body.password != '')
-    ) {
+    if(request.body.password != undefined || request.body.password != '' || request.body.password != null) {
       Users.findOne({
         attributes: ["password"],
         where: { account: request.body.account },
       })
-        .then(async (res) => {
-          // console.log(res);
-          // console.log(request.body);
-          const comparePassResult = bcrypt.compareSync(request.body.password, res.dataValues.password);
-          if(comparePassResult === true) {
-            Users.update(
-              {
-                name: request.body.name,
-                nickName: request.body.nickName,
-                address1: request.body.address1,
-                address2: request.body.address2,
-                address3: request.body.address3,
-                address4: request.body.address4,
-                modifiedDate: currentTimeStamp,
+      .then(async (res) => {
+        // console.log(res);
+        // console.log(request.body);
+        const comparePassResult = bcrypt.compareSync(request.body.password, res.dataValues.password);
+        if(comparePassResult === true) {
+          Users.update(
+            {
+              // name: request.body.name,
+              nickName: request.body.nickName,
+              address1: request.body.address1,
+              address2: request.body.address2,
+              address3: request.body.address3,
+              address4: request.body.address4,
+              modifiedDate: currentTimeStamp,
+            },
+            {
+              where: {
+                account: request.body.account
               },
-              {
-                where: {
-                  account: request.body.account
-                },
-              }
-            )
-            .then((res) => {
-              // console.log('res ', res);
-              if(res[0] == 1) {
-                response.status(200).send({
-                  responseCode: 200,
-                  message: 'Modified Complete(not change pass)',
-                  data: true,
-                });
-              }
-              else {
-                response.status(403).send({
-                  responseCode: 403,
-                  message: 'Modified Failed(not change pass)',
-                  data: false,
-                });
-              }              
-            })
-            .catch((err) => {
-              response.status(500).send({
-                responseCode: 500,
-                message: 'Modified Fail',
-                data: false,
-                error: err,
+            }
+          )
+          .then((res) => {
+            // console.log('res ', res);
+            if(res[0] == 1) {
+              response.status(200).send({
+                responseCode: 200,
+                message: "회원정보 수정 완료",
+                data: true,
               });
-            });
-          }
-          else {
-            response.status(403).send({
-              responseCode: 403,
-              message: 'Modified Fail(not change pass) Password Invalid',
+            }
+            else {
+              response.status(403).send({
+                responseCode: 403,
+                message: "회원정보 수정 실패",
+                data: false,
+              });
+            }              
+          })
+          .catch((err) => {
+            console.log("회원정보 수정 실패 DB에러");
+            response.status(500).send({
+              responseCode: 500,
+              message: "회원정보 수정 실패",
               data: false,
             });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } else if (
-      request.body.changePassword !== null &&
-      request.body.password != null
-    ) {
-      newHashedPass = bcrypt.hashSync(request.body.changePassword, salt);
-      Users.update(
-        {
-          password: newHashedPass,
-          name: request.body.name,
-          nickName: request.body.nickName,
-          address1: request.body.address1,
-          address2: request.body.address2,
-          address3: request.body.address3,
-          address4: request.body.address4,
-          modifiedDate: currentTimeStamp,
-        },
-        {
-          where: {
-            account: request.body.account,
-          },
-        }
-      )
-      .then((res) => {
-        if(res[0] === 1) {
-          response.status(200).send({
-            responseCode: 200,
-            message: 'Modified Complete(apply new pass)',
-            data: true,
           });
         }
         else {
           response.status(403).send({
             responseCode: 403,
-            message: 'Modified Failed(apply new pass)',
-            data: false,
+            message: "비밀번호가 일치하지 않습니다.",
+            data: 3,
           });
-        }        
+        }
       })
       .catch((err) => {
-        response.status(500).send({
-          responseCode: 500,
-          message: "Modified Fail(Database update issue)",
-          data: false,
-          error: err
+        console.error(err);
+        response.status(403).send({
+          responseCode: 403,
+          message: "회원정보 수정 실패 존재하지 않는 회원입니다.",
+          data: 2,
         });
       });
-    }
+    } 
   } else {
     response.status(403).send({
       responseCode: 403,
@@ -550,6 +505,56 @@ const updateUsers = async (request, response) => {
     });
   }
 };
+
+const updatePassword = async(request, response) => {
+  if(
+    request.body.changePassword !== null &&
+    request.body.password != null
+  ) {
+    newHashedPass = bcrypt.hashSync(request.body.changePassword, salt);
+    Users.update(
+      {
+        password: newHashedPass,
+        name: request.body.name,
+        nickName: request.body.nickName,
+        address1: request.body.address1,
+        address2: request.body.address2,
+        address3: request.body.address3,
+        address4: request.body.address4,
+        modifiedDate: currentTimeStamp,
+      },
+      {
+        where: {
+          account: request.body.account,
+        },
+      }
+    )
+    .then((res) => {
+      if(res[0] === 1) {
+        response.status(200).send({
+          responseCode: 200,
+          message: 'Modified Complete(apply new pass)',
+          data: true,
+        });
+      }
+      else {
+        response.status(403).send({
+          responseCode: 403,
+          message: 'Modified Failed(apply new pass)',
+          data: false,
+        });
+      }        
+    })
+    .catch((err) => {
+      response.status(500).send({
+        responseCode: 500,
+        message: "Modified Fail(Database update issue)",
+        data: false,
+        error: err
+      });
+    });
+  }
+}
 
 /**
  * account에 해당하는 사용자의 프로필이미지를 반환하는 함수
@@ -1026,6 +1031,7 @@ module.exports = {
   findByPhone,
   findUsersInfo,
   updateUsers,
+  updatePassword,
   selectUsersProfileImage,
   updateProfileImage,
   requestDefaultPassword,
