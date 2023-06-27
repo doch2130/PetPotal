@@ -41,6 +41,23 @@ interface mapDataInterface {
   _lat: number;
 }
 
+interface myPetInfoInterface {
+  animalsIndexNumber: number;
+  animalsName: string;
+  animalsGender: number;
+  animalsAge: number;
+  animalsWeight: number;
+  animalsIsNeutered: number;
+  animalsCategory1: number;
+  animalsCategory2: string;
+  animalsNeutered: number;
+  animalsPhotos: string;
+  animalsRegisData: string;
+  animalsModifyDate: string;
+  animalsUsersIndexNumber: number;
+  animalsInfoActivate: number;
+}
+
 export default function MateWriteForm(props:mateWriteFormInterface) {
   const { imgFile } = props;
   const navigate = useNavigate();
@@ -53,7 +70,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   const { openModal, closeModal } = useModal();
   // const [ userInfo, setUserInfo ] = useRecoilState<UserType[]>(userState);
   const userInfo = useRecoilValue<UserType[]>(userState);
-  const [ myPetList, setMyPetList ] = useState([]);
+  const [ myPetList, setMyPetList ] = useState<myPetInfoInterface[]>([]);
   const [ mapData, setMapData ] = useState<mapDataInterface>({
     x: 0,
     y: 0,
@@ -138,24 +155,64 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   }, [userInfo]);
 
   useEffect(():void => {
-    const petInfoLoad = async () => {
-      const result = await controller.myPetInfoLoad();
-      setMyPetList(result.data);
+    const myPetInfoLoad = async () => {
+      try {
+        const result = await controller.myPetInfoLoad();
+        // console.log('result ', result);
+        setMyPetList(result.data.data);
+        return ;
+      } catch (err:any) {
+        if(err.response.data.responseCode === 403 && err.response.data.data === false) {
+          console.log('유저 정보 없음');
+          openAlert({
+            title: '사용자 정보 불러오기 오류',
+            type: 'error',
+            content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
+          });
+          return ;
+        } else if(err.response.data.responseCode === 304 && err.response.data.data === false) {
+          console.log('펫 정보 없음');
+          setMyPetList([]);
+          return ;
+        }
+        openAlert({
+          title: '나의 펫 정보 불러오기 오류',
+          type: 'error',
+          content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
+        });
+        return ;
+      }
     }
-    // petInfoLoad();
+
+    myPetInfoLoad();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [myPetList.length]);
 
   const petAddModal = () => {
     const ModalContent = ():JSX.Element => (
-      <MateWritePetAdd onClose={closeModal} />
+      <MateWritePetAdd onClose={closeModal} myPetList={myPetList} setMyPetList={setMyPetList} />
     );
     openModal({
       backDrop: false,
       content: <ModalContent />
     });
   }
-  
+
+  // console.log('myPetList ', myPetList);
+
+  const myPetInfoSelect = (e:any) => {
+    // console.log(e.target.value);
+    const petFormUpdate = myPetList.filter((el:myPetInfoInterface) => el.animalsIndexNumber === Number(e.target.value));
+    // console.log('petFormUpdate ', petFormUpdate);
+    setValue('petName', petFormUpdate[0].animalsName);
+    setValue('petGender', petFormUpdate[0].animalsGender.toString());
+    setValue('petAge', petFormUpdate[0].animalsAge.toString());
+    setValue('petSpecies', petFormUpdate[0].animalsCategory1.toString());
+    setValue('petBreeds', petFormUpdate[0].animalsCategory2);
+    setValue('petWeight', petFormUpdate[0].animalsWeight);
+    setValue('isNeutered', petFormUpdate[0].animalsNeutered.toString());
+  }
+
   return (
     <>
       <form className={style.wrap} onSubmit={handleSubmit(onSubmit)}>
@@ -227,11 +284,11 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
         <div className={style.wrapRow + ' ' + style.wrapPet}>
           <div className={style.wrapCol}>
             <h2>반려동물 정보</h2>
-            <select id='petInfoLoad'>
+            <select id='petInfoLoad' onChange={myPetInfoSelect}>
               <option value="선택">반려동물 정보 가져오기</option>
-              {myPetList.map((el, index) => {
+              {myPetList.map((el:myPetInfoInterface, index:number) => {
                 return (
-                  <option value={index}>{el}</option>
+                  <option value={el.animalsIndexNumber} key={index}>{el.animalsName}</option>
                 )
               })}
             </select>
@@ -248,7 +305,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '이름을 입력해주세요'},
               },
               )}
-              id='petName' type='text' placeholder='이름을 입력해주세요'
+              id='petName' type='text' placeholder='이름을 입력해주세요' disabled readOnly
             />
             <p className={style.mateWriteWraning}>{errors.petName?.message}</p>
           </div>
@@ -263,7 +320,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '성별을 선택해주세요' }
               },
               )}
-              type="radio" id='petGenderMan' value="수컷"
+              type="radio" id='petGenderMan' value="1" disabled readOnly
             />
             <label htmlFor='petGenderMan'>수컷</label>
             <input 
@@ -272,7 +329,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '성별을 선택해주세요' }
               },
               )}
-              type="radio" id='petGenderWoman' value="암컷"
+              type="radio" id='petGenderWoman' value="2" disabled readOnly
             />
             <label htmlFor='petGenderWoman'>암컷</label>
             <p className={style.mateWriteWraning}>{errors.petGender?.message}</p>
@@ -287,7 +344,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               { required: {value: true, message: '나이를 선택해주세요'}
               },
               )}
-              id='petAge'>
+              id='petAge' disabled aria-readonly >
               <option value="선택">나이를 선택해주세요</option>
               <option value="0">알수없음</option>
               <option value="1">1</option>
@@ -313,11 +370,11 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               { required: {value: true, message: '종류를 선택해주세요'}
               },
               )}
-              id='petSpecies'>
+              id='petSpecies' disabled aria-readonly >
               <option value="선택">종류를 선택해주세요</option>
-              <option value="강아지">강아지</option>
-              <option value="고양이">고양이</option>
-              <option value="기타">기타</option>
+              <option value="1">강아지</option>
+              <option value="2">고양이</option>
+              <option value="3">기타</option>
             </select>
             <p className={style.mateWriteWraning}>{errors.petSpecies?.message}</p>
           </div>
@@ -332,7 +389,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '품종을 입력해주세요'},
               },
               )}
-              id='petBreeds' type='text' placeholder='품종을 입력해주세요'
+              id='petBreeds' type='text' placeholder='품종을 입력해주세요' disabled readOnly
             />
             <p className={style.mateWriteWraning}>{errors.petBreeds?.message}</p>
           </div>
@@ -355,7 +412,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 }
               },
               )}
-              id='petWeight' type='text' placeholder='무게를 입력해주세요'
+              id='petWeight' type='text' placeholder='무게를 입력해주세요'disabled readOnly
             />
             <span>KG</span>
             <p className={style.mateWriteWraning}>{errors.petWeight?.message}</p>
@@ -371,7 +428,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '중성화 여부를 선택해주세요' }
               },
               )}
-              type="radio" id='isNeuteredTrue' value="예"
+              type="radio" id='isNeuteredTrue' value="1" disabled
             />
             <label htmlFor='isNeuteredTrue'>예</label>
             <input 
@@ -380,7 +437,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '중성화 여부를 선택해주세요' }
               },
               )}
-              type="radio" id='isNeuteredFalse' value="아니오"
+              type="radio" id='isNeuteredFalse' value="2" disabled readOnly
             />
             <label htmlFor='isNeuteredFalse'>아니오</label>
             <input 
@@ -389,7 +446,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
                 required: {value: true, message: '중성화 여부를 선택해주세요' }
               },
               )}
-              type="radio" id='isNeuteredUnknown' value="모름"
+              type="radio" id='isNeuteredUnknown' value="3" disabled readOnly
             />
             <label htmlFor='isNeuteredUnknown'>모름</label>
             <p className={style.mateWriteWraning}>{errors.isNeutered?.message}</p>
