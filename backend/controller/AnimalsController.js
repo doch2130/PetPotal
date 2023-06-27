@@ -108,43 +108,43 @@ exports.insertAnimal = async(request, result) => {
  * @param {*} request 
  * @param {*} result 
  */
-exports.findByUsersIndexNumber = async(request, result) => {
+exports.findByUsersAccount = async(request, response) => {
     const inputToken = request.headers.token;
     const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
     
     if(checkTokenResult.result == true) {
-        const usersAccount = await Users.findOne({
-            attributes: [ "account" ],
+        const usersIndexNumber = await Users.findOne({
+            attributes: ["usersIndexNumber"],
             where: {
-                usersIndexNumber: parseInt(request.params.animalsUsersIndexNumber),
+                account: checkTokenResult.account
             }
-        });
-        // console.log(usersAccount);
-        // console.log(usersAccount.dataValues.account);
-        if(usersAccount == null) {
+        });        
+        console.log("findByAccount's IndexNumber:", usersIndexNumber);
+        console.log(usersIndexNumber.dataValues.usersIndexNumber);
+        if(usersIndexNumber == null) {
             result.status(403).send({
                 responseCode: 403,
                 data: false,
                 message: "데이터가 없습니다."
             })
         }
-        else if(usersAccount.dataValues.account == checkTokenResult.account) {
+        else {
             await Animals.findAll({
                 // attributes: ["animalsUsersIndexNumber"],
                 where: { 
-                    animalsUsersIndexNumber: request.params.animalsUsersIndexNumber,
+                    animalsUsersIndexNumber: usersIndexNumber.dataValues.usersIndexNumber,
                     animalsInfoActivate: 1
                 }
-            }).then((response) => {
-                if(response == null) {
-                    result.status(304).send({
+            }).then((res) => {
+                if(res == null) {
+                    response.status(304).send({
                         responseCode: 304,
                         data: false,
                         message: "no result"
                     })
                 } else {
-                    if(response.length > 0) {
-                        response.forEach(e => {
+                    if(res.length > 0) {
+                        res.forEach(e => {
                             const prev = e.dataValues.animalsPhotos;
                             if(prev == "") { 
                                 e.dataValues.animalsPhotos = "";
@@ -153,23 +153,22 @@ exports.findByUsersIndexNumber = async(request, result) => {
                             }
                         });
                     }
-                    result.status(200).send({
+                    response.status(200).send({
                         responseCode: 200,
-                        data: response
+                        data: res
                     })
                 }
+            }).catch((err) => {
+                console.error("Animals findByAccount error");
+                console.error(err);
+                response.status(500).send({
+                    responseCode: 500,
+                    data: false
+                })
             })
-        } else {
-            result.status(403).send({
-                responseCode: 403,
-                data: false,
-                message: "요청한 사용자는 해당 데이터에 대한 권한이 없습니다."
-            })
-        }
-
-        
+        }        
     } else {
-        result.status(400).send({
+        response.status(400).send({
             responseCode: 400,
             data: false,
             message: "Incorrect Auth Key"
