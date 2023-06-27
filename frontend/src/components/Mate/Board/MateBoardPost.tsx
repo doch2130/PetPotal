@@ -179,7 +179,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
         <div></div>
         <div className={style.bottomPageButton}>
           {props.postTotalCount > 0 && 
-          <MateBoardPostButton postLength={postList.length} matePageNumber={props.matePageNumber} setMatePageNumber={props.setMatePageNumber} postTotalCount={props.postTotalCount}/>
+          <MateBoardPostButton matePageNumber={props.matePageNumber} setMatePageNumber={props.setMatePageNumber} postTotalCount={props.postTotalCount}/>
           }
         </div>
         <div className={style.bottomWriteButton}>
