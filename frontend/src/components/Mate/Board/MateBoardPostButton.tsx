@@ -2,15 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import style from './MateBoardPost.module.css';
 
 interface MateBoardPostButtonInterface {
-  postLength: number;
   matePageNumber: string;
   setMatePageNumber: Function;
   postTotalCount: number;
 }
 
 export default function MateBoardPostButton(props:MateBoardPostButtonInterface) {
-  const { postLength, matePageNumber, setMatePageNumber, postTotalCount } = props;
-  const pageTotal = Math.ceil(postLength/9);
+  const { matePageNumber, setMatePageNumber, postTotalCount } = props;
+  const pageTotal = Math.ceil(postTotalCount/9);
   const navigater = useNavigate();
   const buttons: JSX.Element[] = [];
   const pageTotalNumber = Math.ceil(postTotalCount/9);
