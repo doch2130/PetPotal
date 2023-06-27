@@ -121,7 +121,7 @@ export default function MyInfo(props:MyInfoInterface) {
   // 비밀번호 변경
   const memberChangePassword = ():void => {
     const ModalContent = () => (
-      <MyInfoPasswordChangeModal onClose={closeModal} account={userInfo[0].account} setCertification={setCertification} />
+      <MyInfoPasswordChangeModal onClose={closeModal} setCertification={setCertification} />
     );
 
     openModal({
@@ -175,8 +175,7 @@ export default function MyInfo(props:MyInfoInterface) {
   // console.log('data ', data);
   // console.log('status ', status);
   // console.log('error ', error);
-
-  console.log('profileImage ', profileImage);
+  // console.log('profileImage ', profileImage);
   return (
     <div className={style.wrap}>
       <h2>회원정보</h2>

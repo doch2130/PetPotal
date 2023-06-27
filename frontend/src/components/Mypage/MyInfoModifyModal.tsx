@@ -75,23 +75,27 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
     }
 
     const { id } = e.target as HTMLButtonElement;
-    const result = await controller.duplicateCheck(id, getValues('nickName'));
-    if(result.data.responseCode !== 200) {
+    try {
+      // const result = await controller.duplicateCheck(id, getValues('nickName'));
+      await controller.duplicateCheck(id, getValues('nickName'));
+      setError('nickName', {message: ''});
+      duplicateValue[0].isNickName = true;
+      duplicateValue[0].nickName = getValues('nickName');
       openAlert({
-        title: '닉네임 중복 검사 실패',
-        type: 'error',
-        content: '중복된 닉네임입니다',
+        title: '닉네임 중복 검사 성공',
+        type: 'success',
+        content: '사용할 수 있는 닉네임입니다',
       });
-      return ;
+    } catch (err:any) {
+      if(err.response.data.responseCode !== 200) {
+        openAlert({
+          title: '닉네임 중복 검사 실패',
+          type: 'error',
+          content: '중복된 닉네임입니다',
+        });
+        return ;
+      }
     }
-    setError('nickName', {message: ''});
-    duplicateValue[0].isNickName = true;
-    duplicateValue[0].nickName = getValues('nickName');
-    openAlert({
-      title: '닉네임 중복 검사 성공',
-      type: 'success',
-      content: '사용할 수 있는 닉네임입니다',
-    });
   }
 
   //Daum Post 관련
@@ -146,27 +150,9 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
       callback: async () => {
         try {
           // console.log('data ', data);
-          const result = await controller.userInfoModify(data);
+          // const result = await controller.userInfoModify(data);
+          await controller.userInfoModify(data);
           // console.log('result : ', result);
-
-          if(result.data.responseCode === 401) {
-            openAlert({
-              title: '회원정보 수정 실패',
-              type: 'error',
-              content: '현재 비밀번호가 일치하지 않습니다',
-            });
-            return ;
-          }
-
-          if(result.data.responseCode !== 200) {
-            openAlert({
-              title: '회원정보 수정 실패',
-              type: 'error',
-              content: '회원정보 수정 중 에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요.',
-            });
-            return ;
-          }
-
           closeConfirm();
           openAlert({
             title: '회원정보 수정 성공',
@@ -185,11 +171,10 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
             address3: data.address3,
             address4: data.address4,
           });
-
           onClose();
-
         } catch (err:any) {
-          if(err.response.data.responseCode === 403) {
+          // console.log('err ', err);
+          if(err.response.data.responseCode === 403 && err.response.data.data === 3) {
             openAlert({
               title: '회원정보 수정 실패',
               type: 'error',
@@ -197,6 +182,7 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
             });
             return ;
           }
+
           openAlert({
             title: '회원정보 수정 실패',
             type: 'error',
@@ -269,21 +255,7 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
         </div> */}
         <div>
           <label>이름</label>
-          <input 
-            {...register('name', 
-              {
-                required: {value: true, message: '이름을 입력해주세요'},
-                minLength: {
-                  value: 1,
-                  message: '1글자 이상 30자 이하로 입력해주세요',
-                },
-                maxLength: {
-                  value: 30,
-                  message : '1글자 이상 30자 이하로 입력해주세요',
-                }
-              }
-            )}
-            type='text' placeholder='이름을 입력하세요' />
+          <input {...register('name')} type='text' readOnly disabled />
           <p className={style.joinWarning}>{errors.name?.message}</p>
         </div>
         <div>
