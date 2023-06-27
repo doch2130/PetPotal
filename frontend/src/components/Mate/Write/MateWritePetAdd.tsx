@@ -5,8 +5,26 @@ import Controller from '../../../api/controller';
 import { useConfirm } from '../../../hooks/useConfirm';
 import { useAlert } from '../../../hooks/useAlert';
 
+interface myPetInfoInterface {
+  animalsIndexNumber: number;
+  animalsName: string;
+  animalsGender: number;
+  animalsAge: number;
+  animalsWeight: number;
+  animalsIsNeutered: number;
+  animalsCategory1: number;
+  animalsCategory2: string;
+  animalsPhotos: string;
+  animalsRegisData: string;
+  animalsModifyDate: string;
+  animalsUsersIndexNumber: number;
+  animalsInfoActivate: number;
+}
+
 interface MateWritePetAddInterface {
   onClose: Function;
+  setMyPetList: Function;
+  myPetList: myPetInfoInterface[];
 }
 
 interface MateWritePetAddFormInput {
@@ -20,7 +38,7 @@ interface MateWritePetAddFormInput {
 }
 
 export default function MateWritePetAdd(props:MateWritePetAddInterface) {
-  const { onClose } = props;
+  const { onClose, myPetList, setMyPetList } = props;
   const { register, setValue, watch, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWritePetAddFormInput>({mode: 'onChange'});
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
@@ -43,12 +61,14 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
       callback: async () => {
         closeConfirm();
         const result = await controller.myPetAdd('', data);
+        // console.log('result ', result);
         if(result.data.responseCode === 200) {
           openAlert({
             title: 'Mate Write Pet Add Success',
             type: 'success',
             content: '펫이 등록되었습니다.'
           });
+          setMyPetList([...myPetList, data]);
           onClose();
         } else {
           openAlert({

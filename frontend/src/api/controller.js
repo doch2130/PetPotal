@@ -108,7 +108,7 @@ export default class Controller {
 
   // 마이 페이지 - 펫 정보 가져오기
   async myPetInfoLoad() {
-    return this.httpClient.post('users/mypage/petInfoLoad');
+    return this.httpClient.get(`animals/findByUser`);
   }
 
   // 마이 페이지 - 펫 정보 삭제
