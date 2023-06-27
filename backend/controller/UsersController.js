@@ -523,6 +523,7 @@ const updatePassword = async(request, response) => {
       }
     }).catch((err) => {
       console.error("사용자 패스워드 업데이트 에러");
+      console.error(err);
       return false;
     });
 

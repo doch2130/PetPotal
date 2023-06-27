@@ -16,7 +16,7 @@ const singleFileUploadHandler = uploadSingle.single("animalsPhotos");
 const animalsPhotoUpload = AnimalsPhotosFileHandler.ImageFileHandler();
 const animalsPhotoUploadController = animalsPhotoUpload.single("animalsPhotos");
 
-router.get("/findByUser/:animalsUsersIndexNumber", AnimalsController.findByUsersIndexNumber);
+router.get("/findByUser", AnimalsController.findByUsersAccount);
 router.post("/insertContent", multiFileUploadHandler, AnimalsController.insertAnimal);
 router.put("/updateInfo", AnimalsController.updateInfo);
 router.put("/deleteInfo", AnimalsController.deleteInfo);
