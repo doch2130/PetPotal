@@ -61,10 +61,10 @@ export default function MateBoardPostButton(props:MateBoardPostButtonInterface) 
 
   buttons.push(
     <button type='button' key={'first'} disabled={matePageNumber === '1' ? true : false} onClick={changeFirstPageFunction}>&lt;&lt;</button>
-  )
+  );
   buttons.push(
     <button type='button' key={'prev'} disabled={matePageNumber === '1' ? true : false} onClick={changePrevPageFunction}>&lt;</button>
-  )
+  );
   for(let i = Math.floor((Number(matePageNumber))/3); i < pageLastNumber; i++) {
     if(Number(matePageNumber) === i+1) {
       buttons.push(
@@ -72,16 +72,16 @@ export default function MateBoardPostButton(props:MateBoardPostButtonInterface) 
       )
     } else {
       buttons.push(
-        <button type='button' key={matePageNumber} onClick={() => changePageNumberFunction(i+1)}>{i+1}</button>
+        <button type='button' key={matePageNumber+1} onClick={() => changePageNumberFunction(i+1)}>{i+1}</button>
       )
     }
   }
   buttons.push(
     <button type='button' key={'next'} disabled={matePageNumber === pageTotal.toString() ? true : false} onClick={changeNextPageFunction}>&gt;</button>
-  )
+  );
   buttons.push(
     <button type='button' key={'last'} disabled={matePageNumber === pageTotal.toString() ? true : false} onClick={changeLastPageFunction}>&gt;&gt;</button>
-  )
+  );
 
   return <>{buttons}</>;
 }
