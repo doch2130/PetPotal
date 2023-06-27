@@ -157,10 +157,11 @@ exports.findAllMateBoardDesc = async (request, result) => {
 
   if(checkTokenResult.result === true) {
     let pageNumber = request.params.pageNumber;
+    const limit = 9;
     let offset = 0;
 
     if(pageNumber > 1) {
-      offset = 10 * (pageNumber - 1);
+      offset = limit * (pageNumber - 1);
     }
 
     await MateBoard.findAndCountAll({
@@ -178,7 +179,7 @@ exports.findAllMateBoardDesc = async (request, result) => {
         mateBoardStatus: 1,
       },
       offset: offset,
-      limit: 9,
+      limit: limit,
       order: [['mateBoardRegistDate', 'DESC']],
     }).then((response) => {
       if (response == null) {
