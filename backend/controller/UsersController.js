@@ -507,54 +507,79 @@ const updateUsers = async (request, response) => {
 };
 
 const updatePassword = async(request, response) => {
-  if(
-    request.body.changePassword !== null &&
-    request.body.password != null
-  ) {
-    newHashedPass = bcrypt.hashSync(request.body.changePassword, salt);
-    Users.update(
-      {
-        password: newHashedPass,
-        name: request.body.name,
-        nickName: request.body.nickName,
-        address1: request.body.address1,
-        address2: request.body.address2,
-        address3: request.body.address3,
-        address4: request.body.address4,
-        modifiedDate: currentTimeStamp,
-      },
-      {
-        where: {
-          account: request.body.account,
-        },
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
+  let originPasswordCheckResult;
+  if(checkTokenResult.result) {
+    originPasswordCheckResult = await Users.findOne({
+      attributes: ["password"],
+      where: {
+        account: checkTokenResult.account,
       }
-    )
-    .then((res) => {
-      if(res[0] === 1) {
-        response.status(200).send({
-          responseCode: 200,
-          message: 'Modified Complete(apply new pass)',
-          data: true,
-        });
+    }).then((res) => {
+      if(res.dataValues.password != undefined || res.dataValues.password != null) {
+        return bcrypt.compareSync(request.body.currentPassword, res.dataValues.password);
+      } else {
+        return false;
       }
-      else {
-        response.status(403).send({
-          responseCode: 403,
-          message: 'Modified Failed(apply new pass)',
-          data: false,
-        });
-      }        
-    })
-    .catch((err) => {
-      response.status(500).send({
-        responseCode: 500,
-        message: "Modified Fail(Database update issue)",
-        data: false,
-        error: err
-      });
+    }).catch((err) => {
+      console.error("사용자 패스워드 업데이트 에러");
+      return false;
     });
+
+    if(originPasswordCheckResult) {
+      const salt = parseInt(process.env.USER_SALT);
+      const newHashedPass = bcrypt.hashSync(request.body.changePassword, salt);
+      Users.update(
+        {
+          password: newHashedPass
+        },
+        {
+          where: {
+            account: checkTokenResult.account
+          },
+        }
+      )
+      .then((res) => {
+        if(res[0] === 1) {
+          response.status(200).send({
+            responseCode: 200,
+            message: "사용자 패스워드 업데이트가 완료되었습니다.",
+            data: true,
+          });
+        }
+        else {
+          response.status(403).send({
+            responseCode: 403,
+            message: "사용자 패스워드 업데이트에 실패했습니다.",
+            data: false,
+          });
+        }        
+      })
+      .catch((err) => {
+        response.status(500).send({
+          responseCode: 500,
+          message: "사용자 패스워드 업데이트에 실패했습니다. 데이터베이스 에러",
+          data: false,
+          error: err
+        });
+      });
+    } else {
+      response.status(403).send({
+        responseCode: 403,
+        message: "사용자의 기존의 패스워드가 일치하지 않습니다.",
+        data: 2
+      })
+    }
+  } else {
+    response.status(403).send({
+      responsCode: 403,
+      data: false,
+      message: "인증키가 유효하지 않습니다."
+    })
   }
+
 }
+
 
 /**
  * account에 해당하는 사용자의 프로필이미지를 반환하는 함수
