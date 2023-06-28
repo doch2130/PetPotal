@@ -59,10 +59,10 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
       title: '펫 신규 등록',
       content: '작성한 내용으로 등록하시겠습니까?',
       callback: async () => {
-        closeConfirm();
-        const result = await controller.myPetAdd('', data);
-        // console.log('result ', result);
-        if(result.data.responseCode === 200) {
+        try {
+          closeConfirm();
+          // const result = await controller.myPetAdd('', data);
+          await controller.myPetAdd('', data);
           openAlert({
             title: 'Mate Write Pet Add Success',
             type: 'success',
@@ -70,7 +70,7 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
           });
           setMyPetList([...myPetList, data]);
           onClose();
-        } else {
+        } catch (err:any) {
           openAlert({
             title: 'Mate Write Pet Add Error',
             type: 'error',

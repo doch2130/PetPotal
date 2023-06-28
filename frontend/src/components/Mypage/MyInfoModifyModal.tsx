@@ -56,12 +56,21 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
     }
     const formData = new FormData();
     formData.append('usersProfile', files[0]);
-    const result = await controller.userProfileModify(formData);
-    // console.log('imgFileHandler result :', result);
-    // console.log('imgFileHandler result :', result.data);
-    setProfileImage(result.data.data);
-    setModalProfileImage(result.data.data);
-    return ;
+    try {
+      const result = await controller.userProfileModify(formData);
+      // console.log('imgFileHandler result :', result);
+      // console.log('imgFileHandler result :', result.data);
+      setProfileImage(result.data.data);
+      setModalProfileImage(result.data.data);
+      return ;
+    } catch (err) {
+      openAlert({
+        title: '프로필 이미지 변경 오류',
+        type: 'error',
+        content: '프로필 변경 중 오류가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
+      });
+      return ;
+    }
   };
 
   const duplicateCheckHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
