@@ -35,6 +35,8 @@ exports.insertMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
+  console.log(currentTimeStamp);
+  console.log(new Date(currentTimeStamp));
 
   const usersIndexNumber = await Users.findOne({
     attributes: [ "usersIndexNumber" ],
