@@ -103,21 +103,36 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
         imgFile.forEach((el) => {
           formData.append('mateBoardPhotos', el);
         });
-        const result = await controller.mateWrite(formData);
-        if(result.data.responseCode === 200) {
+        try {
+          // const result = await controller.mateWrite(formData);
+          await controller.mateWrite(formData);
           openAlert({
             title: 'Mate Board Create Success',
             type: 'success',
             content: '메이트 게시글이 등록되었습니다.'
           });
           navigate('/mate/1');
-        } else {
+        } catch (err:any) {
           openAlert({
             title: 'Mate Board Create Error',
             type: 'error',
             content: '글 생성 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
           });
         }
+        // if(result.data.responseCode === 200) {
+        //   openAlert({
+        //     title: 'Mate Board Create Success',
+        //     type: 'success',
+        //     content: '메이트 게시글이 등록되었습니다.'
+        //   });
+        //   navigate('/mate/1');
+        // } else {
+        //   openAlert({
+        //     title: 'Mate Board Create Error',
+        //     type: 'error',
+        //     content: '글 생성 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
+        //   });
+        // }
       }
     });
 
@@ -315,20 +330,12 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           <div className={style.wrapCol + ' ' + style.wrapPetGender}>
             <label>성별</label>
             <input 
-              {...register("petGender",
-              {
-                required: {value: true, message: '성별을 선택해주세요' }
-              },
-              )}
+              {...register("petGender")}
               type="radio" id='petGenderMan' value="1" disabled readOnly
             />
             <label htmlFor='petGenderMan'>수컷</label>
             <input 
-              {...register("petGender",
-              {
-                required: {value: true, message: '성별을 선택해주세요' }
-              },
-              )}
+              {...register("petGender")}
               type="radio" id='petGenderWoman' value="2" disabled readOnly
             />
             <label htmlFor='petGenderWoman'>암컷</label>
@@ -423,29 +430,17 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           <div className={style.wrapCol + ' ' + style.wrapIsNeutered}>
             <label>중성화</label>
             <input 
-              {...register("isNeutered",
-              {
-                required: {value: true, message: '중성화 여부를 선택해주세요' }
-              },
-              )}
-              type="radio" id='isNeuteredTrue' value="1" disabled
+              {...register("isNeutered")}
+              type="radio" id='isNeuteredTrue' value="1" disabled readOnly
             />
             <label htmlFor='isNeuteredTrue'>예</label>
             <input 
-              {...register("isNeutered",
-              {
-                required: {value: true, message: '중성화 여부를 선택해주세요' }
-              },
-              )}
+              {...register("isNeutered")}
               type="radio" id='isNeuteredFalse' value="2" disabled readOnly
             />
             <label htmlFor='isNeuteredFalse'>아니오</label>
             <input 
-              {...register("isNeutered",
-              {
-                required: {value: true, message: '중성화 여부를 선택해주세요' }
-              },
-              )}
+              {...register("isNeutered")}
               type="radio" id='isNeuteredUnknown' value="3" disabled readOnly
             />
             <label htmlFor='isNeuteredUnknown'>모름</label>
