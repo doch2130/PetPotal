@@ -1,5 +1,5 @@
-// const redis = require('redis');
-const fs = require('fs');
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 const MateBoard = require('../models/MateBoard');
 const CheckToken = require('../middleware/CheckToken');
@@ -68,44 +68,88 @@ exports.findByFilter = async(request, response) => {
     offset = limit * (pageNumber - 1);
   }
 
-  await MateBoard.findAndCountAll({
-    include: [
-      {
-        model: Users,
-        as: "Users",
-        attributes: [ "account" ]
-      }
-    ],
-    where: {
-      mateBoardStatus: 1
-    },
-    limit: limit,
-    offset: offset
-  })
-  .then((res) => {
-    if(res.count == 0) {
-      response.status(204).send({
-        responseCode: 204,
-        data: null,
-        message: "결과 데이터가 없습니다."
-      });
-    } else {
-      response.status(200).send({
-        responseCode: 200,
-        data: res,
-        message: "결과를 출력합니다."
-      })
-    }    
-  })
-  .catch((err) => {
-    console.error("Mate 글 목록 조회(필터사용) 실패");
-    console.error(err);
-    response.status(502).send({
-      responseCode: 502,
-      data: false,
-      message: "데이터를 불러오는데 실패했습니다."
+  if(request.query.mateBoardAddress1 == "전체") {
+    await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        mateBoardStatus: 1
+      },
+      limit: limit,
+      offset: offset
     })
-  })
+    .then((res) => {
+      if(res.count == 0) {
+        response.status(404).send({
+          responseCode: 404,
+          data: null,
+          message: "결과 데이터가 없습니다."
+        });
+      } else {
+        response.status(200).send({
+          responseCode: 200,
+          data: res,
+          message: "결과를 출력합니다."
+        })
+      }    
+    })
+    .catch((err) => {
+      console.error("Mate 글 목록 조회(필터사용) 실패");
+      console.error(err);
+      response.status(502).send({
+        responseCode: 502,
+        data: false,
+        message: "데이터를 불러오는데 실패했습니다."
+      })
+    })
+  } else {
+    await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        mateBoardAddress1: { 
+          [Op.like]: `${request.query.mateBoardAddress1}%`
+        },
+        mateBoardStatus: 1
+      },
+      limit: limit,
+      offset: offset
+    })
+    .then((res) => {
+      if(res.count == 0) {
+        response.status(404).send({
+          responseCode: 404,
+          data: null,
+          message: "결과 데이터가 없습니다."
+        });
+      } else {
+        response.status(200).send({
+          responseCode: 200,
+          data: res,
+          message: "결과를 출력합니다."
+        })
+      }    
+    })
+    .catch((err) => {
+      console.error("Mate 글 목록 조회(필터사용) 실패");
+      console.error(err);
+      response.status(502).send({
+        responseCode: 502,
+        data: false,
+        message: "데이터를 불러오는데 실패했습니다."
+      })
+    })
+  }
 }
 
 /**
