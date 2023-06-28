@@ -1,31 +1,59 @@
-import style from './MyPetBox.module.css';
-import defaultImg from '../../assets/mainpage/Hoteling/MainPage_Hoteling_Img_2.jpg';
+import { useModal } from '../../hooks/useModal';
 import { useConfirm } from '../../hooks/useConfirm';
 import { useAlert } from '../../hooks/useAlert';
 import Controller from '../../api/controller';
 import MyPetModifyModal from './MyPetModifyModal';
-import { useModal } from '../../hooks/useModal';
+import style from './MyPetBox.module.css';
+import defaultImg from '../../assets/matepage/MateDefaultImage.png';
 
-export default function MyPetBox(props:any) {
-  const { petData } = props;
+interface MyPetBoxInterface {
+  petData: myPetInfoInterface;
+  petList: myPetInfoInterface[];
+  setPetList: Function;
+}
+
+interface myPetInfoInterface {
+  animalsIndexNumber: number;
+  animalsName: string;
+  animalsGender: number;
+  animalsAge: number;
+  animalsWeight: number;
+  animalsIsNeutered: number;
+  animalsCategory1: number;
+  animalsCategory2: string;
+  animalsPhotos: string;
+  animalsRegisData: string;
+  animalsModifyDate: string;
+  animalsUsersIndexNumber: number;
+  animalsInfoActivate: number;
+}
+
+export default function MyPetBox(props:MyPetBoxInterface) {
+  const { petData, petList, setPetList } = props;
   const { openModal, closeModal } = useModal();
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
   const controller = new Controller();
 
   // 반려동물 정보 삭제
-  const petDelete = () => {
+  const petDelete = (animalsIndexNumber:number) => {
     openConfirm({
       title: '반려동물 정보 삭제',
       content: '해당 반려동물 정보를 삭제하시겠습니까?',
       callback: async () => {
-        openAlert({
-          title: '삭제 실패',
-          type: 'error',
-          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
-        });
-        const result = await controller.myPetDelete();
-        if(result.data.responseCode !== 200) {
+        try {
+          // const result = await controller.myPetDelete(animalsIndexNumber);
+          await controller.myPetDelete(animalsIndexNumber);
+          // console.log('result2 ', result);
+          closeConfirm();
+          openAlert({
+            title: '반려동물 정보 삭제 성공',
+            type: 'success',
+            content: '해당 정보가 삭제되었습니다'
+          });
+          const updatePetListData = petList.filter((el:myPetInfoInterface) => el.animalsIndexNumber !== animalsIndexNumber);
+          setPetList(updatePetListData);
+        } catch (err:any) {
           openAlert({
             title: '삭제 실패',
             type: 'error',
@@ -33,13 +61,6 @@ export default function MyPetBox(props:any) {
           });
           return ;
         }
-
-        closeConfirm();
-        openAlert({
-          title: '반려동물 정보 삭제 성공',
-          type: 'success',
-          content: '해당 정보가 삭제되었습니다'
-        });
       },
     });
   }
@@ -47,7 +68,7 @@ export default function MyPetBox(props:any) {
    // 반려동물 수정 창 열기
    const petModifyOpen = (petData:any) => {
     const ModalContent = () => (
-      <MyPetModifyModal onClose={closeModal} petData={petData} />
+      <MyPetModifyModal onClose={closeModal} petData={petData} petList={petList} setPetList={setPetList} />
     );
 
     openModal({
@@ -60,7 +81,7 @@ export default function MyPetBox(props:any) {
     <div className={style.wrap}>
       <div className={style.leftWrap}>
         <div className={style.petImageWrap}>
-          <img src={petData.animalsPhotos} alt='petImage' />
+          <img src={petData.animalsPhotos === '' ? defaultImg : petData.animalsPhotos} alt='petImage' />
         </div>
       </div>
       <div className={style.rightWrap}>
@@ -74,11 +95,11 @@ export default function MyPetBox(props:any) {
         </p>
         <p>
           <span>성별</span>
-          <span>{petData.animalsGender}</span>
+          <span>{petData.animalsGender === 1 ? '수컷' : '암컷'}</span>
         </p>
         <p>
           <span>종류</span>
-          <span>{petData.animalsCategory1}</span>
+          <span>{petData.animalsCategory1 === 1 ? '강아지' : petData.animalsCategory1 === 2 ? '고양이' : '기타'}</span>
         </p>
         <p>
           <span>품종</span>
@@ -87,7 +108,7 @@ export default function MyPetBox(props:any) {
       </div>
       <div className={style.buttonGroup}>
         <button type='button' className={style.emptyButton} onClick={() => petModifyOpen(petData)} >수정</button>
-        <button type='button' className={style.emptyButton} onClick={petDelete} >삭제</button>
+        <button type='button' className={style.emptyButton} onClick={() => petDelete(petData.animalsIndexNumber)} >삭제</button>
       </div>
     </div>
   )
