@@ -56,6 +56,59 @@ exports.findAllMateBoardDesc = async(request, response) => {
 };
 
 /**
+ * 조건에 따라 게시글 목록을 불러오기 위한 함수
+ */
+exports.findByFilter = async(request, response) => {
+
+  let pageNumber = parseInt(request.params.pageNumber);
+  let limit = 9;
+  let offset = 0;
+
+  if(pageNumber > 1) {
+    offset = limit * (pageNumber - 1);
+  }
+
+  await MateBoard.findAndCountAll({
+    include: [
+      {
+        model: Users,
+        as: "Users",
+        attributes: [ "account" ]
+      }
+    ],
+    where: {
+      mateBoardStatus: 1
+    },
+    limit: limit,
+    offset: offset
+  })
+  .then((res) => {
+    if(res.count == 0) {
+      response.status(204).send({
+        responseCode: 204,
+        data: null,
+        message: "결과 데이터가 없습니다."
+      });
+    } else {
+      response.status(200).send({
+        responseCode: 200,
+        data: res,
+        message: "결과를 출력합니다."
+      })
+    }    
+  })
+  .catch((err) => {
+    console.error("Mate 글 목록 조회(필터사용) 실패");
+    console.error(err);
+    response.status(502).send({
+      responseCode: 502,
+      data: false,
+      message: "데이터를 불러오는데 실패했습니다."
+    })
+  })
+}
+
+/**
  * 게시글 상세 조회를 위한 메서드 (게시글의 색인번호를 매개변수로 활용)
  * @param {*} request 
  * @param {*} response
@@ -106,16 +159,3 @@ exports.findByIndexNumber = async (request, reponse) => {
     });
   })
 };
-
-/**
- * 조건에 따라 게시글 목록을 불러오기 위한 함수
- */
-// exports.findByCondition = async(request, result) => {
-//   await MateBoard.findAndCountAll({
-//     where: {
-
-//     },
-//     limit: 9,
-//     offset: offset
-//   })
-// }
