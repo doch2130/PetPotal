@@ -45,7 +45,9 @@
 }
 
 .myPetEmpty > h2 {
-  margin: 0
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
 }
 
 .myPetList {

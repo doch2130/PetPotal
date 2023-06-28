@@ -9,6 +9,10 @@
   /* flex: 1 0; */
 }
 
+.wrapCol label:nth-of-type(1) {
+  font-weight: 700;
+}
+
 .wrapRow:nth-of-type(1) > h2 {
   text-align: center;
   width: 100%;
@@ -54,10 +58,23 @@
 
 .wrapPetGender label:not(:nth-of-type(1)) {
   margin: 0 5px;
+  cursor: pointer;
 }
 
 .wrapPetGender input:nth-of-type(2) {
   margin-left: 1rem;
+}
+
+.wrapPetGender input {
+  cursor: pointer;
+}
+
+.wrapPetGender label {
+  font-weight: 700;
+}
+
+.wrapPetGender label:not(:nth-of-type(1)):hover {
+  color: var(--main-default-dark-color);
 }
 
 .wrapRow .wrapCol select {
@@ -80,10 +97,23 @@
 
 .wrapIsNeutered label:not(:nth-of-type(1)) {
   margin: 0 5px;
+  cursor: pointer;
 }
 
 .wrapIsNeutered input:not(:nth-of-type(1)) {
   margin-left: 1rem;
+}
+
+.wrapIsNeutered label:not(:nth-of-type(1)):hover {
+  color: var(--main-default-dark-color);
+}
+
+.wrapIsNeutered label {
+  font-weight: 700;
+}
+
+.wrapIsNeutered input {
+  cursor: pointer;
 }
 
 .buttonGroup {

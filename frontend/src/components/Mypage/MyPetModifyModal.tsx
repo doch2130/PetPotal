@@ -1,19 +1,54 @@
 import { ChangeEvent, MouseEventHandler, useEffect, useState } from 'react'
-import style from './MyPetAddModal.module.css';
+import { useForm, SubmitHandler} from 'react-hook-form';
+import { useConfirm } from '../../hooks/useConfirm';
+import { useAlert } from '../../hooks/useAlert';
+import Controller from '../../api/controller';
 import PictureBox from '../UI/PictureBox';
 import FileUploadButton from '../UI/FileUploadButton';
-import defaultImg from '../../assets/icon/animal.png';
-import { useForm, SubmitHandler} from 'react-hook-form';
-import { useAlert } from '../../hooks/useAlert';
-import { useConfirm } from '../../hooks/useConfirm';
-import Controller from '../../api/controller';
+import style from './MyPetAddModal.module.css';
+import defaultImg from '../../assets/matepage/MateDefaultImage.png';
 
-interface props {
+interface MyPetAddModalInterface {
   onClose: Function;
-  petData: any;
+  petData: myPetInfoInterface;
+  petList: myPetInfoArrayInterface[];
+  setPetList: Function;
 }
 
-interface perFormInput {
+interface myPetInfoInterface {
+  animalsIndexNumber: number;
+  animalsName: string;
+  animalsGender: number;
+  animalsAge: number;
+  animalsWeight: number;
+  animalsNeutered: number;
+  animalsCategory1: number;
+  animalsCategory2: string;
+  animalsPhotos: string;
+  animalsRegisData: string;
+  animalsModifyDate: string;
+  animalsUsersIndexNumber: number;
+  animalsInfoActivate: number;
+}
+
+interface myPetInfoArrayInterface {
+  animalsIndexNumber: number;
+  animalsName: string;
+  animalsGender: number;
+  animalsAge: number;
+  animalsWeight: number;
+  animalsIsNeutered: number;
+  animalsCategory1: number;
+  animalsCategory2: string;
+  animalsPhotos: string;
+  animalsRegisData: string;
+  animalsModifyDate: string;
+  animalsUsersIndexNumber: number;
+  animalsInfoActivate: number;
+}
+
+interface petFormInput {
+  animalsIndexNumber: number;
   animalsName: string;
   animalsAge: string;
   animalsGender: string;
@@ -24,56 +59,154 @@ interface perFormInput {
   animalsPhotos: string;
 }
 
-export default function MyPetAddModal(props:props) {
-  const { onClose, petData } = props;
-  const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<perFormInput>({mode: 'onChange'});
+export default function MyPetAddModal(props:MyPetAddModalInterface) {
+  const { onClose, petData, petList, setPetList } = props;
+  const { register, setValue, getValues, formState: { errors }, setError, handleSubmit} = useForm<petFormInput>({mode: 'onChange'});
   const { openAlert } = useAlert();
   const { openConfirm, closeConfirm } = useConfirm();
   const controller = new Controller();
   const [ petImage, setPetImage ] = useState<string>(petData.animalsPhotos);
-  const [ tempPetImage, setTempPetImage ] = useState<string>('');
+
+  // const imgFileHandler = (e:ChangeEvent<HTMLInputElement>):void => {
+  //   const files:any = e.target.files;
+
+  //   if(files === null || files.length === 0) {
+  //     return ;
+  //   }
+
+  //   if(tempPetImage !== '') {
+  //     URL.revokeObjectURL(tempPetImage);
+  //     setTempPetImage('');
+  //   }
+
+  //   const currentImgUrl = URL.createObjectURL(files[0]);
+  //   setTempPetImage(currentImgUrl);
+  //   setValue('animalsPhotos', files[0]);
+  //   return ;
+  // };
 
   const imgFileHandler = async (e:ChangeEvent<HTMLInputElement>):Promise<void> => {
     const files:any = e.target.files;
+    if(files === null || files.length ===0) {
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append('animalsIndexNumber', petData.animalsIndexNumber.toString());
+      formData.append('animalsPhotos', files[0]);
+      const result = await controller.myPetImageModify(formData);
+      console.log('result ', result);
+      setPetImage(result.data.data);
 
-    if(files === null || files.length === 0) {
+      let tempIndex = -1;
+      petList.forEach((el:any, index:number):void => {
+        if(el.animalsIndexNumber === petData.animalsIndexNumber) {
+          tempIndex = index;
+          setPetList([...petList, petList[tempIndex].animalsPhotos = result.data.data]);
+          return ;
+        }
+      });
+
+      if(tempIndex === -1) {
+        openAlert({
+          title: '펫 이미지 변경 실패',
+          type: 'error',
+          content: '펫 이미지 변경 중 오류가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
+        });
+      }
+
+      return ;
+    } catch (err) {
+      openAlert({
+        title: '펫 이미지 변경 오류',
+        type: 'error',
+        content: '펫 이미지 변경 중 오류가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
+      });
       return ;
     }
-
-    if(tempPetImage !== '') {
-      URL.revokeObjectURL(tempPetImage);
-      setTempPetImage('');
-    }
-
-    const currentImgUrl = URL.createObjectURL(files[0]);
-    setTempPetImage(currentImgUrl);
-    setValue('animalsPhotos', files[0]);
-  };
-
-  const onSubmit : SubmitHandler<perFormInput> = async (data) => {
-    console.log('data : ', data);
   }
 
-  useEffect(() => {
-    // select, radio 함수 초기 값 셋팅
-    setValue('animalsGender', petData.animalsGender);
-    setValue('animalsAge', petData.animalsAge);
-    setValue('animalsCategory1', petData.animalsCategory1);
-    setValue('animalsNeutered', petData.animalsNeutered);
+  const onSubmit:SubmitHandler<petFormInput> = async (data:petFormInput):Promise<void> => {
+    openConfirm({
+      title: '나의 펫 정보 수정 확인 창',
+      content: '해당 정보로 수정하시겠습니까?',
+      callback: async () => {
+        try {
+          const result = await controller.myPetModify(data);
+          console.log('data ', data);
+          console.log('result ', result);
+          closeConfirm();
+          let tempIndex = -1;
+          petList.forEach((el:any, index:number):void => {
+            if(el.animalsIndexNumber === petData.animalsIndexNumber) {
+              const updatePetData = {
+                animalsIndexNumber: petData.animalsIndexNumber,
+                animalsName: data.animalsName,
+                animalsGender: Number(data.animalsGender),
+                animalsAge: Number(data.animalsAge),
+                animalsWeight: Number(data.animalsWeight),
+                animalsIsNeutered: Number(data.animalsNeutered),
+                animalsCategory1: Number(data.animalsCategory1),
+                animalsCategory2: data.animalsCategory2,
+                animalsPhotos: petData.animalsPhotos,
+                animalsRegisData: petData.animalsRegisData,
+                animalsModifyDate: petData.animalsModifyDate,
+                animalsUsersIndexNumber: petData.animalsUsersIndexNumber,
+                animalsInfoActivate: petData.animalsInfoActivate,
+              }
+              tempIndex = index;
+              setPetList([...petList, petList[tempIndex] = updatePetData]);
+              return ;
+            }
+          });
+
+          if(tempIndex === -1) {
+            openAlert({
+              title: '나의 펫 정보 수정 실패',
+              type: 'error',
+              content: '데이터 업데이트 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
+            });
+            return ;
+          }
+
+          openAlert({
+            title: '나의 펫 정보 수정 성공',
+            type: 'success',
+            content: '펫 정보가 수정되었습니다.',
+          });
+          onClose();
+          return ;
+        } catch (err:any) {
+          openAlert({
+            title: '나의 펫 정보 수정 오류',
+            type: 'error',
+            content: '데이터 업데이트 중 에러가 발생하였습니다.\r\n새로고침 후 이용 부탁드립니다.',
+          });
+          return ;
+        }
+      }
+    });
+  }
+
+  useEffect(():void => {
+    setValue('animalsIndexNumber', petData.animalsIndexNumber);
+    setValue('animalsGender', petData.animalsGender.toString());
+    setValue('animalsAge', petData.animalsAge.toString());
+    setValue('animalsCategory1', petData.animalsCategory1.toString());
+    setValue('animalsNeutered', petData.animalsNeutered.toString());
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-
-    return () => {
-      URL.revokeObjectURL(tempPetImage);
-    }
-  }, [tempPetImage]);
+  // useEffect(() => {
+  //   return () => {
+  //     URL.revokeObjectURL(tempPetImage);
+  //   }
+  // }, [tempPetImage]);
 
   return (
     <div className={style.wrap}>
       <PictureBox width='125px' height='125px' >
-        <img src={tempPetImage === '' ? petImage : tempPetImage} alt='petImage' />
+        <img src={ petImage === '' ? defaultImg : petImage } alt='petImage' />
       </PictureBox>
       <FileUploadButton onLoadFileHandler={imgFileHandler} multiple={false} />
       <form className={style.wrapForm} onSubmit={handleSubmit(onSubmit)}>
@@ -104,7 +237,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '성별을 입력해주세요'},
             }
           )}
-          type="radio" id='petGenderMan' value="수컷" name='animalsGender' />
+          type="radio" id='petGenderMan' value="1" name='animalsGender' />
           <label htmlFor='petGenderMan'>수컷</label>
           <input
           {...register('animalsGender', 
@@ -112,7 +245,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '성별을 선택해주세요'},
             }
           )}
-          type="radio" id='petGenderWoman' value="암컷" name='animalsGender' />
+          type="radio" id='petGenderWoman' value="2" name='animalsGender' />
           <label htmlFor='petGenderWoman'>암컷</label>
           <p className={style.petAddWarning}>{errors.animalsGender?.message}</p>
         </div>
@@ -125,18 +258,18 @@ export default function MyPetAddModal(props:props) {
             }
           )}
           id='petAge' name='animalsAge'>
-            <option defaultValue="선택">나이를 선택해주세요</option>
-            <option defaultValue="0">알수없음</option>
-            <option defaultValue="1">1</option>
-            <option defaultValue="2">2</option>
-            <option defaultValue="3">3</option>
-            <option defaultValue="4">4</option>
-            <option defaultValue="5">5</option>
-            <option defaultValue="6">6</option>
-            <option defaultValue="7">7</option>
-            <option defaultValue="8">8</option>
-            <option defaultValue="9">9</option>
-            <option defaultValue="10">10</option>
+            <option value="선택">나이를 선택해주세요</option>
+            <option value="0">알수없음</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
           </select>
           <p className={style.petAddWarning}>{errors.animalsAge?.message}</p>
         </div>
@@ -149,10 +282,10 @@ export default function MyPetAddModal(props:props) {
             }
           )}
           id='petSpecies' name='animalsCategory1'>
-            <option defaultValue="선택">종류를 선택해주세요</option>
-            <option defaultValue="강아지">강아지</option>
-            <option defaultValue="고양이">고양이</option>
-            <option defaultValue="기타">기타</option>
+            <option value="선택">종류를 선택해주세요</option>
+            <option value="1">강아지</option>
+            <option value="2">고양이</option>
+            <option value="3">기타</option>
           </select>
           <p className={style.petAddWarning}>{errors.animalsCategory1?.message}</p>
         </div>
@@ -182,7 +315,7 @@ export default function MyPetAddModal(props:props) {
             {
               required: {value: true, message: '무게를 입력해주세요'},
               pattern: {
-                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,1}$/,
+                value: /^[0-9]{1,5}[.]{0,1}[0-9]{0,3}$/,
                 message: '입력한 무게를 다시 확인해주세요'
               },
               min: {
@@ -203,7 +336,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredTrue' value="예"
+            type="radio" id='isNeuteredTrue' value="1"
           />
           <label htmlFor='isNeuteredTrue'>예</label>
           <input 
@@ -212,7 +345,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredFalse' value="아니오"
+            type="radio" id='isNeuteredFalse' value="2"
           />
           <label htmlFor='isNeuteredFalse'>아니오</label>
           <input 
@@ -221,7 +354,7 @@ export default function MyPetAddModal(props:props) {
               required: {value: true, message: '중성화 여부를 선택해주세요' }
             },
             )}
-            type="radio" id='isNeuteredUnknown' value="모름"
+            type="radio" id='isNeuteredUnknown' value="3"
           />
           <label htmlFor='isNeuteredUnknown'>모름</label>
           <p className={style.petAddWarning}>{errors.animalsNeutered?.message}</p>

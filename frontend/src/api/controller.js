@@ -79,6 +79,11 @@ export default class Controller {
     return result;
   }
 
+  // 네이버 지도 API, 주소를 위경도로 변환
+  async naverMapGeocoding(address) {
+    return this.httpClient.get(`naverMapGeocoding?address=${address}`);
+  }
+
   // 마이 페이지 - 회원정보 가져오기
   async userInfoLoad(account, password) {
     return this.httpClient.post('users/mypageUsersInfo', { account, password });
@@ -112,16 +117,18 @@ export default class Controller {
   }
 
   // 마이 페이지 - 펫 정보 삭제
-  async myPetDelete() {
-    return this.httpClient.delete('users/mypage/petDelete');
+  async myPetDelete(animalsIndexNumber) {
+    return this.httpClient.put('animals/deleteInfo', {
+      animalsIndexNumber: animalsIndexNumber
+    });
   }
 
-  // 마이 페이지 - 펫 - 미리보기 이미지 업로드
-  // async myPetPreviewImageUpload(object) {
-  //   return this.httpClient.post('animals/updatePetImage', object);
-  // }
+  // 마이 페이지 - 펫 이미지 업로드
+  async myPetImageModify(object) {
+    return this.httpClient.post('animals/updateImage', object);
+  }
 
-  // 마이 페이지 - 펫 등록
+  // 마이 페이지 - 펫 정보 등록
   async myPetAdd(account, object) {
     return this.httpClient.post('animals/insertContent', object, {
       headers: {
@@ -129,6 +136,11 @@ export default class Controller {
         account: account
       },
     });
+  }
+
+  // 마이 페이지 - 펫 정보 수정
+  async myPetModify(object) {
+    return this.httpClient.put(`animals/updateInfo`, object);
   }
 
   // 메이트 글쓰기 - 미리보기 이미지 업로드
@@ -139,11 +151,6 @@ export default class Controller {
   // 메이트 글쓰기
   async mateWrite(object) {
     return this.httpClient.post(`mateBoard/insertContent`, object);
-  }
-
-  // 네이버 지도 API, 주소를 위경도로 변환
-  async naverMapGeocoding(address) {
-    return this.httpClient.get(`naverMapGeocoding?address=${address}`);
   }
 
   // 메이트 게시판 - 전체 글 가져오기
