@@ -71,8 +71,8 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardLng: request.body.mateBoardLng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: currentTimeStamp,
-        mateBoardModifyDate: currentTimeStamp,
+        mateBoardRegistDate: new Date(currentTimeStamp),
+        mateBoardModifyDate: new Date(currentTimeStamp),
         usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
       })
       .then(res => {
@@ -107,8 +107,8 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardContent2: request.body.cautionContent,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: currentTimeStamp,
-        mateBoardModifyDate: currentTimeStamp,
+        mateBoardRegistDate: new Date(currentTimeStamp),
+        mateBoardModifyDate: new Date(currentTimeStamp),
         usersIndexNumber: parseInt(request.body.usersIndexNumber),
         animalsIndexNumber: parseInt(usersIndexNumber),
       })
@@ -370,7 +370,7 @@ exports.updateMateBoard = async (request, result) => {
           mateBoardContent2: request.body.cautionContent,
           mateBoardPhotos: matePhotosList.toString(),
           mateBoardCategory: parseInt(request.body.mateBoardCategory),
-          mateBoardModifyDate: currentTimeStamp,
+          mateBoardModifyDate: new Date(currentTimeStamp),
           usersIndexNumber: parseInt(request.body.usersIndexNumber)
         },
         {
@@ -412,7 +412,7 @@ exports.updateMateBoard = async (request, result) => {
           mateBoardContent2: request.body.cautionContent,
           mateBoardPhotos: matePhotosList.toString(),
           mateBoardCategory: parseInt(request.body.mateBoardCategory),
-          mateBoardModifyDate: currentTimeStamp,
+          mateBoardModifyDate: new Date(currentTimeStamp),
           usersIndexNumber: parseInt(request.body.usersIndexNumber),
           animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
         },
@@ -469,7 +469,7 @@ exports.deleteMateBoard = async (request, result) => {
     console.log(request.body);
     await MateBoard.update(
         {
-          mateBoardModifyDate: currentTimeStamp,
+          mateBoardModifyDate: new Date(currentTimeStamp),
           mateBoardStatus: parseInt(3)
         },
         {
