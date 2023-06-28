@@ -119,8 +119,8 @@ exports.findByUsersAccount = async(request, response) => {
                 account: checkTokenResult.account
             }
         });        
-        console.log("findByAccount's IndexNumber:", usersIndexNumber);
-        console.log(usersIndexNumber.dataValues.usersIndexNumber);
+        // console.log("findByAccount's IndexNumber:", usersIndexNumber);
+        // console.log(usersIndexNumber.dataValues.usersIndexNumber);
         if(usersIndexNumber == null) {
             result.status(403).send({
                 responseCode: 403,
@@ -191,9 +191,11 @@ exports.updateInfo = async(request, response) => {
             {
                 animalsName: request.body.animalsName,
                 animalsGender: parseInt(request.body.animalsGender),
-                animalsNeutered: parseInt(request.body.animalsNeutered),
                 animalsAge: parseInt(request.body.animalsAge),
+                animalsCategory1: parseInt(request.body.animalsCategory1),
+                animalsCategory2: request.body.animalsCategory2,
                 animalsWeight: parseFloat(request.body.animalsWeight),
+                animalsNeutered: parseInt(request.body.animalsNeutered),   
                 animalsModifyDate: currentTimeStamp,
             },
             {
@@ -262,25 +264,43 @@ exports.updateImage = async(request, response) => {
                 }
             ).then((res) => {
                 if(res[0] == 1) {
-                    response.status(200).send({
-                        responseCode: 200,
-                        message: '동물 사진 업데이트 완료',
-                        data: true,
-                    });
+                    Animals.findOne({
+                        attributes: ["animalsPhotos"],
+                        where: {
+                            animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
+                        }
+                    })
+                    .then((res2) => {
+                        response.status(200).send({
+                            responseCode: 200,
+                            message: '반려동물 사진 업데이트 완료',
+                            data: `http://${request.hostname}:${request.socket.localPort}/api/animals/animalsPhotos/${res2.dataValues.animalsPhotos}`,
+                        });
+                    })
+                    .catch((err) => {
+                        console.log("업데이트된 반려동물 사진 링크 불러오기 실패");
+                        console.error(err);
+                        response.status(500).send({
+                            responseCode: 500,
+                            message: "업데이트된 반려동물 사진 링크 불러오기 실패",
+                            data: false,
+                        });
+                    })
                 } else {
                     response.status(403).send({
                         responseCode: 403,
-                        message: '동물 사진 업데이트 실패',
+                        message: '반려동물 사진 업데이트 실패',
                         data: false,
                     });
                 }
             })
             .catch((err) => {
+                console.log("반려동물 사진 업데이트1 실패")
+                console.error(err);
                 response.status(403).send({
                     responseCode: 403,
-                    message: '동물 사진 업데이트 실패(데이터베이스 오류)',
+                    message: '반려동물 사진 업데이트 실패(데이터베이스 오류)',
                     data: false,
-                    error: err
                 });
             });
         } else {
@@ -300,25 +320,43 @@ exports.updateImage = async(request, response) => {
                 }   
             ).then((res) => {
                 if(res[0] == 1) {
-                    response.status(200).send({
-                        responseCode: 200,
-                        message: '동물 사진 업데이트 완료',
-                        data: true,
-                    });
-                } else {
+                    Animals.findOne({
+                        attributes: ["animalsPhotos"],
+                        where: {
+                            animalsIndexNumber: parseInt(request.body.animalsIndexNumber)
+                        }
+                    })
+                    .then((res2) => {
+                        response.status(200).send({
+                            responseCode: 200,
+                            message: '반려동물 사진 업데이트 완료',
+                            data: `http://${request.hostname}:${request.socket.localPort}/api/animals/animalsPhotos/${res2.dataValues.animalsPhotos}`,
+                        });
+                    })
+                    .catch((err) => {
+                        console.log("업데이트된 반려동물 사진 링크 불러오기 실패");
+                        console.error(err);
+                        response.status(500).send({
+                            responseCode: 500,
+                            message: "업데이트된 반려동물 사진 링크 불러오기 실패",
+                            data: false,
+                        });
+                    })
+                 } else {
                     response.status(403).send({
                         responseCode: 403,
-                        message: '동물 사진 업데이트 실패',
+                        message: '반려동물 사진 업데이트 실패',
                         data: false,
                     });
                 }
             })
             .catch((err) => {
+                console.info("반려동물 사진 업데이트2 실패")
+                console.error(err);
                 response.status(403).send({
                     responseCode: 403,
-                    message: '동물 사진 업데이트 실패(데이터베이스 오류)',
+                    message: '반려동물 사진 업데이트 실패(데이터베이스 오류)',
                     data: false,
-                    error: err
                 });
             });
         }
