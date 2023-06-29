@@ -35,21 +35,24 @@ exports.insertMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  console.log(currentTimeStamp);
-  console.log(new Date(currentTimeStamp));
+  let currentTimeStampDate = new Date(currentTimeStamp);
 
-  const usersIndexNumber = await Users.findOne({
-    attributes: [ "usersIndexNumber" ],
-    where: {
-        account: checkTokenResult.account
-    }
-  });
+  // console.log("currentTimeStamp String:", currentTimeStamp);
+  // console.log("currentTimeStamp Date:", currentTimeStampDate);
 
   if(checkTokenResult.result == true) {
     // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);
     // const geocodeResult = await geocode(geocodeKeyword);
     // console.log("geocode Result:", geocodeResult);
+
+    // console.log("요청시 입력받은 데이터:", request.body);
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
     
     let matePhotosList = new Array(request.files.length);
     
@@ -73,8 +76,8 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardLng: request.body.mateBoardLng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: new Date(currentTimeStamp),
-        mateBoardModifyDate: new Date(currentTimeStamp),
+        mateBoardRegistDate: currentTimeStamp,
+        mateBoardModifyDate: currentTimeStamp,
         usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
       })
       .then(res => {
@@ -109,10 +112,10 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardContent2: request.body.cautionContent,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: new Date(currentTimeStamp),
-        mateBoardModifyDate: new Date(currentTimeStamp),
-        usersIndexNumber: parseInt(request.body.usersIndexNumber),
-        animalsIndexNumber: parseInt(usersIndexNumber),
+        mateBoardRegistDate: currentTimeStamp,
+        mateBoardModifyDate: currentTimeStamp,
+        usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+        animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
       })
       .then(res => {
         if(res == null) {

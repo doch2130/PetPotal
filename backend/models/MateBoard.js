@@ -60,10 +60,10 @@ const MateBoard = sequelize.define("MateBoard", {
             type: DataTypes.INTEGER
         },
         mateBoardRegistDate: {
-            type: DataTypes.DATE
+            type: DataTypes.STRING
         },
         mateBoardModifyDate: {
-            type: DataTypes.DATE
+            type: DataTypes.STRING
         },
         mateBoardStatus: {
             type: DataTypes.INTEGER,
