@@ -5,7 +5,7 @@ import Controller from '../../../api/controller';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import { useAlert } from '../../../hooks/useAlert';
@@ -17,6 +17,7 @@ interface mateWriteFormInterface {
 }
 
 interface MateWriteFormInput {
+  animalsIndexNumber: number;
   title: String;
   writeType: String;
   amount: Number;
@@ -119,20 +120,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
             content: '글 생성 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
           });
         }
-        // if(result.data.responseCode === 200) {
-        //   openAlert({
-        //     title: 'Mate Board Create Success',
-        //     type: 'success',
-        //     content: '메이트 게시글이 등록되었습니다.'
-        //   });
-        //   navigate('/mate/1');
-        // } else {
-        //   openAlert({
-        //     title: 'Mate Board Create Error',
-        //     type: 'error',
-        //     content: '글 생성 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
-        //   });
-        // }
       }
     });
 
@@ -213,12 +200,9 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
     });
   }
 
-  // console.log('myPetList ', myPetList);
-
-  const myPetInfoSelect = (e:any) => {
-    // console.log(e.target.value);
+  const myPetInfoSelect = (e:ChangeEvent<HTMLSelectElement>) => {
     const petFormUpdate = myPetList.filter((el:myPetInfoInterface) => el.animalsIndexNumber === Number(e.target.value));
-    // console.log('petFormUpdate ', petFormUpdate);
+    setValue('animalsIndexNumber', Number(e.target.value));
     setValue('petName', petFormUpdate[0].animalsName);
     setValue('petGender', petFormUpdate[0].animalsGender.toString());
     setValue('petAge', petFormUpdate[0].animalsAge.toString());
