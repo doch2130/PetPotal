@@ -259,7 +259,18 @@ export default function MateDetail() {
     });
   }
 
+  const matePostUpdate = (mateBoardIndexNumber:number):void => {
+    openConfirm({
+      title: '메이트 글 수정',
+      content: '해당 글을 수정하시겠습니까?',
+      callback: () => {
+        closeConfirm();
+        navigater(`/mate/detail/update/${mateBoardIndexNumber}`);
+      }
+    });
+  }
   return (
+    <>
     <div className={style.wrap}>
       <div className={style.top}>
         <img src={emptyHeart} alt='emptyHeart' />
@@ -287,14 +298,14 @@ export default function MateDetail() {
         </div>
         {/* 내용 */}
         <div className={style.contentWrap}>
-          {/* <h2>나비</h2> */}
-          {/* <h2>{data?.Animals?.animalsName}</h2> */}
+          <h2>나비</h2>
+          <h2>{data?.Animals?.animalsName}</h2>
           <div className={style.genderAge}>
-            {/* <p>암컷</p> */}
-            {/* <p>11세</p> */}
+            <p>암컷</p>
+            <p>11세</p>
           </div>
           <div className={style.breed}>
-            {/* <p>트레디셔널 페르시안</p> */}
+            <p>트레디셔널 페르시안</p>
           </div>
           <div className={style.grade}>
             <img src={star} alt='star' />
@@ -324,8 +335,8 @@ export default function MateDetail() {
           </div>
           <div className={style.content1}>
             <p>세부내용</p>
-            <pre>
-              {data?.data.mateBoardContent1}
+            {/* <pre> */}
+            <pre dangerouslySetInnerHTML={{__html: data?.data.mateBoardContent1}}>
               {/* <p>날짜 : 202-04-15 토요일</p>
               <p>시간 : 16시 ~ 17시</p>
               <p>급여 : 10,000원</p>
@@ -336,8 +347,8 @@ export default function MateDetail() {
           </div>
           <div className={style.content2}>
             <p>*주의사항</p>
-            <pre>
-              {data?.data.mateBoardContent2}
+            {/* <pre> */}
+            <pre dangerouslySetInnerHTML={{__html: data?.data.mateBoardContent2}}>
               {/* <p>공격성이 어느 정도 있는 고양이 입니다. 그래서 초보자 분은 하기 힘드실 수 있습니다.</p>
               <p>그리고 심장이 안좋아서 약을 먹고 있습니다.</p> */}
             </pre>
@@ -359,7 +370,7 @@ export default function MateDetail() {
               <p>{moment(data?.data.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p>
               {data?.data.Users.account === userInfo[0].account &&
               <div>
-                <button type='button'>수정</button>
+                <button type='button' onClick={() => matePostUpdate(data?.data.mateBoardIndexNumber)}>수정</button>
                 <button type='button' onClick={() => matePostDelete(data?.data.mateBoardIndexNumber)}>삭제</button>
               </div>
               }
@@ -371,5 +382,6 @@ export default function MateDetail() {
         <button type='button'>연락하기</button>
       </div>
     </div>
+    </>
   )
 }

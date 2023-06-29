@@ -10,11 +10,7 @@ Quill.register('modules/ImageResize', ImageResize);
 // typescript에서 모듈 관련하여 img 삽입 시 resize 기능에 문제가 발생
 // typescript resize를 해도 toolbar에서 문제가 발생하는 현상 확인되어 일단, js 파일로 진행
 
-export default function MateWriteTextEditorQuil({
-  placeholderText,
-  name,
-  setValueHandler,
-}) {
+export default function MateWriteTextEditorQuil({ placeholderText, name, setValueHandler, initialValue }) {
   // eslint-disable-next-line no-unused-vars
   const [imgTempList, setImgTempList] = useState([]);
   const quillRef = useRef();
@@ -34,17 +30,7 @@ export default function MateWriteTextEditorQuil({
 
       try {
         const result = await controller.mateWriteTextEditorImage(formData);
-
-        if (result.status !== 200) {
-          // alert('에러가 발생하였습니다. 새로고침 후 다시 시도해주세요!');
-          openAlert({
-            title: '텍스트에디터 이미지 에러',
-            type: 'error',
-            content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요!',
-          });
-        }
         // console.log(result.data);
-
         const imgUrl = result.data.imgUrl;
         const editor = quillRef.current.getEditor();
         const range = editor.getSelection();
@@ -54,7 +40,11 @@ export default function MateWriteTextEditorQuil({
         setImgTempList((prev) => [...prev, result.data.fileName]);
         // setImgTemp(result.data.fileName);
       } catch (error) {
-        alert('에러가 발생하였습니다. 새로고침 후 다시 시도해주세요!');
+        openAlert({
+          title: '텍스트에디터 이미지 에러',
+          type: 'error',
+          content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요!',
+        });
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,6 +122,7 @@ export default function MateWriteTextEditorQuil({
         style={{ height: '200px' }}
         placeholder={placeholderText || ''}
         ref={quillRef}
+        value={initialValue}
       />
     </>
   );

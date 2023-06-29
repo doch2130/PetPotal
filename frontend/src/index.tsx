@@ -17,6 +17,7 @@ import MateWritePage from './pages/MateWritePage';
 import MateDetailPage from './pages/MateDetailPage';
 import PrivatePage from './pages/PrivatePage';
 import RestrictedPage from './pages/RestrictedPage';
+import MateUpdatePage from './pages/MateUpdatePage';
 
 
 const router = createBrowserRouter([
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       {path: '/mate/:pageNumber', element: <MatePage />},
       {path: '/mate/write', element: <PrivatePage><MateWritePage /></PrivatePage>},
       {path: '/mate/detail/:matePostNumber', element: <MateDetailPage />},
+      {path: '/mate/detail/update/:matePostNumber', element: <MateUpdatePage />},
     ]
   }
 ]);
