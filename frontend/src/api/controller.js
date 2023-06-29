@@ -206,4 +206,9 @@ export default class Controller {
     });
   }
 
+  // 메이트 게시판 - 상세 글 수정
+  async mateBoardUpdatePost(object) {
+    return this.httpClient.put(`mateBoard/updateContent`, object);
+  }
+
 }

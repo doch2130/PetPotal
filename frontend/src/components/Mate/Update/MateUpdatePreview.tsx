@@ -2,25 +2,25 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 're
 import { useAlert } from '../../../hooks/useAlert';
 import PictureBox from '../../UI/PictureBox';
 import FileUploadButton from '../../UI/FileUploadButton';
-import style from './MateWritePreview.module.css';
+import style from './MateUpdatePreview.module.css';
 
-interface MateWritePreviewInterface {
+interface MateUpdatePreviewInterface {
   imgFile: Array<File>;
   setImgFile: Function;
+  mateBoardPhotos: string;
 }
 
-export default function MateWritePreview(props:MateWritePreviewInterface) {
-  const { imgFile, setImgFile } = props;
+export default function MateUpdatePreview(props:MateUpdatePreviewInterface) {
+  const { imgFile, setImgFile, mateBoardPhotos } = props;
   const [mouseDownClientX, setMouseDownClientX] = useState(0);
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
   const [mouseUpClientY, setMouseUpClientY] = useState(0);
-
-  // const [imgFile, setImgFile] = useState<File[]>([]);
   const [imgUrl, setImgUrl] = useState<string[]>([]);
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const slideRef = useRef<any>([]);
   const { openAlert } = useAlert();
+  // console.log('imgFile ', imgFile);
 
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setMouseDownClientX(e.clientX);
@@ -160,6 +160,18 @@ export default function MateWritePreview(props:MateWritePreviewInterface) {
     }
   }, [imgUrl]);
 
+  useEffect(() => {
+    let tempMateBoardPhotos:string[] = [];
+    if(mateBoardPhotos !== '') {
+      mateBoardPhotos?.split(',').forEach((el:any) => {
+        // console.log('el ', el);
+        tempMateBoardPhotos.push(`${process.env.REACT_APP_BACK_AXIOS}/static3/${el}`);
+      });
+      setImgUrl(tempMateBoardPhotos);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <div className={style.wrapPreview} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
@@ -184,3 +196,4 @@ export default function MateWritePreview(props:MateWritePreviewInterface) {
     </>
   )
 }
+

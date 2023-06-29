@@ -21,7 +21,7 @@ interface MateBoardPostListInterface {
   mateBoardContent: string;
   mateBoardContent2: string;
   mateBoardPhotos: string;
-  mateBoardCategory: string;
+  mateBoardCategory: number;
   mateBoardRegistDate: string;
   mateBoardModifyDate: string;
   mateBoardStatus: number;
@@ -69,7 +69,7 @@ export default function AnimalCard(props:animalCardInterface) {
       });
     }
   }
-
+  
   const heartStyle = `${style.heart} ${heart ? style.heartActive : ''}`;
 
   return (
@@ -85,7 +85,7 @@ export default function AnimalCard(props:animalCardInterface) {
       <div className={style.wrapText}>
         <div className={style.wrapCategory}>
           {/* <p>구함</p> */}
-          <p>{postData.mateBoardCategory === '1' ? '구함' : '지원'}</p>
+          <p>{postData.mateBoardCategory === 1 ? '구함' : '지원'}</p>
           {/* <p>100,000원</p> */}
           <p>{postData.mateBoardFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</p>
         </div>

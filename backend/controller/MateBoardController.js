@@ -35,21 +35,26 @@ exports.insertMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  console.log(currentTimeStamp);
-  console.log(new Date(currentTimeStamp));
+  let currentTimeStampDate = new Date(currentTimeStamp);
 
-  const usersIndexNumber = await Users.findOne({
-    attributes: [ "usersIndexNumber" ],
-    where: {
-        account: checkTokenResult.account
-    }
-  });
+  console.log("currentTimeStamp String:", currentTimeStamp);
+  console.log("currentTimeStamp Date:", currentTimeStampDate);
 
   if(checkTokenResult.result == true) {
+    request.body = JSON.parse(request.body.data);
+    
     // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);
     // const geocodeResult = await geocode(geocodeKeyword);
     // console.log("geocode Result:", geocodeResult);
+
+    // console.log("요청시 입력받은 데이터:", request.body);
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
     
     let matePhotosList = new Array(request.files.length);
     
@@ -59,7 +64,7 @@ exports.insertMateBoard = async (request, result) => {
 
     let createMateBoard;
 
-    if(request.body.animalsIndexNumber === null || request.body.animalsIndexNumber === undefined) {      
+    if(request.body.animalsIndexNumber === null || request.body.animalsIndexNumber === undefined) {
       createMateBoard = await MateBoard.create({
         mateBoardTitle: request.body.title,
         mateBoardFee: parseInt(request.body.amount),
@@ -73,31 +78,34 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardLng: request.body.mateBoardLng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: new Date(currentTimeStamp),
-        mateBoardModifyDate: new Date(currentTimeStamp),
+        mateBoardRegistDate: currentTimeStamp,
+        mateBoardModifyDate: currentTimeStamp,
         usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
       })
       .then(res => {
         if(res == null) {
+          console.log("게시글(구직) 등록 실패");
           result.status(403).send({
             responseCode: 403,
             data: false,
-            message: "게시글 등록 실패",
+            message: "게시글(구직) 등록 실패",
           });
         }
         else {
           result.status(200).send({
             responseCode: 200,
             data: true,
-            message: "게시글 등록 완료"
+            message: "게시글(구직) 등록 완료"
           });
         }
       })
       .catch(err => {
+        console.log("게시글(구직) 등록 실패");
+        console.error(err);
         result.status(403).send({
           responseCode: 403,
           data: false,
-          message: "게시글 등록 실패 데이터베이스 오류",
+          message: "게시글(구직) 등록 실패 데이터베이스 오류",
           error: err
         });
       })  
@@ -109,17 +117,18 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardContent2: request.body.cautionContent,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: new Date(currentTimeStamp),
-        mateBoardModifyDate: new Date(currentTimeStamp),
-        usersIndexNumber: parseInt(request.body.usersIndexNumber),
-        animalsIndexNumber: parseInt(usersIndexNumber),
+        mateBoardRegistDate: currentTimeStamp,
+        mateBoardModifyDate: currentTimeStamp,
+        usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+        animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
       })
       .then(res => {
         if(res == null) {
+          console.log("게시글(구인) 등록 실패")
           result.status(403).send({
             responseCode: 403,
             data: false,
-            message: "게시글 등록 실패",
+            message: "게시글(구인) 등록 실패",
           });
         }
         else {
@@ -131,11 +140,12 @@ exports.insertMateBoard = async (request, result) => {
         }
       })
       .catch(err => {
+        console.info("게시글(구인) 등록 실패 데이터베이스 오류");
+        console.error(err);
         result.status(403).send({
           responseCode: 403,
           data: false,
           message: "게시글 등록 실패 데이터베이스 오류",
-          error: err
         });
       })
     }
