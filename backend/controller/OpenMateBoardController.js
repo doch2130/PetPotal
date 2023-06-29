@@ -47,6 +47,7 @@ exports.findAllMateBoardDesc = async(request, response) => {
         message: "조회 결과가 존재하지 않습니다.",
       });
     } else {
+      // console.log(res.rows[0].dataValues);
       response.status(200).send({
         responseCode: 200,
         data: res

@@ -57,12 +57,10 @@ const MultiFileHandler = (dirName) => {
         destination(req, file, res) {
           res(null, `./data/${dirName}/`);
         },
-        filename(req, file, res) {
+        async filename(req, file, res) {
+          const checkTokenResult = await CheckToken.CheckToken(1, req.headers.token);
           const ext = path.extname(file.originalname);
-          res(
-            null,
-            `${req.headers.account}_${file.fieldname}_${Date.now()}${ext}`
-          );
+          res(null, `${checkTokenResult.account}_${file.fieldname}_${Date.now()}${ext}`);
         },
       }),
       // limits: { fileSize: 5 * 1024 * 1024 } // 5메가로 용량 제한
@@ -73,11 +71,12 @@ const MultiFileHandler = (dirName) => {
       destination(req, file, res) {
         res(null, `./data/${dirName}/`);
       },
-      filename(req, file, res) {
+      async filename(req, file, res) {
+        const checkTokenResult = await CheckToken.CheckToken(1, req.headers.token);
         const ext = path.extname(file.originalname);
         res(
           null,
-          `${req.headers.account}_${file.fieldname}_${Date.now()}${ext}`
+          `${checkTokenResult.account}_${file.fieldname}_${Date.now()}${ext}`
         );
       },
     }),
