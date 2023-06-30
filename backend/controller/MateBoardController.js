@@ -11,7 +11,7 @@ const {
 } = require('../middleware/filehandler/MulterFileHandler');
 const Animals = require('../models/Animals');
 const Users = require('../models/Users');
-const { geocode } = require("../controller/NaverMapController");
+const { geocode2 } = require("../controller/NaverMapController");
 
 /**
  * 게시글 작성 메서드
@@ -43,15 +43,13 @@ exports.insertMateBoard = async (request, result) => {
 
   if(checkTokenResult.result == true) {
     // console.log(request.body);
-    request.body = JSON.parse(request.body.data);
-    // console.log("request body:\n", request.body);
+    // request.body = JSON.parse(request.body.data);
     
-    // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
+    let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);
-    // const geocodeResult = await geocode(geocodeKeyword);
+    const geocodeResult = await geocode2(geocodeKeyword);
     // console.log("geocode Result:", geocodeResult);
 
-    // console.log("요청시 입력받은 데이터:", request.body);
     const usersIndexNumber = await Users.findOne({
       attributes: [ "usersIndexNumber" ],
       where: {
@@ -77,12 +75,12 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardAddress2: request.body.mateBoardAddress2,
         mateBoardAddress3: request.body.mateBoardAddress3,
         mateBoardAddress4: request.body.mateBoardAddress4,
-        mateBoardLat: request.body.mateBoardLat,
-        mateBoardLng: request.body.mateBoardLng,
+        mateBoardLat: geocodeResult.lat,
+        mateBoardLng: geocodeResult.lng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: currentTimeStamp,
-        mateBoardModifyDate: currentTimeStamp,
+        mateBoardRegistDate: currentTimeStampDate,
+        mateBoardModifyDate: currentTimeStampDate,
         usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
       })
       .then(res => {
@@ -118,10 +116,12 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardFee: parseInt(request.body.amount),
         mateBoardContent1: request.body.detailContent,
         mateBoardContent2: request.body.cautionContent,
+        mateBoardLat: geocodeResult.lat,
+        mateBoardLng: geocodeResult.lng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
-        mateBoardRegistDate: currentTimeStamp,
-        mateBoardModifyDate: currentTimeStamp,
+        mateBoardRegistDate: currentTimeStampDate,
+        mateBoardModifyDate: currentTimeStampDate,
         usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
         animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
       })
@@ -334,6 +334,10 @@ exports.findByIndexNumber = async (request, result) => {
           message: 'no result',
         });
       } else {
+        // console.log("1:", response.dataValues);
+        response.dataValues.mateBoardLat = parseFloat(response.dataValues.mateBoardLat);
+        response.dataValues.mateBoardLng = parseFloat(response.dataValues.mateBoardLng);
+        console.log("2:", response.dataValues);
         result.status(200).send({
           responseCode: 200,
           data: response,
