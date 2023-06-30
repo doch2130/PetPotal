@@ -36,12 +36,15 @@ exports.insertMateBoard = async (request, result) => {
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
   let currentTimeStampDate = new Date(currentTimeStamp);
+  currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
 
-  console.log("currentTimeStamp String:", currentTimeStamp);
-  console.log("currentTimeStamp Date:", currentTimeStampDate);
+  // console.log("currentTimeStamp String:", currentTimeStamp);
+  // console.log("currentTimeStamp Date:", currentTimeStampDate);
 
   if(checkTokenResult.result == true) {
+    // console.log(request.body);
     request.body = JSON.parse(request.body.data);
+    // console.log("request body:\n", request.body);
     
     // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);
