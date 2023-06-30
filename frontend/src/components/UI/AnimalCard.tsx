@@ -1,10 +1,11 @@
+import { MouseEvent, MouseEventHandler, useState } from 'react';
+import { useConfirm } from '../../hooks/useConfirm';
+import { useAlert } from '../../hooks/useAlert';
+import moment from 'moment';
 import style from './AnimalCard.module.css';
 // import animalImage from '../../assets/matepage/MateImg_3.png';
 import emptyHeart from '../../assets/icon/empty_heart.png';
 import fullHeart from '../../assets/icon/full_heart.png';
-import { MouseEvent, MouseEventHandler, useState } from 'react';
-import { useConfirm } from '../../hooks/useConfirm';
-import { useAlert } from '../../hooks/useAlert';
 import mateDefaultImage from '../../assets/matepage/MateDefaultImage.png';
 
 interface animalCardInterface {
@@ -20,7 +21,7 @@ interface MateBoardPostListInterface {
   mateBoardContent: string;
   mateBoardContent2: string;
   mateBoardPhotos: string;
-  mateBoardCategory: string;
+  mateBoardCategory: number;
   mateBoardRegistDate: string;
   mateBoardModifyDate: string;
   mateBoardStatus: number;
@@ -68,7 +69,7 @@ export default function AnimalCard(props:animalCardInterface) {
       });
     }
   }
-
+  
   const heartStyle = `${style.heart} ${heart ? style.heartActive : ''}`;
 
   return (
@@ -84,7 +85,7 @@ export default function AnimalCard(props:animalCardInterface) {
       <div className={style.wrapText}>
         <div className={style.wrapCategory}>
           {/* <p>구함</p> */}
-          <p>{postData.mateBoardCategory === '1' ? '구함' : '지원'}</p>
+          <p>{postData.mateBoardCategory === 1 ? '구함' : '지원'}</p>
           {/* <p>100,000원</p> */}
           <p>{postData.mateBoardFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</p>
         </div>
@@ -98,7 +99,8 @@ export default function AnimalCard(props:animalCardInterface) {
         </div>
         <div className={style.time}>
           {/* <p>2023-04-17 18:22</p> */}
-          <p>{`${postData.mateBoardRegistDate.split('T')[0].split('-')[0]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[1]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[2]} ${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[1]}`}</p>
+          {/* <p>{`${postData.mateBoardRegistDate.split('T')[0].split('-')[0]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[1]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[2]} ${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[1]}`}</p> */}
+          <p>{moment(postData?.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p>
         </div>
       </div>
     </div>

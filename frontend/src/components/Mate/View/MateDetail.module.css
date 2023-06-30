@@ -136,6 +136,11 @@
   margin: 0 5px;
 }
 
+.title > p:nth-of-type(2) {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
 .title > p:nth-of-type(1),
 .content1 p,
 .content2 p {

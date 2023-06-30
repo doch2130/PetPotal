@@ -2,8 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import { useModal } from '../../../hooks/useModal';
-import { Params, useParams } from 'react-router-dom';
+import { Params, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useAlert } from '../../../hooks/useAlert';
+import moment from 'moment';
 import Controller from '../../../api/controller';
 import PictureBox from '../../UI/PictureBox';
 import MateDetailMap from './MateDetailMap';
@@ -15,6 +17,8 @@ import star from '../../../assets/icon/star.png';
 import interest from '../../../assets/icon/people.png';
 import chatting from '../../../assets/icon/chatting.png';
 import locationMap from '../../../assets/icon/location_map.png';
+import mateDefaultImage from '../../../assets/matepage/MateDefaultImage.png';
+import { useConfirm } from '../../../hooks/useConfirm';
 
 interface mapData {
   x: number;
@@ -36,6 +40,7 @@ export default function MateDetail() {
     _lat: 0,
   });
   const { openModal } = useModal();
+  const { openConfirm, closeConfirm } = useConfirm();
   const [imgUrl, setImgUrl] = useState<string[]>([
     '/static/media/MainPage_Dog.1d0a30c4b1704ee37ebf.png',
     '/static/media/MainPage_Cat.9fed3dbb00482ebb7bdf.png',
@@ -45,6 +50,8 @@ export default function MateDetail() {
   const historyValue = useParams<Params<string>>();
   const [ matePostDetailNumber, setMatePostDetailNumber ] = useState<number | null>(null);
   const controller = new Controller();
+  const { openAlert } = useAlert();
+  const navigater = useNavigate();
 
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>):void => {
     setMouseDownClientX(e.clientX);
@@ -133,26 +140,6 @@ export default function MateDetail() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mouseUpClientX]);
 
-  useEffect(() => {
-    const mapGeocoding = async () => {
-      const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
-      // console.log('address ', address);
-      if (address !== '') {
-        const result = await controller.naverMapGeocoding(address);
-        // console.log('result ', result.data);
-        setMapData({
-          x: result.data[0],
-          y: result.data[1],
-          _lng: result.data[0],
-          _lat: result.data[1],
-        });
-      }
-    }
-
-    mapGeocoding();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo]);
-
   useEffect(():void => {
     const historyKeyword = Number(historyValue.matePostNumber);
     if(historyKeyword) {
@@ -163,9 +150,17 @@ export default function MateDetail() {
 
   // React Query default
   const fetchMateBoardDetail = async (matePostDetailNumber:string) => {
-    const result = await controller.mateBoardDetailPost(matePostDetailNumber);
-    console.log('result detail ', result);
-    return result;
+    try {
+      const result = await controller.mateBoardDetailPost(matePostDetailNumber);
+      return result.data;
+    } catch (err) {
+      openAlert({
+        title: '게시글 상세 조회 에러',
+        type: 'error',
+        content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
+      });
+      return ;
+    }
   }
 
   const { status, data, error, refetch } = useQuery(
@@ -179,12 +174,103 @@ export default function MateDetail() {
     }
   }, [matePostDetailNumber, refetch]);
 
+  useEffect(() => {
+    console.log('data? ', data);
+    console.log('data?.data ', data?.data);
+
+    const tempMateBoardPhotos = data?.data.mateBoardPhotos.split(',');
+    let tempImgUrl: string[] = [];
+    tempMateBoardPhotos?.forEach((el:any) => {
+      const update = `${process.env.REACT_APP_BACK_AXIOS}/static3/${el}`;
+      tempImgUrl.push(update);
+    });
+    setImgUrl(tempImgUrl);
+
+    if(data?.data.mateBoardPhotos === '') {
+      setImgUrl([mateDefaultImage]);
+    }
+
+    const mapGeocoding = async () => {
+      const address = (`${data?.data.mateBoardAddress1} ${data?.data.mateBoardAddress2} ${data?.data.mateBoardAddress3} ${data?.data.mateBoardAddress4}`).trim();
+      console.log('address ', address);
+      if (address !== '') {
+        try {
+          const result = await controller.naverMapGeocoding(address);
+          console.log('result ', result.data);
+          setMapData({
+            x: result.data[0],
+            y: result.data[1],
+            _lng: result.data[0],
+            _lat: result.data[1],
+          });
+        } catch (err) {
+          openAlert({
+            title: '맵 지오코딩 에러',
+            type: 'error',
+            content: '',
+          });
+        }
+      }
+    }
+
+    if(data) {
+      // mapGeocoding();
+      setMapData({
+        x: data?.data.mateBoardLng,
+        y: data?.data.mateBoardLat,
+        _lng: data?.data.mateBoardLng,
+        _lat: data?.data.mateBoardLat,
+      });
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   if(status === 'loading') return <div className={style.reactQueryLoading}>Data Loading...</div>
 
   if(error) return <div className={style.reactQueryError}>Data Load Error</div>
 
+  const matePostDelete = async (mateBoardIndexNumber:number):Promise<void> => {
+    openConfirm({
+      title: '메이트 글 삭제',
+      content: '해당 글을 삭제하시겠습니까?',
+      callback: async () => {
+        try {
+          // const result = await controller.mateBoardDeletePost(mateBoardIndexNumber);
+          await controller.mateBoardDeletePost(mateBoardIndexNumber);
+          closeConfirm();
+          openAlert({
+            title: '메이트 글 삭제 성공',
+            type: 'success',
+            content: '해당 글이 삭제되었습니다.',
+          });
+          navigater('/mate/1');
+          return ;
+        } catch (err:any) {
+          closeConfirm();
+          openAlert({
+            title: '메이트 글 삭제 에러',
+            type: 'error',
+            content: '글 삭제 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
+          });
+          return ;
+        }
+      }
+    });
+  }
 
+  const matePostUpdate = (mateBoardIndexNumber:number):void => {
+    openConfirm({
+      title: '메이트 글 수정',
+      content: '해당 글을 수정하시겠습니까?',
+      callback: () => {
+        closeConfirm();
+        navigater(`/mate/detail/update/${mateBoardIndexNumber}`);
+      }
+    });
+  }
   return (
+    <>
     <div className={style.wrap}>
       <div className={style.top}>
         <img src={emptyHeart} alt='emptyHeart' />
@@ -213,6 +299,7 @@ export default function MateDetail() {
         {/* 내용 */}
         <div className={style.contentWrap}>
           <h2>나비</h2>
+          <h2>{data?.Animals?.animalsName}</h2>
           <div className={style.genderAge}>
             <p>암컷</p>
             <p>11세</p>
@@ -243,24 +330,27 @@ export default function MateDetail() {
           {/* 내용 2 */}
           <div className={style.title}>
             <p>제목</p>
-            <p>강아지 제목입니다.</p>
+            {/* <p>강아지 제목입니다.</p> */}
+            <p>{data?.data.mateBoardTitle}</p>
           </div>
           <div className={style.content1}>
             <p>세부내용</p>
-            <pre>
-              <p>날짜 : 202-04-15 토요일</p>
+            {/* <pre> */}
+            <pre dangerouslySetInnerHTML={{__html: data?.data.mateBoardContent1}}>
+              {/* <p>날짜 : 202-04-15 토요일</p>
               <p>시간 : 16시 ~ 17시</p>
               <p>급여 : 10,000원</p>
               <p> </p>
               <p>주요 내용 :</p>
-              <p>1시간 동안 공원에서 산책 시켜주시면 됩니다.</p>
+              <p>1시간 동안 공원에서 산책 시켜주시면 됩니다.</p> */}
             </pre>
           </div>
           <div className={style.content2}>
             <p>*주의사항</p>
-            <pre>
-              <p>공격성이 어느 정도 있는 고양이 입니다. 그래서 초보자 분은 하기 힘드실 수 있습니다.</p>
-              <p>그리고 심장이 안좋아서 약을 먹고 있습니다.</p>
+            {/* <pre> */}
+            <pre dangerouslySetInnerHTML={{__html: data?.data.mateBoardContent2}}>
+              {/* <p>공격성이 어느 정도 있는 고양이 입니다. 그래서 초보자 분은 하기 힘드실 수 있습니다.</p>
+              <p>그리고 심장이 안좋아서 약을 먹고 있습니다.</p> */}
             </pre>
           </div>
           <div className={style.locationMap}>
@@ -276,11 +366,14 @@ export default function MateDetail() {
           </div>
           <div className={style.contentBottom}>
             <div>
-              <p>2023-04-17 15:24</p>
+              {/* <p>2023-04-17 15:24</p> */}
+              <p>{moment(data?.data.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p>
+              {data?.data.Users.account === userInfo[0].account &&
               <div>
-                <button type='button'>수정</button>
-                <button type='button'>삭제</button>
+                <button type='button' onClick={() => matePostUpdate(data?.data.mateBoardIndexNumber)}>수정</button>
+                <button type='button' onClick={() => matePostDelete(data?.data.mateBoardIndexNumber)}>삭제</button>
               </div>
+              }
             </div>
           </div>
         </div>
@@ -289,5 +382,6 @@ export default function MateDetail() {
         <button type='button'>연락하기</button>
       </div>
     </div>
+    </>
   )
 }

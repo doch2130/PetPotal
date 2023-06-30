@@ -101,8 +101,8 @@ export default function MateWriteMap(props:naverMapInterface) {
 
               if(addrType === '[지번 주소]') {
                 setValueHandler('address', address.trim().replace(/ +/g, " "));
-                setValueHandler('lng', latlng._lng);
-                setValueHandler('lat', latlng._lat);
+                setValueHandler('mateBoardLng', latlng._lng);
+                setValueHandler('mateBoardLat', latlng._lat);
               }
           }
   
@@ -128,17 +128,17 @@ export default function MateWriteMap(props:naverMapInterface) {
   
       if (hasArea(region.area1)) {
           sido = region.area1.name;
-          setValueHandler('address1', sido);
+          setValueHandler('mateBoardAddress1', sido);
       }
   
       if (hasArea(region.area2)) {
           sigugun = region.area2.name;
-          setValueHandler('address2', sigugun);
+          setValueHandler('mateBoardAddress2', sigugun);
       }
   
       if (hasArea(region.area3)) {
           dongmyun = region.area3.name;
-          setValueHandler('address3', dongmyun);
+          setValueHandler('mateBoardAddress3', dongmyun);
       }
   
       if (hasArea(region.area4)) {
@@ -158,7 +158,7 @@ export default function MateWriteMap(props:naverMapInterface) {
               }
 
               if( hasData(land.type) && land.type === '1') {
-                setValueHandler('address4', rest);
+                setValueHandler('mateBoardAddress4', rest);
               }
           }
   

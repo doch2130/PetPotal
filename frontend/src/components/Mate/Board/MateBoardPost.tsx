@@ -23,7 +23,7 @@ interface MateBoardPostListInterface {
   mateBoardContent: string;
   mateBoardContent2: string;
   mateBoardPhotos: string;
-  mateBoardCategory: string;
+  mateBoardCategory: number;
   mateBoardRegistDate: string;
   mateBoardModifyDate: string;
   mateBoardStatus: number;

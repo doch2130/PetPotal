@@ -4,14 +4,14 @@ import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 // import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
+import Controller from '../../../api/controller';
 import RegionData from './RegionData';
 import KindData from './KindData';
-import Controller from '../../../api/controller';
-import MateBoardPost from './MateBoardPost';
-import close from '../../../assets/icon/plus.png';
-import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
-import style from './MateBoard.module.css';
 import MateBoardSlideImage from './MateBoardSlideImage';
+import MateBoardPost from './MateBoardPost';
+import MateBoardNotPage from './MateBoardNotPage';
+import close from '../../../assets/icon/plus.png';
+import style from './MateBoard.module.css';
 
 interface searchQueryInterface {
   searchRegion: string;
@@ -167,9 +167,7 @@ export default function MateBoard() {
     return result.data.data; 
   }
   // useQuery(key값, ()) Reacy Query V3 이후 방식
-  const { status, data, error } = useQuery(
-    [`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery], () => fetchMateBoardList()
-  )
+  const { status, data, error } = useQuery([`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery], () => fetchMateBoardList());
 
   if (status === 'loading') return <div className={style.reactQueryLoading}>Data Loading...</div>;
  
@@ -208,7 +206,6 @@ export default function MateBoard() {
     <div className={style.wrap}>
       <div className={style.slideWrap}>
         {/* 슬라이드 이미지는 일단 보류 */}
-        {/* <img src={mateSlideImage1} alt='mateSlideImage1' /> */}
         <MateBoardSlideImage />
       </div>
       <div className={style.bodyWrap}>
@@ -352,9 +349,13 @@ export default function MateBoard() {
           </div>
         </div>
         {/* <MateBoardPost postList={data.data} matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount} /> */}
+        
+        {data.rows.length === 0 && matePageNumber !== '1' ? 
+        <MateBoardNotPage /> : 
         <MateBoardPost postList={data.rows} matePageNumber={matePageNumber}
         setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount}
         timeSort={timeSort} setTimeSort={setTimeSort} />
+      }
       </div>
     </div>
   )

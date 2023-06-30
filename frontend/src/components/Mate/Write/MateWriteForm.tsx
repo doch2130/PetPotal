@@ -1,16 +1,16 @@
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useConfirm } from '../../../hooks/useConfirm';
-import Controller from '../../../api/controller';
-import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
-import MateWriteMap from './MateWriteMap';
-import style from './MateWriteForm.module.css';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
 import { useAlert } from '../../../hooks/useAlert';
 import { useModal } from '../../../hooks/useModal';
+import Controller from '../../../api/controller';
 import MateWritePetAdd from './MateWritePetAdd';
+import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
+import MateWriteMap from './MateWriteMap';
+import style from './MateWriteForm.module.css';
 
 interface mateWriteFormInterface {
   imgFile: Array<File>;
@@ -19,7 +19,7 @@ interface mateWriteFormInterface {
 interface MateWriteFormInput {
   animalsIndexNumber: number;
   title: String;
-  writeType: String;
+  mateBoardCategory: String;
   amount: Number;
   petName: String;
   petGender: String;
@@ -31,8 +31,12 @@ interface MateWriteFormInput {
   detailContent: String;
   cautionContent: String;
   address: String;
-  lng: number;
-  lat: number;
+  mateBoardAddress1: String;
+  mateBoardAddress2: string;
+  mateBoardAddress3: string;
+  mateBoardAddress4: string;
+  mateBoardLng: number;
+  mateBoardLat: number;
 }
 
 interface mapDataInterface {
@@ -64,7 +68,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   const navigate = useNavigate();
   const { register, setValue, watch, getValues, formState: { errors }, setError, handleSubmit} = useForm<MateWriteFormInput>({mode: 'onChange'});
   // const {getValues, register, handleSubmit, formState: { isSubmitting, errors }} = useForm({mode: 'onChange'});
-  const writeType = watch("writeType");
+  const mateBoardCategory = watch("mateBoardCategory");
   const controller = new Controller();
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
@@ -80,7 +84,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   });
   
   const onSubmit = async (data:MateWriteFormInput):Promise<void> => {
-    if(writeType === '1') {
+    if(mateBoardCategory === '1') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
         return ;
@@ -91,8 +95,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
         return ;
       }
     }
-
-    console.log('data ', data);
 
     openConfirm({
       title: '글 작성 등록',
@@ -165,7 +167,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
         return ;
       } catch (err:any) {
         if(err.response.data.responseCode === 403 && err.response.data.data === false) {
-          console.log('유저 정보 없음');
+          // console.log('유저 정보 없음');
           openAlert({
             title: '사용자 정보 불러오기 오류',
             type: 'error',
@@ -173,7 +175,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           });
           return ;
         } else if(err.response.data.responseCode === 304 && err.response.data.data === false) {
-          console.log('펫 정보 없음');
+          // console.log('펫 정보 없음');
           setMyPetList([]);
           return ;
         }
@@ -201,15 +203,26 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   }
 
   const myPetInfoSelect = (e:ChangeEvent<HTMLSelectElement>) => {
-    const petFormUpdate = myPetList.filter((el:myPetInfoInterface) => el.animalsIndexNumber === Number(e.target.value));
-    setValue('animalsIndexNumber', Number(e.target.value));
-    setValue('petName', petFormUpdate[0].animalsName);
-    setValue('petGender', petFormUpdate[0].animalsGender.toString());
-    setValue('petAge', petFormUpdate[0].animalsAge.toString());
-    setValue('petSpecies', petFormUpdate[0].animalsCategory1.toString());
-    setValue('petBreeds', petFormUpdate[0].animalsCategory2);
-    setValue('petWeight', petFormUpdate[0].animalsWeight);
-    setValue('isNeutered', petFormUpdate[0].animalsNeutered.toString());
+    if(e.target.value !== '선택') {
+      const petFormUpdate = myPetList.filter((el:myPetInfoInterface) => el.animalsIndexNumber === Number(e.target.value));
+      setValue('animalsIndexNumber', Number(e.target.value));
+      setValue('petName', petFormUpdate[0].animalsName);
+      setValue('petGender', petFormUpdate[0].animalsGender.toString());
+      setValue('petAge', petFormUpdate[0].animalsAge.toString());
+      setValue('petSpecies', petFormUpdate[0].animalsCategory1.toString());
+      setValue('petBreeds', petFormUpdate[0].animalsCategory2);
+      setValue('petWeight', petFormUpdate[0].animalsWeight);
+      setValue('isNeutered', petFormUpdate[0].animalsNeutered.toString());
+    } else {
+      setValue('animalsIndexNumber', Number(e.target.value));
+      setValue('petName', '');
+      setValue('petGender', '0');
+      setValue('petAge', '선택');
+      setValue('petSpecies', '0');
+      setValue('petBreeds', '');
+      setValue('petWeight', 0);
+      setValue('isNeutered', '0');
+    }
   }
 
   return (
@@ -222,6 +235,10 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               {...register('title',
               {
                 required: {value: true, message: '제목을 입력해주세요'},
+                pattern: {
+                  value: /^[A-za-z0-9가-힣]{0,30}$/,
+                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                }
               },
               )}
               id='title' type='text' placeholder='제목을 입력해주세요'
@@ -234,7 +251,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           <div className={style.wrapCol + ' ' + style.writeType}>
             <label>구분</label>
             <input 
-              {...register("writeType",
+              {...register("mateBoardCategory",
               {
                 required: {value: true, message: '글 구분을 선택해주세요' }
               },
@@ -243,7 +260,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
             />
             <label htmlFor='typeWanted'>구함</label>
             <input 
-              {...register("writeType",
+              {...register("mateBoardCategory",
               {
                 required: {value: true, message: '글 구분을 선택해주세요' }
               },
@@ -251,7 +268,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               type="radio" id='typeSupport' value="2"
             />
             <label htmlFor='typeSupport'>지원</label>
-            <p className={style.mateWriteWraning}>{errors.writeType?.message}</p>
+            <p className={style.mateWriteWraning}>{errors.mateBoardCategory?.message}</p>
           </div>
         </div>
 
@@ -279,7 +296,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           </div>
         </div>
 
-      {writeType === '1' ? <>
+      {mateBoardCategory === '1' ? <>
         <div className={style.wrapRow + ' ' + style.wrapPet}>
           <div className={style.wrapCol}>
             <h2>반려동물 정보</h2>
@@ -302,6 +319,10 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               {...register('petName',
               {
                 required: {value: true, message: '이름을 입력해주세요'},
+                pattern: {
+                  value: /^[A-za-z0-9가-힣]{0,30}$/,
+                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                }
               },
               )}
               id='petName' type='text' placeholder='이름을 입력해주세요' disabled readOnly
@@ -378,6 +399,10 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
               {...register('petBreeds',
               {
                 required: {value: true, message: '품종을 입력해주세요'},
+                pattern: {
+                  value: /^[A-za-z0-9가-힣]{0,30}$/,
+                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                }
               },
               )}
               id='petBreeds' type='text' placeholder='품종을 입력해주세요' disabled readOnly
@@ -438,7 +463,8 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           <div className={style.wrapCol}>
             <h2>세부내용</h2>
             <div className={style.wrapTextEditor}>
-              <MateWriteTextEditorQuil setValueHandler={setValue} name='detailContent' placeholderText='EX)&#13;&#10;날짜 : 2023-04-17&#13;&#10;시간 : 16시 ~ 17시&#13;&#10;주요 내용 :&#13;&#10;안녕하세요. 저희 반려동물 산책해주실 분 구합니다.' />
+              <MateWriteTextEditorQuil setValueHandler={setValue} name='detailContent' initialValue=''
+              placeholderText='EX)&#13;&#10;날짜 : 2023-04-17&#13;&#10;시간 : 16시 ~ 17시&#13;&#10;주요 내용 :&#13;&#10;안녕하세요. 저희 반려동물 산책해주실 분 구합니다.' />
             </div>
           </div>
         </div>
@@ -447,7 +473,8 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           <div className={style.wrapCol}>
             <h2>주의사항</h2>
             <div className={style.wrapTextEditor}>
-              <MateWriteTextEditorQuil setValueHandler={setValue} name='cautionContent' placeholderText='EX)&#13;&#10;입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.' />
+              <MateWriteTextEditorQuil setValueHandler={setValue} name='cautionContent' initialValue=''
+              placeholderText='EX)&#13;&#10;입질이 있으며, 심장이 안좋아서 약을 복용하고 있습니다.' />
             </div>
           </div>
         </div>
