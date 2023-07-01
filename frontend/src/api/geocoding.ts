@@ -7,7 +7,8 @@ const geocodingUrl = "/map-geocode/v2/geocode";
 const geocoding = async (address:string):Promise<number[]> => {
   try {
     // const result = await axios.get(`/api/navermapapi${geocodingUrl}?query=${address}`, {
-    const result = await axios.get(`/navermapapi`, {
+    // const result = await axios.get(`/api/v1/geocoding${geocodingUrl}`, {
+    const result = await axios.get(`/api/v1/geocoding`, {
       params: {
         query: address
       },
@@ -27,7 +28,7 @@ const geocoding = async (address:string):Promise<number[]> => {
 
     return [result.data.addresses[0].x, result.data.addresses[0].y];
   } catch (err) {
-    console.log('주소 -> 좌표 변환요청 오류');
+    console.log('주소 -> 좌표 변환요청 오류 ', err);
     return [-1, -1];
   };
 }

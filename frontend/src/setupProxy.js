@@ -1,6 +1,6 @@
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 
-// module.exports = function (app:any) {
+// module.exports = function (app) {
 //   app.use(
 //     createProxyMiddleware(
 //       ['/api', '/socket.io', '/navermapapi'],
@@ -18,7 +18,7 @@
 
 
 
-// module.exports = function (app:any) {
+// module.exports = function (app) {
 //   app.use(
 //     '/navermapapi',
 //     createProxyMiddleware({
@@ -36,7 +36,7 @@
 // };
 
 
-// module.exports = function (app:any) {
+// module.exports = function (app) {
 //   app.use(
 //     '/navermapapi',
 //     createProxyMiddleware({
@@ -50,5 +50,25 @@
 //         'X-NCP-APIGW-API-KEY': process.env.REACT_APP_NCP_MAP_CLIENT_SECRET,
 //       },
 //     })
+//   );
+// };
+
+// const { createProxyMiddleware } = require("http-proxy-middleware");
+
+// module.exports = (app) => {
+//   app.use(
+//     createProxyMiddleware("/api/v1/geocoding", {
+//       target: "https://naveropenapi.apigw.ntruss.com",
+//       changeOrigin: true,
+//     }),
+//   );
+// };
+
+// module.exports = (app) => {
+//   app.use(
+//     createProxyMiddleware("/api/v1/geocoding", {
+//       target: "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode",
+//       changeOrigin: true,
+//     }),
 //   );
 // };
