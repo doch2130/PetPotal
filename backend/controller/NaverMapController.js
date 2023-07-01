@@ -55,54 +55,50 @@ module.exports.geocoding = async (request, response) => {
   // return coord;
 };
 
-// const geocode = async(query) => {
-//   let result;  
-//   await axios.get(`${geocodingUrl}?query=${query}`, {
-//       headers: {
-//         'X-NCP-APIGW-API-KEY-ID': `${process.env.REACT_APP_NCP_MAP_CLIENT_ID}`,
-//         'X-NCP-APIGW-API-KEY': `${process.env.REACT_APP_NCP_MAP_CLIENT_SECRET}`,
-//       },
-//   })
-//   .then((res) => {
-//     // TODO: check if response is ok
-//     console.log('api 데이터 수신중');
-//     // console.log(res);
-//     // console.log(res.data);
-//     return res.data;
-//   })
-//   .then((data) => {
-//     if (data.addresses.length > 0) {
-//       console.log("검색 완료");
-//       result = {
-//         lat: data.addresses[0].x, 
-//         lng: data.addresses[0].y
-//       };
-//     } else if (data.addresses.length === 0) {
-//       console.log("검색 완료 결과가 0개 입니다.");
-//       result = {
-//         lat: -1, 
-//         lng: -1
-//       };
-//     } else {
-//       console.log("검색 완료3");
-//       // console.log('data ', data);
-//       result ={
-//         lat: data.addresses[0].x, 
-//         lng: data.addresses[0].y
-//       };
-//     }
-//   })
-//   .catch((error) => {
-//     console.log('api 요청 에러');
-//     console.error(error);
-//     result = {
-//       lat: -1,
-//       lng: -1
-//     };
-//   });
-//   return result;
-// };
-
-// module.exports = {
-//   geocode
-// }
+module.exports.geocode2 = async(query) => {
+  let result;  
+  await axios.get(`${geocodingUrl}?query=${query}`, {
+      headers: {
+        'X-NCP-APIGW-API-KEY-ID': `${process.env.REACT_APP_NCP_MAP_CLIENT_ID}`,
+        'X-NCP-APIGW-API-KEY': `${process.env.REACT_APP_NCP_MAP_CLIENT_SECRET}`,
+      },
+  })
+  .then((res) => {
+    // TODO: check if response is ok
+    console.log('api 데이터 수신중');
+    // console.log(res);
+    // console.log(res.data);
+    return res.data;
+  })
+  .then((data) => {
+    if (data.addresses.length > 0) {
+      console.log("검색 완료");
+      result = {
+        lat: data.addresses[0].y, 
+        lng: data.addresses[0].x
+      };
+    } else if (data.addresses.length === 0) {
+      console.log("검색 완료 결과가 0개 입니다.");
+      result = {
+        lat: -1, 
+        lng: -1
+      };
+    } else {
+      console.log("검색 완료3");
+      // console.log('data ', data);
+      result ={
+        lat: data.addresses[0].y, 
+        lng: data.addresses[0].x
+      };
+    }
+  })
+  .catch((error) => {
+    console.log('api 요청 에러');
+    console.error(error);
+    result = {
+      lat: -1,
+      lng: -1
+    };
+  });
+  return result;
+};

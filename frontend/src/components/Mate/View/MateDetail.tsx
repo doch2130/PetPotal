@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAlert } from '../../../hooks/useAlert';
 import moment from 'moment';
 import Controller from '../../../api/controller';
+// import geocoding from '../../../api/geocoding';
 import PictureBox from '../../UI/PictureBox';
 import MateDetailMap from './MateDetailMap';
 import style from './MateDetail.module.css';
@@ -190,31 +191,7 @@ export default function MateDetail() {
       setImgUrl([mateDefaultImage]);
     }
 
-    const mapGeocoding = async () => {
-      const address = (`${data?.data.mateBoardAddress1} ${data?.data.mateBoardAddress2} ${data?.data.mateBoardAddress3} ${data?.data.mateBoardAddress4}`).trim();
-      console.log('address ', address);
-      if (address !== '') {
-        try {
-          const result = await controller.naverMapGeocoding(address);
-          console.log('result ', result.data);
-          setMapData({
-            x: result.data[0],
-            y: result.data[1],
-            _lng: result.data[0],
-            _lat: result.data[1],
-          });
-        } catch (err) {
-          openAlert({
-            title: '맵 지오코딩 에러',
-            type: 'error',
-            content: '',
-          });
-        }
-      }
-    }
-
-    if(data) {
-      // mapGeocoding();
+    if(data?.data.mateBoardLat && data?.data.mateBoardLng) {
       setMapData({
         x: data?.data.mateBoardLng,
         y: data?.data.mateBoardLat,
@@ -222,6 +199,40 @@ export default function MateDetail() {
         _lat: data?.data.mateBoardLat,
       });
     }
+
+    // const mapGeocoding = async () => {
+    //   const address = (`${data?.data.mateBoardAddress1} ${data?.data.mateBoardAddress2} ${data?.data.mateBoardAddress3} ${data?.data.mateBoardAddress4}`).trim();
+    //   console.log('address ', address);
+    //   if (address !== '') {
+    //     try {
+    //       // const result = await controller.naverMapGeocoding(address);
+    //       const result = await geocoding(address);
+    //       console.log('result ', result);
+    //       // setMapData({
+    //       //   x: result.data[0],
+    //       //   y: result.data[1],
+    //       //   _lng: result.data[0],
+    //       //   _lat: result.data[1],
+    //       // });
+    //     } catch (err) {
+    //       openAlert({
+    //         title: '맵 지오코딩 에러',
+    //         type: 'error',
+    //         content: '',
+    //       });
+    //     }
+    //   }
+    // }
+
+    // if(data) {
+    //   mapGeocoding();
+    //   setMapData({
+    //     x: data?.data.mateBoardLng,
+    //     y: data?.data.mateBoardLat,
+    //     _lng: data?.data.mateBoardLng,
+    //     _lat: data?.data.mateBoardLat,
+    //   });
+    // }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
