@@ -2,6 +2,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require("fs");
 
+const CheckToken = require("../CheckToken");
+
 const BasicHandler = (dirName, req) => {
   // 기본형
   const ext = path.extname(req.file.originalname);

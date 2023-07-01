@@ -44,12 +44,12 @@ const MateBoard = sequelize.define("MateBoard", {
             defaultValue: ""
         },
         mateBoardLat: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 0
         },
         mateBoardLng: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 0
         },

@@ -69,46 +69,24 @@ exports.findByFilter = async(request, response) => {
     offset = limit * (pageNumber - 1);
   }
 
-  if(request.query.mateBoardAddress1 == "전체") {
-    await MateBoard.findAndCountAll({
-      include: [
-        {
-          model: Users,
-          as: "Users",
-          attributes: [ "account" ]
-        }
-      ],
-      where: {
-        mateBoardStatus: 1
+  if(request.query.mateBoardAddress1 === undefined) request.query.mateBoardAddress1 = "";
+  if(request.query.mateBoardAddress2 === undefined) request.query.mateBoardAddress2 = "";
+
+  if(request.query.mateBoardAddress1.length == 0) {
+    console.log(`주소1이 비어있습니다.`);
+    response.status(502).send({
+      responseCode: 502,
+      data: { 
+        count: 0,
+        rows: []
       },
-      limit: limit,
-      offset: offset
+      message: `주소1이 비어있습니다.`
     })
-    .then((res) => {
-      if(res.count == 0) {
-        response.status(404).send({
-          responseCode: 404,
-          data: null,
-          message: "결과 데이터가 없습니다."
-        });
-      } else {
-        response.status(200).send({
-          responseCode: 200,
-          data: res,
-          message: "결과를 출력합니다."
-        })
-      }    
-    })
-    .catch((err) => {
-      console.error("Mate 글 목록 조회(필터사용) 실패");
-      console.error(err);
-      response.status(502).send({
-        responseCode: 502,
-        data: false,
-        message: "데이터를 불러오는데 실패했습니다."
-      })
-    })
-  } else {
+  }
+  else if(
+    request.query.mateBoardAddress1.length != 0 &&
+    request.query.mateBoardAddress2.length == 0
+  ) {
     await MateBoard.findAndCountAll({
       include: [
         {
@@ -123,33 +101,86 @@ exports.findByFilter = async(request, response) => {
         },
         mateBoardStatus: 1
       },
+      offset: offset,
       limit: limit,
-      offset: offset
+      order: [['mateBoardRegistDate', 'DESC']],
     })
     .then((res) => {
       if(res.count == 0) {
+        console.log(`주소1(${request.query.mateBoardAddress1}) 로 검색한 결과가 없습니다.`);
         response.status(404).send({
           responseCode: 404,
           data: null,
-          message: "결과 데이터가 없습니다."
+          message: `주소1(${request.query.mateBoardAddress1}) 로 검색한 결과가 없습니다.`
         });
       } else {
+        console.log(`주소1(${request.query.mateBoardAddress1}) 로 검색한 결과를 출력합니다.`);
         response.status(200).send({
           responseCode: 200,
           data: res,
-          message: "결과를 출력합니다."
+          message: `주소1(${request.query.mateBoardAddress1}) 로 검색한 결과를 출력합니다.`
         })
       }    
     })
     .catch((err) => {
-      console.error("Mate 글 목록 조회(필터사용) 실패");
+      console.log(`주소1(${request.query.mateBoardAddress1}) 로 검색을 실패했습니다.`);
       console.error(err);
       response.status(502).send({
         responseCode: 502,
         data: false,
-        message: "데이터를 불러오는데 실패했습니다."
+        message: `주소1(${request.query.mateBoardAddress1}) 로 검색을 실패했습니다.`
       })
     })
+  }
+  else if(request.query.mateBoardAddress1.length != 0 && request.query.mateBoardAddress2.length != 0) {
+    await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        [Op.and]: [{
+        mateBoardAddress1: { 
+          [Op.like]: `${request.query.mateBoardAddress1}%`
+        },
+        mateBoardAddress2: { 
+          [Op.like]: `${request.query.mateBoardAddress2}%`
+        },
+        mateBoardStatus: 1 }]
+      },
+      limit: limit,
+      offset: offset,
+      order: [['mateBoardRegistDate', 'DESC']],
+    })
+    .then((res) => {
+      if(res.count == 0) {
+        console.log(`주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색한 결과가 없습니다.`);
+        response.status(404).send({
+          responseCode: 404,
+          data: null,
+          message: `주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색한 결과가 없습니다.`
+        });
+      } else {
+        console.log(`주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색한 결과를 출력합니다.`);
+        response.status(200).send({
+          responseCode: 200,
+          data: res,
+          message: `주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색한 결과를 출력합니다.`
+        })
+      }    
+    })
+    .catch((err) => {
+      console.log(`주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색을 실패했습니다.`);
+      console.error(err);
+      response.status(502).send({
+        responseCode: 502,
+        data: false,
+        message: `주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색을 실패했습니다.`
+      })
+    });
   }
 }
 

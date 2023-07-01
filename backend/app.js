@@ -64,5 +64,8 @@ app.get('/', (req, res) => {
 app.get('/api/naverMapGeocoding', geocoding);
 
 app.listen(port, () => {
+  let currentTime = new Date();
+  currentTime.setHours(currentTime.getHours() + 9);
+  console.log("Process Start:", currentTime);
   console.log(`pettotal backend listening on port ${port}`);
 });
