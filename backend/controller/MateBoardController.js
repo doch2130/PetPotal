@@ -23,10 +23,8 @@ const { geocode2 } = require("../controller/NaverMapController");
  * @param {String} mateBoardContent2 주의사항
  * @param {String} mateBoardPhotos 첨부 사진의 저장된 파일 이름
  * @param {int} mateBoardCategory 구인/구직 여부 구인=1, 구직=2
- * @param {String} mateBoardRegistDate 게시글 최초 작성일
- * (형태: yyyy-M-ddTHH:mm:s.ms)
- * @param {String} mateBoardModifyDate 게시글 최종 수정일
- * (형태: yyyy-M-ddTHH:mm:s.ms)
+ * @param {Datetime} mateBoardRegistDate 게시글 최초 작성일
+ * @param {Datetime} mateBoardModifyDate 게시글 최종 수정일
  * @param {BigInt} usersIndexNumber 작성자의 인덱스 번호
  * @param {BigInt} animalsIndexNumber 게시글과 연관된 반려동물의 인덱스 번호 
  * @param {*} result 메서드 결과를 전달하는 콜백함수
@@ -39,11 +37,11 @@ exports.insertMateBoard = async (request, result) => {
   currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
 
   // console.log("currentTimeStamp String:", currentTimeStamp);
-  // console.log("currentTimeStamp Date:", currentTimeStampDate);
+  console.log("currentTimeStamp Date:", currentTimeStampDate);
 
   if(checkTokenResult.result == true) {
     // console.log(request.body);
-    // request.body = JSON.parse(request.body.data);
+    request.body = JSON.parse(request.body.data);
     
     let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);

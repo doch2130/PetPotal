@@ -74,8 +74,8 @@ module.exports.geocode2 = async(query) => {
     if (data.addresses.length > 0) {
       console.log("검색 완료");
       result = {
-        lat: data.addresses[0].x, 
-        lng: data.addresses[0].y
+        lat: data.addresses[0].y, 
+        lng: data.addresses[0].x
       };
     } else if (data.addresses.length === 0) {
       console.log("검색 완료 결과가 0개 입니다.");
@@ -87,8 +87,8 @@ module.exports.geocode2 = async(query) => {
       console.log("검색 완료3");
       // console.log('data ', data);
       result ={
-        lat: data.addresses[0].x, 
-        lng: data.addresses[0].y
+        lat: data.addresses[0].y, 
+        lng: data.addresses[0].x
       };
     }
   })
