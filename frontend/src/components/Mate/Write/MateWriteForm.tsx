@@ -11,6 +11,7 @@ import MateWritePetAdd from './MateWritePetAdd';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
+// import geocoding from '../../../api/geocoding';
 
 interface mateWriteFormInterface {
   imgFile: Array<File>;
@@ -155,6 +156,22 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
     }
 
     mapGeocoding();
+
+    // const testGeociding = async ():Promise<void> => {
+    //   const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
+    //   if (address !== '') {
+    //     const result = await geocoding(address);
+    //     console.log('result ' ,result);
+    //     setMapData({
+    //       x: result[0],
+    //       y: result[1],
+    //       _lng: result[0],
+    //       _lat: result[1],
+    //     });
+    //   } 
+    // }
+    // testGeociding();
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
