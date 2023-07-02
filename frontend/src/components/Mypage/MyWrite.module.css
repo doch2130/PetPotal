@@ -5,10 +5,26 @@
   min-height: 300px;
 }
 
-.viewTypeChangeButton {
-  margin: 0 1rem 10px 0;
-  width: 60px;
-  height: 35px;
+.viewChange {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.5rem auto;
+}
+
+.viewChange span {
+  cursor: default;
+  margin-right: 5px;
+}
+
+.viewChange svg {
+  cursor: pointer;
+  height: 21px;
+  margin-right: 5px;
+}
+
+.viewChange svg:hover {
+  transform: scale(1.3);
+  fill: var(--main-default-dark-color);
 }
 
 .zeroContent {
