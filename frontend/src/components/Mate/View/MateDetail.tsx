@@ -176,8 +176,8 @@ export default function MateDetail() {
   }, [matePostDetailNumber, refetch]);
 
   useEffect(() => {
-    console.log('data? ', data);
-    console.log('data?.data ', data?.data);
+    // console.log('data? ', data);
+    // console.log('data?.data ', data?.data);
 
     const tempMateBoardPhotos = data?.data.mateBoardPhotos.split(',');
     let tempImgUrl: string[] = [];

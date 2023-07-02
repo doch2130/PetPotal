@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import { MouseEventHandler } from 'react'
 import style from './MateBoardPostTable.module.css';
 import moment from 'moment';
 
