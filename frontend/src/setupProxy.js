@@ -57,7 +57,7 @@
 
 // module.exports = (app) => {
 //   app.use(
-//     createProxyMiddleware("/api/v1/geocoding", {
+//     createProxyMiddleware("/apis/v1/geocoding", {
 //       target: "https://naveropenapi.apigw.ntruss.com",
 //       changeOrigin: true,
 //     }),

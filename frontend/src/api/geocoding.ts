@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// 사용 X
+// 혹시 몰라서 일단 파일 유지
+
 // const geocodingUrl = '/api/map-geocode/v2/geocode';
 // const geocodingUrl = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode";
 const geocodingUrl = "/map-geocode/v2/geocode";
@@ -7,8 +10,8 @@ const geocodingUrl = "/map-geocode/v2/geocode";
 const geocoding = async (address:string):Promise<number[]> => {
   try {
     // const result = await axios.get(`/api/navermapapi${geocodingUrl}?query=${address}`, {
-    // const result = await axios.get(`/api/v1/geocoding${geocodingUrl}`, {
-    const result = await axios.get(`/api/v1/geocoding`, {
+    const result = await axios.get(`/apis/v1/geocoding${geocodingUrl}`, {
+    // const result = await axios.get(`/api/v1/geocoding`, {
       params: {
         query: address
       },
@@ -33,7 +36,9 @@ const geocoding = async (address:string):Promise<number[]> => {
   };
 }
 
+
 export default geocoding;
+
 
 
 

@@ -142,35 +142,75 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   }
 
   useEffect(():void => {
-    const mapGeocoding = async ():Promise<void> => {
+    // const mapGeocoding = async ():Promise<void> => {
+    //   const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
+    //   if (address !== '') {
+    //     const result = await controller.naverMapGeocoding(address);
+    //     setMapData({
+    //       x: result.data[0],
+    //       y: result.data[1],
+    //       _lng: result.data[0],
+    //       _lat: result.data[1],
+    //     });
+    //   }
+    // }
+
+    // mapGeocoding();
+
+
+    const searchAddressToCoordinate = ():void => {
+      const navermaps = window.naver.maps;
       const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
-      if (address !== '') {
-        const result = await controller.naverMapGeocoding(address);
-        setMapData({
-          x: result.data[0],
-          y: result.data[1],
-          _lng: result.data[0],
-          _lat: result.data[1],
-        });
+    
+      if(address !== '') {
+        navermaps.Service.geocode(
+          {
+            query: address,
+          },
+          function (status, response) {
+            if (status === navermaps.Service.Status.ERROR) {
+              if (!address) {
+                openAlert({
+                  title: 'Geocode Error, Please check address',
+                  type: 'error',
+                  content: '에러가 발생하였습니다.\r\n\새로고침 후 이용해주세요.',
+                });
+                return ;
+              }
+              openAlert({
+                title: 'Geocode Error',
+                type: 'error',
+                content: '에러가 발생하였습니다.\r\n\새로고침 후 이용해주세요.',
+              });
+              return ;
+            }
+            
+            if (response.v2.meta.totalCount === 0) {
+              // 결과 값 없는 경우 서울역 위도, 경도 설정
+              setMapData({
+                x: Number(126.969763),
+                y: Number(37.553651),
+                _lng: Number(126.969763),
+                _lat: Number(37.553651),
+              });
+              return ;
+              // return alert('No result.');
+            }
+      
+            const item = response.v2.addresses[0];
+            // console.log(item.x+" : "+item.y);
+            // setGeometricData({mapLat:item.x, mapLng:item.y});
+            setMapData({
+              x: Number(item.x),
+              y: Number(item.y),
+              _lng: Number(item.x),
+              _lat: Number(item.y),
+            });
+          },
+        );
       }
     }
-
-    mapGeocoding();
-
-    const testGeociding = async ():Promise<void> => {
-      const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
-      if (address !== '') {
-        const result = await geocoding(address);
-        console.log('result ' ,result);
-        setMapData({
-          x: result[0],
-          y: result[1],
-          _lng: result[0],
-          _lat: result[1],
-        });
-      } 
-    }
-    // testGeociding();
+    searchAddressToCoordinate();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
