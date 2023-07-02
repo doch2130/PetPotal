@@ -1,7 +1,8 @@
 import { useState, useEffect, MouseEventHandler } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../recoil/user';
+import { mateBoardViewState, mateBoardViewType } from '../../recoil/mateBoardView';
 import Controller from '../../api/controller';
 import style from './MyWrite.module.css';
 import { useAlert } from '../../hooks/useAlert';
@@ -91,6 +92,8 @@ interface MateBoardPostListInterface {
 export default function MyWrite() {
   const navigater = useNavigate();
   const userInfo = useRecoilValue<UserType[]>(userState);
+  const [mateBoardView, setMateBoardView] = useRecoilState<mateBoardViewType>(mateBoardViewState);
+  const { viewChange } = mateBoardView;
   const controller = new Controller();
   const { openAlert } = useAlert();
   const date = new Date();
@@ -125,13 +128,38 @@ export default function MyWrite() {
     navigater(`/mate/detail/${el.mateBoardIndexNumber}`);
     return ;
   }
+
+  const viewChangeFunction = ():void => {
+    setMateBoardView((prevMateBoardView) => ({
+      ...prevMateBoardView,
+      viewChange: !prevMateBoardView.viewChange
+    }));
+    return ;
+  }
   
 
   return (
     <div className={style.wrap}>
-      {/* <div className={style.wrapTop}> */}
-      {/* {tempData?.length > 0 && <button type='button' className={style.viewTypeChangeButton}>변경</button>} */}
-      {/* </div> */}
+      <div className={style.viewChange}>
+        <span>보기</span>
+        {viewChange ? 
+          <svg width="21" height="21" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="appsAltIconTitle" onClick={viewChangeFunction}>
+            <rect x="5" y="5" width="2" height="2"/>
+            <rect x="11" y="5" width="2" height="2"/>
+            <rect x="17" y="5" width="2" height="2"/>
+            <rect x="5" y="11" width="2" height="2"/>
+            <rect x="11" y="11" width="2" height="2"/>
+            <rect x="17" y="11" width="2" height="2"/>
+            <rect x="5" y="17" width="2" height="2"/>
+            <rect x="11" y="17" width="2" height="2"/>
+            <rect x="17" y="17" width="2" height="2"/>
+          </svg>
+          :
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="21" height="21" onClick={viewChangeFunction}>
+            <path d="M8.75 5.5h11.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1 0-1.5Zm0 6h11.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1 0-1.5Zm0 6h11.5a.75.75 0 0 1 0 1.5H8.75a.75.75 0 0 1 0-1.5ZM5 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM4 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path>
+          </svg>
+        }
+      </div>
 
       {/* {myMateBoardList?.length === 0 ?  */}
       {tempData?.length === 0 ? 
