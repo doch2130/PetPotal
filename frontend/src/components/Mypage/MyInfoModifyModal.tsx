@@ -280,6 +280,10 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
                 maxLength: {
                   value: 30,
                   message : '1글자 이상 30자 이하로 입력해주세요',
+                },
+                pattern: {
+                  value: /^[A-za-z0-9가-힣]{0,30}$/,
+                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
                 }
               }
             )}
@@ -331,6 +335,10 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
               {
                 required: true,
                 minLength: 1,
+                pattern: {
+                  value: /^[A-za-z0-9가-힣\s]{0,30}$/,
+                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                }
               }
             )}
             type='text' placeholder='상세주소를 입력하세요' />

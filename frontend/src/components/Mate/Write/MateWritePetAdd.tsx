@@ -93,6 +93,10 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             {...register('animalsName',
             {
               required: {value: true, message: '이름을 입력해주세요'},
+              pattern: {
+                value: /^[A-za-z0-9가-힣]{0,30}$/,
+                message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+              }
             },
             )}
             id='petNameModal' type='text' placeholder='이름을 입력해주세요'
@@ -177,6 +181,10 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             {...register('animalsCategory2',
             {
               required: {value: true, message: '품종을 입력해주세요'},
+              pattern: {
+                value: /^[A-za-z0-9가-힣]{0,30}$/,
+                message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+              }
             },
             )}
             id='petBreedsModal' type='text' placeholder='품종을 입력해주세요'
