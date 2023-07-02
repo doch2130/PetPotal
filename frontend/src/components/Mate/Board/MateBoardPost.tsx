@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import writeImage from '../../../assets/icon/pencil.png';
-import AnimalCard from '../../UI/AnimalCard';
-import style from './MateBoardPost.module.css';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
+import { mateBoardViewState, mateBoardViewType } from '../../../recoil/mateBoardView';
 import { useConfirm } from '../../../hooks/useConfirm';
-import Controller from '../../../api/controller';
 import { useAlert } from '../../../hooks/useAlert';
+import Controller from '../../../api/controller';
+import AnimalCard from '../../UI/AnimalCard';
+import MateBoardPostTable from './MateBoardPostTable';
 import MateBoardPostButton from './MateBoardPostButton';
+import writeImage from '../../../assets/icon/pencil.png';
+import style from './MateBoardPost.module.css';
 
 interface MateBoardPostInterface extends MateBoardPageNumberInterface {
   postList: Array<MateBoardPostListInterface>;
@@ -43,7 +45,9 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
   const { postList, timeSort, setTimeSort, matePageNumber } = props;
   const userInfo = useRecoilValue<UserType[]>(userState);
   const navigater = useNavigate();
-  const [ viewChange, setViewChange ] = useState<Boolean>(true);
+  const [mateBoardView, setMateBoardView] = useRecoilState<mateBoardViewType>(mateBoardViewState);
+  const { viewChange } = mateBoardView;
+  // const [ viewChange, setViewChange ] = useState<Boolean>(true);
   const { openConfirm, closeConfirm } = useConfirm();
   const controller = new Controller();
   const { openAlert } = useAlert();
@@ -78,7 +82,10 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
   }
 
   const viewChangeFunction = ():void => {
-    setViewChange(!viewChange);
+    setMateBoardView((prevMateBoardView) => ({
+      ...prevMateBoardView,
+      viewChange: !prevMateBoardView.viewChange
+    }));
     return ;
   }
 
@@ -92,29 +99,6 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
     return ;
   }
 
-  // useEffect(() => {
-  //   const getMateLikeBoardList = async () => {
-  //     const result = await controller.mateLikeBoardList(userInfo[0].account);
-  //     if(result.data !== 200) {
-  //       openAlert({
-  //         title: 'getMateLikeBoardList Error',
-  //         type: 'error',
-  //         content: '에러가 발생하였습니다. 새로고침 후 다시 이용해주세요',
-  //       })
-  //       return ;
-  //     }
-  //     setLikeBoardList(result.data);
-  //   }
-
-  //   if(userInfo[0].account !== '') {
-  //     // 일단 주석처리
-  //     // 개인 좋아요 메이트 리스트 가져오기
-  //     // getMateLikeBoardList();
-  //   }
-
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [userInfo[0].account]);
-  
   return (
     <div className={style.wrap}>
       <div className={style.header}>
@@ -155,7 +139,8 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           <h1>등록된 게시글이 없습니다</h1>
         </div>
         }
-        {timeSort === 'newest' &&
+        {/* {timeSort === 'newest' && */}
+        {viewChange ?
           postList.map((el: MateBoardPostListInterface) => {
             return (
             <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
@@ -163,8 +148,25 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
             </div>
             );
           })
+          :
+          <div className={style.tableWrap}>
+            <div className={style.tableHeader}>
+              <p>번호</p>
+              <p>카테고리</p>
+              <p>제목</p>
+              <p>금액</p>
+              <p>날짜</p>
+            </div>
+          {postList.map((el: MateBoardPostListInterface) => {
+            return (
+              <div key={el.mateBoardIndexNumber}>
+                <MateBoardPostTable detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
+              </div>
+            )
+          })}
+          </div>
         }
-        {timeSort === 'oldest' &&
+        {/* {timeSort === 'oldest' &&
         // 백엔드 코드 재호출 기능으로 적용 필요하다고 판단
           postList.slice(-endIndex, -startIndex).map((el: MateBoardPostListInterface, index:number) => {
             return (
@@ -173,7 +175,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
             </div>
             );
           })
-        }
+        } */}
       </div>
       <div className={style.bottom}>
         <div></div>
