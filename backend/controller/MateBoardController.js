@@ -220,12 +220,12 @@ exports.findAllMateBoardDesc = async (request, result) => {
  * @param {*} request 
  * @param {*} result 
  */
-exports.findByUsersIndexNumber = async (request, result) => {
-  let inputToken = request.headers.token;
+exports.findByUsersAccount = async (request, result) => {
+  const inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
   if(checkTokenResult.result === true) {
-    await MateBoard.findAll({
+    await MateBoard.findAndCountAll({
       // attributes: ["animalsUsersIndexNumber"],
       include: [
         {
@@ -236,7 +236,7 @@ exports.findByUsersIndexNumber = async (request, result) => {
       ],
       where: {
         mateBoardStatus: 1,
-        usersIndexNumber: request.params.usersIndexNumber,
+        "$Users.account$": request.params.usersAccount,
       },
     }).then((response) => {
       if(response == null) {
@@ -250,7 +250,16 @@ exports.findByUsersIndexNumber = async (request, result) => {
           data: response,
         });
       }
-    });
+    })
+    .catch((err) => {
+      console.log("사용자 계정과 일치하는 게시글 조회 실패");
+      console.error(err);
+      result.status(500).send({
+        responseCode: 500,
+        data: null,
+        message: "사용자 계정과 일치하는 게시글 조회 실패"
+      })
+    })
   } else {
     result.send({
       responseCode: 400,
