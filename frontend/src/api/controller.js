@@ -211,4 +211,9 @@ export default class Controller {
     return this.httpClient.put(`mateBoard/updateContent`, object);
   }
 
+  // 마이 페이지 - 메이트 본인 글 가져오기
+  async myMateBoardPost(account) {
+    return this.httpClient.get(`mateBoard/findByUser?account=${account}`);
+  }
+
 }
