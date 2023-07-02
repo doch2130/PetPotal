@@ -132,6 +132,10 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
               maxLength: {
                 value: 30,
                 message : '1글자 이상 30자 이하로 입력해주세요',
+              },
+              pattern: {
+                value: /^[A-za-z0-9가-힣]{0,30}$/,
+                message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
               }
             }
           )}
@@ -143,7 +147,7 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
           <input
           {...register('animalsGender', 
             {
-              required: {value: true, message: '성별을 입력해주세요'},
+              required: {value: true, message: '성별을 선택해주세요'},
             }
           )}
           type="radio" id='petGenderMan' value="1" name='animalsGender' />
@@ -211,6 +215,10 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
               maxLength: {
                 value: 50,
                 message : '1글자 이상 50자 이하로 입력해주세요',
+              },
+              pattern: {
+                value: /^[A-za-z0-9가-힣]{0,30}$/,
+                message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
               }
             }
           )}
