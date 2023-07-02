@@ -1,5 +1,5 @@
 import { useState, useEffect, MouseEventHandler } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../recoil/user';
 import { mateBoardViewState, mateBoardViewType } from '../../recoil/mateBoardView';
@@ -8,69 +8,7 @@ import style from './MyWrite.module.css';
 import { useAlert } from '../../hooks/useAlert';
 import moment from 'moment';
 import MyBoardPostButton from './MyBoardPostButton';
-
-const tempData: any[] = [
-  {
-    id: 1,
-    mateBoardCategory: '구함',
-    mateBoardTitle: '제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 2,
-    mateBoardCategory: '지원',
-    mateBoardTitle: '제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 1,
-    mateBoardCategory: '구함',
-    mateBoardTitle: '제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 2,
-    mateBoardCategory: '지원',
-    mateBoardTitle: '제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 1,
-    mateBoardCategory: '구함',
-    mateBoardTitle: '제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 2,
-    mateBoardCategory: '지원',
-    mateBoardTitle: '제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 1,
-    mateBoardCategory: '구함',
-    mateBoardTitle: '제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 2,
-    mateBoardCategory: '지원',
-    mateBoardTitle: '제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 1,
-    mateBoardCategory: '구함',
-    mateBoardTitle: '제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-  {
-    id: 2,
-    mateBoardCategory: '지원',
-    mateBoardTitle: '제목을 작성합니다',
-    mateBoardRegistDate: '2023-04-18 01:30',
-  },
-];
+import MyBoardNotPage from './MyBoardNotPage';
 
 interface MateBoardPostListInterface {
   mateBoardIndexNumber: number;
@@ -91,21 +29,44 @@ interface MateBoardPostListInterface {
 
 export default function MyWrite() {
   const navigater = useNavigate();
+  const historyValue = useParams();
+  const controller = new Controller();
   const userInfo = useRecoilValue<UserType[]>(userState);
   const [mateBoardView, setMateBoardView] = useRecoilState<mateBoardViewType>(mateBoardViewState);
   const { viewChange } = mateBoardView;
-  const controller = new Controller();
   const { openAlert } = useAlert();
+  const [ myMateBoardList, setMyMateBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  const [ printMyMateBoardList, setPrintMyMateBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  const [ postPageNumber, setPostPageNumber ] = useState<string>('1');
+  const [ totalPostCount, setTotalPostCount ] = useState<number>(0);
   const date = new Date();
   const compareDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
-  const [ myMateBoardList, setMyMateBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  
 
+  useEffect(():void => {
+    const historyKeyword = historyValue.page;
+    const historyPostKeyword = historyValue.postNumber;
 
-  useEffect(() => {
+    if(historyKeyword === 'write' && historyPostKeyword === undefined) {
+      navigater('/mypage/write/1');
+      return ;
+    }
+
+    if(historyKeyword === 'write' && historyPostKeyword) {
+      setPostPageNumber(historyPostKeyword);
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [historyValue]);
+
+  useEffect(():void => {
     const getMyMateBoardPost = async () => {
       try {
         const result = await controller.myMateBoardPost(userInfo[0].account);
-        console.log('getMyMateBoard ', result);
+        // console.log('getMyMateBoard ', result);
+        const reverse = [...result.data.data.rows].reverse();
+        setMyMateBoardList(reverse);
+        setTotalPostCount(result.data.data.count);
         return ;
       } catch (err:any) {
         openAlert({
@@ -117,14 +78,12 @@ export default function MyWrite() {
       }
     }
     if(userInfo[0].account !== '') {
-      // getMyMateBoardPost();
+      getMyMateBoardPost();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
   const detailPostMoveHandler = (el:MateBoardPostListInterface):void => {
-    console.log('el ', el);
-    // navigater('/mate/detail/1');
     navigater(`/mate/detail/${el.mateBoardIndexNumber}`);
     return ;
   }
@@ -136,7 +95,15 @@ export default function MyWrite() {
     }));
     return ;
   }
-  
+
+  useEffect(():void => {
+    // console.log('myMateBoardList ', myMateBoardList);
+    // console.log('totalPostCount ', totalPostCount);
+    // console.log('postPageNumber ', postPageNumber);
+    if(myMateBoardList.length > 0) {
+      setPrintMyMateBoardList(myMateBoardList?.slice((Number(postPageNumber)-1)*9, 9*Number(postPageNumber)));
+    }
+  }, [myMateBoardList, postPageNumber]);
 
   return (
     <div className={style.wrap}>
@@ -161,8 +128,9 @@ export default function MyWrite() {
         }
       </div>
 
-      {/* {myMateBoardList?.length === 0 ?  */}
-      {tempData?.length === 0 ? 
+      {myMateBoardList?.length === 0 && postPageNumber !== '1' ?
+      <MyBoardNotPage url={'/mypage/write/1'} /> :
+      myMateBoardList?.length === 0 && postPageNumber === '1' ? 
       <h2 className={style.zeroContent}>작성한 글이 없습니다.</h2>
       :
       <>
@@ -172,13 +140,11 @@ export default function MyWrite() {
         <p>제목</p>
         <p>날짜</p>
       </div>
-      {/* {myMateBoardList.map((el:any, index:number) => { */}
-      {tempData.map((el:MateBoardPostListInterface, index:number) => {
+      {/* {myMateBoardList.map((el:MateBoardPostListInterface) => { */}
+      {printMyMateBoardList.map((el:MateBoardPostListInterface) => {
         return (
-        <div className={style.body} key={index} onClick={() => detailPostMoveHandler(el)}>
-          {/* <div className={style.body}> */}
-            {/* <p>{el.mateBoardIndexNumber}</p> */}
-            <p>{index+1}</p>
+        <div className={style.body} key={el.mateBoardIndexNumber} onClick={() => detailPostMoveHandler(el)}>
+            <p>{el.mateBoardIndexNumber}</p>
             <p>{el.mateBoardCategory === 1 ? '구함' : '지원'}</p>
             <p>{el.mateBoardTitle}</p>
             <p>{moment(el.mateBoardRegistDate).format('YYYY-MM-DD') === compareDate ? moment(el.mateBoardRegistDate).format('HH:mm')
@@ -188,8 +154,8 @@ export default function MyWrite() {
       })}
 
       <div className={style.wrapBottom}>
-        {/* 여기서도 offset으로 할지, 확인 후 설정하기 */}
-        <MyBoardPostButton />
+        {totalPostCount > 0 && <MyBoardPostButton postPageNumber={postPageNumber} setPostPageNumber={setPostPageNumber}
+        totalPostCount={totalPostCount} />}
       </div>
       </>
       }

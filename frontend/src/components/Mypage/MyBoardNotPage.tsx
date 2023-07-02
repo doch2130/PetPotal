@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useAlert } from '../../../hooks/useAlert'
+import { useAlert } from '../../hooks/useAlert'
 
-export default function MateBoardNotPage() {
+interface MyBoardNotPageInterface {
+  url: string;
+}
+
+export default function MyBoardNotPage(props:MyBoardNotPageInterface) {
   const { openAlert } = useAlert();
   const navigater = useNavigate();
   useEffect(() => {
@@ -12,7 +16,8 @@ export default function MateBoardNotPage() {
       content: '존재하지 않는 페이지입니다.',
     });
 
-    navigater('/mate/1');
+    // navigater(`/mypage/write/1`);
+    navigater(`${props.url}`);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
