@@ -32,7 +32,7 @@ interface MateBoardPostListInterface {
 }
 
 export default function AnimalCard(props:animalCardInterface) {
-  const { userId, postData } = props;
+  const { userId, postData, detailPostMoveHandler } = props;
   const [ heart, setHeart ] = useState<Boolean>(false);
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
@@ -73,7 +73,7 @@ export default function AnimalCard(props:animalCardInterface) {
   const heartStyle = `${style.heart} ${heart ? style.heartActive : ''}`;
 
   return (
-    <div className={style.wrap} onClick={props.detailPostMoveHandler as MouseEventHandler}>
+    <div className={style.wrap} onClick={detailPostMoveHandler as MouseEventHandler}>
       <div className={style.image}>
         {/* <img src={animalImage} alt='animalImage' /> */}
         {postData.mateBoardPhotos === '' ? <img src={mateDefaultImage} alt='mateDefaultImage' /> :
