@@ -91,6 +91,7 @@ exports.insertMateBoard = async (request, result) => {
           });
         }
         else {
+          console.log("게시글(구인) 등록 완료");
           result.status(200).send({
             responseCode: 200,
             data: true,
@@ -125,7 +126,7 @@ exports.insertMateBoard = async (request, result) => {
       })
       .then(res => {
         if(res == null) {
-          console.log("게시글(구인) 등록 실패")
+          console.log("게시글(구인) 등록 실패");
           result.status(403).send({
             responseCode: 403,
             data: false,
@@ -133,6 +134,7 @@ exports.insertMateBoard = async (request, result) => {
           });
         }
         else {
+          console.log("게시글(구인) 등록 완료");
           result.status(200).send({
             responseCode: 200,
             data: true,
@@ -151,8 +153,9 @@ exports.insertMateBoard = async (request, result) => {
       })
     }
   } else {
-    result.send({
-      responseCode: 400,
+    console.log("인증키가 유효하지 않습니다.");
+    result.status(500).send({
+      responseCode: 500,
       message: 'Incorrect Key',
     });
   }
@@ -196,33 +199,45 @@ exports.findAllMateBoardDesc = async (request, result) => {
       order: [['mateBoardRegistDate', 'DESC']],
     }).then((response) => {
       if (response == null) {
-        result.send({
-          responseCode: 304,
+        console.log("게시글 검색 결과가 존재하지 않습니다.")
+        result.status(403).send({
+          responseCode: 403,
+          data: { count: 0, rows: [] },
           message: 'no result',
         });
       } else {
-        result.send({
+        console.log("게시글 검색 결과를 반환합니다.")
+        result.status(200).send({
           responseCode: 200,
           data: response,
         });
       }
     });
   } else {
-    result.send({
-      responseCode: 400,
+    console.log("인증키가 유효하지 않습니다.");
+    result.status(500).send({
+      responseCode: 500,
       message: 'Incorrect Key',
     });
   }
 };
 
 /**
- * 사용자 색인번호를 매개변수로 글 목록을 조회하는 함수
+ * 사용자 계정을 매개변수로 글 목록을 조회하는 함수
  * @param {*} request 
  * @param {*} result 
  */
 exports.findByUsersAccount = async (request, result) => {
   const inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+
+  let pageNumber = request.params.pageNumber;
+  const limit = 9;
+  let offset = 0;
+
+  if(pageNumber > 1) {
+    offset = limit * (pageNumber - 1);
+  }
 
   if(checkTokenResult.result === true) {
     await MateBoard.findAndCountAll({
@@ -238,14 +253,20 @@ exports.findByUsersAccount = async (request, result) => {
         mateBoardStatus: 1,
         "$Users.account$": request.params.usersAccount,
       },
+      offset: offset,
+      limit: limit,
+      order: [['mateBoardRegistDate', 'DESC']],
     }).then((response) => {
       if(response == null) {
-        result.send({
-          responseCode: 304,
+        console.log("사용자 계정과 일치하는 게시글 검색 결과가 존재하지 않습니다.");
+        result.status(403).send({         
+          responseCode: 403,
+          data: { count: 0, rows: [] },
           message: 'no result',
         });
       } else {
-        result.send({
+        console.log("사용자 계정과 일치하는 게시글 검색 결과를 전송합니다.");
+        result.status(200).send({
           responseCode: 200,
           data: response,
         });
@@ -256,7 +277,7 @@ exports.findByUsersAccount = async (request, result) => {
       console.error(err);
       result.status(500).send({
         responseCode: 500,
-        data: null,
+        data: { count: 0, rows: [] },
         message: "사용자 계정과 일치하는 게시글 조회 실패"
       })
     })
@@ -335,6 +356,7 @@ exports.findByIndexNumber = async (request, result) => {
       }
     }).then((response) => {
       if(response == null) {
+        console.log("해당 게시글이 존재하지 않습니다.");
         result.status(404).send({
           responseCode: 404,
           data: null,
@@ -360,8 +382,8 @@ exports.findByIndexNumber = async (request, result) => {
       });
     })
   } else {
-    result.send({
-      responseCode: 400,
+    result.status(500).send({
+      responseCode: 500,
       message: 'Incorrect Key',
     });
   }
