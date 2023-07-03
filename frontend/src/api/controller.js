@@ -162,7 +162,7 @@ export default class Controller {
       sort = 'Asc';
     }
 
-    if(account === '') {
+    if(account === '' || account === undefined) {
       return this.httpClient.get(`openMateBoard/findAllContent${sort}/${pageNumber}`,
       {
         params: searchQuery,

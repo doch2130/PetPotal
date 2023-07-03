@@ -42,26 +42,32 @@ export default function MemberJoin() {
   const POST_WIDTH = 500;
   const POST_HEIGHT = 500;
 
-  type Value = {sido: string, sigungu: string, zonecode: string, jibunAddress:string, address: string, userSelectedType: string}
+  type Value = {sido: string, sigungu: string, zonecode: string, jibunAddress:string, address: string, userSelectedType: string, roadname: string, bname: string}
 
   const onComplete = (data : Value) => {
     if(data.userSelectedType === 'R') {
       // 도로명 주소
       const fullAddress = `(${data.zonecode}) ${data.address}`;
       setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      // 세종특별자치시처럼 구가 없는 경우가 있음
       setAddressObj({
         address1: data.sido,
         address2: data.sigungu,
-        address3: data.address.slice(data.address.indexOf(data.sigungu) + data.sigungu.length + 1),
+        address3: data.sigungu === '' ?
+        data.address.slice(data.address.indexOf(data.roadname)) :
+        data.address.slice(data.address.indexOf(data.sigungu) + data.sigungu.length + 1),
       });
     } else {
       // 지번 주소
       const fullAddress = `(${data.zonecode}) ${data.jibunAddress}`;
       setValue('address', fullAddress, { shouldValidate: true, shouldDirty: true });
+      // 세종특별자치시처럼 구가 없는 경우가 있음
       setAddressObj({
         address1: data.sido,
         address2: data.sigungu,
-        address3: data.jibunAddress.slice(data.jibunAddress.indexOf(data.sigungu) + data.sigungu.length + 1),
+        address3: data.sigungu === '' ?
+        data.jibunAddress.slice(data.jibunAddress.indexOf(data.bname)) : 
+        data.jibunAddress.slice(data.jibunAddress.indexOf(data.sigungu) + data.sigungu.length + 1),
       });
     }
   };
