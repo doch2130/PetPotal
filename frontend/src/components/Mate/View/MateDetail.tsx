@@ -309,14 +309,17 @@ export default function MateDetail() {
         </div>
         {/* 내용 */}
         <div className={style.contentWrap}>
-          <h2>나비</h2>
-          <h2>{data?.Animals?.animalsName}</h2>
+          {/* <h2>나비</h2> */}
+          <h2>{data?.data.Animals?.animalsName}</h2>
           <div className={style.genderAge}>
-            <p>암컷</p>
-            <p>11세</p>
+            {/* <p>암컷</p> */}
+            {/* <p>11세</p> */}
+            {data?.data.Animals && <p>{data?.data.Animals?.animalsGender === 1 ? '수컷' : '암컷'}</p>}
+            {data?.data.Animals && <p>{data?.data.Animals?.animalsAge}세</p>}
           </div>
           <div className={style.breed}>
-            <p>트레디셔널 페르시안</p>
+            {/* <p>트레디셔널 페르시안</p> */}
+            <p>{data?.data.Animals?.animalsCategory2}</p>
           </div>
           <div className={style.grade}>
             <img src={star} alt='star' />
@@ -365,7 +368,8 @@ export default function MateDetail() {
             </pre>
           </div>
           <div className={style.locationMap}>
-            <p>상세 위치 안내</p>
+            <p>상세 위치 안내</p><br />
+            <p>{`${data?.data.mateBoardAddress1} ${data?.data.mateBoardAddress2} ${data?.data.mateBoardAddress3}`}</p>
             {/* Naver Map */}
             <div>
             {mapData.x !== 0 ?

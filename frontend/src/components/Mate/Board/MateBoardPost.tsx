@@ -31,6 +31,9 @@ interface MateBoardPostListInterface {
   mateBoardStatus: number;
   animalsIndexNumber?: number;
   mateBoardAddress: string;
+  mateBoardAddress1: string;
+  mateBoardAddress2: string;
+  mateBoardAddress3: string;
   mateBoardLng: number;
   mateBoardLat: number;
 }

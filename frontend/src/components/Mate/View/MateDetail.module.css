@@ -156,6 +156,10 @@
   margin: 5px 0;
 }
 
+.locationMap > p:nth-of-type(2) {
+  margin-bottom: 5px;
+}
+
 
 
 .locationMap > div {
@@ -229,4 +233,30 @@
   font-weight: 700;
   text-align: center;
   color: red;
+}
+
+
+@media (max-width: 750px) {
+  .locationMap > div {
+    width: 100%;
+  }
+}
+
+@media (max-width: 550px) {
+  .contentWrap > h2:nth-of-type(1) {
+    margin: 1rem 1rem auto;
+  }
+  .contentWrap > div {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .top {
+    margin: auto;
+  }
+}
+
+@media (max-width: 411px) {
+  .interest {
+    margin-right: 0px !important;
+  }
 }

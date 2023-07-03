@@ -54,3 +54,9 @@
   /* margin: 1rem 2rem; */
   min-height: 200px;
 }
+
+@media (max-width: 576px) {
+  .myPetWrap {
+    width: 95%;
+  }
+}
