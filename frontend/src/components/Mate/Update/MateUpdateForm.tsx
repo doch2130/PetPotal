@@ -277,8 +277,8 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
               {
                 required: {value: true, message: '제목을 입력해주세요'},
                 pattern: {
-                  value: /^[A-za-z0-9가-힣]{0,30}$/,
-                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                  value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,28}[A-Za-z0-9가-힣]$/,
+                  message: '30자 이내 영문, 한글, 숫자만 입력가능합니다.',
                 }
               },
               )}
@@ -361,8 +361,8 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
               {
                 required: {value: true, message: '이름을 입력해주세요'},
                 pattern: {
-                  value: /^[A-za-z0-9가-힣]{0,30}$/,
-                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                  value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,28}[A-Za-z0-9가-힣]$/,
+                  message: '30자 이내 영문, 한글, 숫자만 입력가능합니다.',
                 }
               },
               )}
@@ -441,8 +441,8 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
               {
                 required: {value: true, message: '품종을 입력해주세요'},
                 pattern: {
-                  value: /^[A-za-z0-9가-힣]{0,30}$/,
-                  message: '영문 대소문자, 한글, 숫자만 입력가능합니다.',
+                  value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,28}[A-Za-z0-9가-힣]$/,
+                  message: '30자 이내 영문, 한글, 숫자만 입력가능합니다.',
                 }
               },
               )}

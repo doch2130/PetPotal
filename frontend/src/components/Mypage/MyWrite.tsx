@@ -9,6 +9,7 @@ import { useAlert } from '../../hooks/useAlert';
 import moment from 'moment';
 import MyBoardPostButton from './MyBoardPostButton';
 import MyBoardNotPage from './MyBoardNotPage';
+import AnimalCard from '../UI/AnimalCard';
 
 interface MateBoardPostListInterface {
   mateBoardIndexNumber: number;
@@ -23,6 +24,9 @@ interface MateBoardPostListInterface {
   mateBoardStatus: number;
   animalsIndexNumber?: number;
   mateBoardAddress: string;
+  mateBoardAddress1: string;
+  mateBoardAddress2: string;
+  mateBoardAddress3: string;
   mateBoardLng: number;
   mateBoardLat: number;
 }
@@ -132,6 +136,24 @@ export default function MyWrite() {
       <MyBoardNotPage url={'/mypage/write/1'} /> :
       myMateBoardList?.length === 0 && postPageNumber === '1' ? 
       <h2 className={style.zeroContent}>작성한 글이 없습니다.</h2>
+      :
+      viewChange ?
+      <>
+      <div className={style.bodyAniamlCard}>
+        {printMyMateBoardList.map((el:MateBoardPostListInterface) => {
+          return (
+            <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
+              <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
+            </div>
+          )
+        })}
+      </div>
+      
+      <div className={style.wrapBottom}>
+        {totalPostCount > 0 && <MyBoardPostButton postPageNumber={postPageNumber} setPostPageNumber={setPostPageNumber}
+        totalPostCount={totalPostCount} />}
+      </div>
+      </>
       :
       <>
       <div className={style.header}>

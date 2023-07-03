@@ -23,7 +23,7 @@ export default function MyPage() {
       <div className={style.navWrap}>
         <MySideNavbar pageValue={pageValue} />
       </div>
-      <div className={style.bodyWrap}>
+      <div className={pageValue === 'write' ? `${style.bodyWrap} ${style.bodyWrapWrite}` : style.bodyWrap }>
         {pageValue === 'info' ? <MyInfoCertification /> : null}
         {pageValue === 'pet' ? <MyPet /> : null}
         {pageValue === 'write' ? <MyWrite /> : null}

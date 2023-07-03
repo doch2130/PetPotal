@@ -27,6 +27,9 @@ interface MateBoardPostListInterface {
   mateBoardStatus: number;
   animalsIndexNumber?: number;
   mateBoardAddress: string;
+  mateBoardAddress1: string;
+  mateBoardAddress2: string;
+  mateBoardAddress3: string;
   mateBoardLng: number;
   mateBoardLat: number;
 }
@@ -95,7 +98,8 @@ export default function AnimalCard(props:animalCardInterface) {
         </div>
         <div className={style.region}>
           {/* <p>서울시 마포구</p> */}
-          <p>{postData.mateBoardAddress}</p>
+          {/* <p>{postData.mateBoardAddress}</p> */}
+          <p>{`${postData.mateBoardAddress1} ${postData.mateBoardAddress2} ${postData.mateBoardAddress3}`}</p>
         </div>
         <div className={style.time}>
           {/* <p>2023-04-17 18:22</p> */}

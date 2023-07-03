@@ -228,3 +228,27 @@
 .wrapRow input[type="radio"]:disabled {
   background-color: #0075ff;
 }
+
+@media (max-width: 842px) {
+  .wrapRowTextEditor {
+    min-height: 270px;
+  }
+}
+
+@media (max-width: 576px) {
+  .wrap {
+    border-right: none;
+    border-left: none;
+    border-radius: 0px;
+  }
+  .wrapRow label {
+    margin: 0px 0.5rem;
+  }
+  .writeType label:nth-of-type(1) {
+    margin: 0px 0.5rem;
+  }
+  .wrapRowTextEditor > .wrapCol,
+  .wrapRowMap > .wrapCol {
+    margin: 0px 0.5rem;
+  }
+}
