@@ -39,15 +39,15 @@ exports.findAllMateBoardDesc = async(request, response) => {
     limit: limit,
     order: [['mateBoardRegistDate', 'DESC']],
   }).then((res) => {
-    // console.log("res:", res);
+    console.log("조회 결과가 존재하지 않습니다.");
     if (res.count == 0) {
       response.status(304).send({
         responseCode: 304,
-        data: null,
+        data: { count: 0, rows: [] },
         message: "조회 결과가 존재하지 않습니다.",
       });
     } else {
-      // console.log(res.rows[0].dataValues);
+      console.log("조회 결과를 전송합니다.");
       response.status(200).send({
         responseCode: 200,
         data: res
@@ -110,7 +110,7 @@ exports.findByFilter = async(request, response) => {
         console.log(`주소1(${request.query.mateBoardAddress1}) 로 검색한 결과가 없습니다.`);
         response.status(404).send({
           responseCode: 404,
-          data: null,
+          data: { count: 0, rows: [] },
           message: `주소1(${request.query.mateBoardAddress1}) 로 검색한 결과가 없습니다.`
         });
       } else {
@@ -160,7 +160,7 @@ exports.findByFilter = async(request, response) => {
         console.log(`주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색한 결과가 없습니다.`);
         response.status(404).send({
           responseCode: 404,
-          data: null,
+          data: { count: 0, rows: [] },
           message: `주소1(${request.query.mateBoardAddress1}), 주소2(${request.query.mateBoardAddress2}) 로 검색한 결과가 없습니다.`
         });
       } else {
@@ -189,7 +189,7 @@ exports.findByFilter = async(request, response) => {
  * @param {*} request 
  * @param {*} response
  */
-exports.findByIndexNumber = async (request, reponse) => {
+exports.findByIndexNumber = async (request, response) => {
   await MateBoard.findOne({
     // attributes: ["animalsUsersIndexNumber"],
     include: [
@@ -213,12 +213,14 @@ exports.findByIndexNumber = async (request, reponse) => {
     }
   }).then((res) => {
     if(res == null) {
+      console.log(`해당 게시글이 존재하지 않습니다. 게시글 번호: ${request.params.mateBoardIndexNumber}`);
       response.status(404).send({
         responseCode: 404,
         data: null,
         message: 'no result',
       });
     } else {
+      console.log(`해당 게시글을 전송합니다. 게시글 번호: ${request.params.mateBoardIndexNumber}`);
       response.status(200).send({
         responseCode: 200,
         data: res,
@@ -226,7 +228,7 @@ exports.findByIndexNumber = async (request, reponse) => {
     }
   })
   .catch((err) => {
-    console.error("글 조회 실패 데이터 불러오기 오류");
+    console.error(`글 조회 실패 데이터 불러오기 오류, 게시글 번호: ${request.params.mateBoardIndexNumber}`);
     console.error(err);
     response.status(500).send({
       responseCode: 500,
