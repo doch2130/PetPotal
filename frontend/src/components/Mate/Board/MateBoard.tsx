@@ -12,6 +12,7 @@ import MateBoardPost from './MateBoardPost';
 import MateBoardNotPage from './MateBoardNotPage';
 import close from '../../../assets/icon/plus.png';
 import style from './MateBoard.module.css';
+import { useAlert } from '../../../hooks/useAlert';
 
 interface searchQueryInterface {
   searchRegion: string;
@@ -39,6 +40,7 @@ export default function MateBoard() {
 
   const [ postTotalCount, setPostTotalCount ] = useState<number>(0);
   const [ timeSort, setTimeSort ] = useState<string>('newest');
+  const { openAlert } = useAlert();
 
   const isShowBoxRegionHandler = () => {
     setIsShowBoxRegion(!showBoxRegion);
@@ -162,9 +164,22 @@ export default function MateBoard() {
   // }
 
   const fetchMateBoardList = async () => {
-    const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
-    setPostTotalCount(result.data.data.count);
-    return result.data.data; 
+    try {
+      const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
+      setPostTotalCount(result.data.data.count);
+      return result.data.data;
+    } catch (err:any) {
+      console.log(err);
+      if(err.response.status === 304) {
+        return err.data.data;
+      }
+      openAlert({
+        title: '게시글 데이터 로딩 Error',
+        type: 'error',
+        content: '데이터 로딩 중 문제가 발생하였습니다.\r\n새로고침 후 이용해주세요.',
+      });
+      return ;
+    }
   }
   // useQuery(key값, ()) Reacy Query V3 이후 방식
   const { status, data, error } = useQuery([`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery], () => fetchMateBoardList());
