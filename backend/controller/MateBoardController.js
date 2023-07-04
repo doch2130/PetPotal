@@ -190,6 +190,58 @@ exports.findAllMateBoardDesc = async (request, result) => {
       offset = limit * (pageNumber - 1);
     }
 
+
+    // console.log('searchRegion ', searchRegion.split(','));
+    let temp = searchRegion.split(',');
+    // console.log('temp ', temp);
+
+    // console.log(searchRegion.indexOf('서울특별시'));
+
+    let tempMateBoardAddress1 = [];
+
+    temp.forEach((el) => {
+      console.log('el ', el);
+      console.log('el ', el.split(' '));
+      const tempSi = el.split(' ')[0];
+      if(tempSi !== '전국') {
+        tempMateBoardAddress1.push(el.split(' ')[0]);
+      }
+
+      // if(el.include('서울특별시')) {
+      //   tempMateBoardAddress1.push('서울특별시');
+      // }
+    })
+    console.log('tempMateBoardAddress1 ', tempMateBoardAddress1);
+    // const set = new Set(tempMateBoardAddress1);
+    // const uniqueArr = [...set];
+    // console.log('uniqueArr ', uniqueArr);
+
+    // whereMateBoard.mateBoardAddress1 = {}
+    // if(searchRegion.include('서울특별시')) {
+    // }
+
+    // whereMateBoard.mateBoardSeoul = '';
+    // whereMateBoard.mateBoardBusan = '';
+    // whereMateBoard.mateBoardDaegu = '';
+    // whereMateBoard.mateBoardIncheon = '';
+    // whereMateBoard.mateBoardGwangju = '';
+    // whereMateBoard.mateBoardDaejeon = '';
+    // whereMateBoard.mateBoardUlsan = '';
+    // whereMateBoard.mateBoardSejong = '';
+    // whereMateBoard.mateBoardGyeonggi = '';
+    // whereMateBoard.mateBoardGyeongnam = '';
+    // whereMateBoard.mateBoardGyeongbuk = '';
+    // whereMateBoard.mateBoardChungnam = '';
+    // whereMateBoard.mateBoardChungbuk = '';
+    // whereMateBoard.mateBoardJeonnam = '';
+    // whereMateBoard.mateBoardJeonbuk = '';
+    // whereMateBoard.mateBoardGangwon = '';
+    // whereMateBoard.mateBoardJeju = '';
+    
+
+
+    
+
     // 구함, 지원 조건문
     let whereMateBoard = { mateBoardStatus: 1 };
     whereMateBoard.mateBoardFee = { [Op.gte]: Number(searchAmount) };
@@ -204,7 +256,7 @@ exports.findAllMateBoardDesc = async (request, result) => {
       };
     }
 
-    // 동물 종류 카테고리
+    // 동물 종류 카테고리 (분기)
     if (searchKindReplace[0] === '' || searchKindReplace[0] === '전체') {
       // 동물 종류 선택 안하는 경우 (전체 검색)
       await MateBoard.findAndCountAll({
