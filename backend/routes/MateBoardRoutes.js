@@ -9,7 +9,8 @@ const uploadInsertContentHandler = insertContentUpload.array('mateBoardPhotos');
 
 router.post('/insertContent', uploadInsertContentHandler, MateBoardController.insertMateBoard);
 router.post('/textEditorImgFileUpload', MateBoardController.textEditorImgFileUpload);
-router.get('/findAllContentDesc/:pageNumber', MateBoardController.findAllMateBoardDesc);
+// router.get('/findAllContentDesc/:pageNumber', MateBoardController.findAllMateBoardDesc);
+router.get('/findAllContent/:sort/:pageNumber', MateBoardController.findAllMateBoardDesc);
 router.get('/findByUser/:usersAccount', MateBoardController.findByUsersAccount);
 router.get("/findByIndex/:mateBoardIndexNumber", MateBoardController.findByIndexNumber);
 router.put('/updateContent', uploadInsertContentHandler, MateBoardController.updateMateBoard);

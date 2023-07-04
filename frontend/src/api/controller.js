@@ -156,6 +156,7 @@ export default class Controller {
   // 메이트 게시판 - 전체 글 가져오기
   async mateBoardList(pageNumber, searchQuery, account, timeSort) {
     let sort = '';
+    // console.log('timeSort ', timeSort);
     if(timeSort === 'newest') {
       sort = 'Desc';
     } else {
@@ -163,7 +164,7 @@ export default class Controller {
     }
 
     if(account === '' || account === undefined) {
-      return this.httpClient.get(`openMateBoard/findAllContent${sort}/${pageNumber}`,
+      return this.httpClient.get(`openMateBoard/findAllContent/${sort}/${pageNumber}`,
       {
         params: searchQuery,
         paramsSerializer: params => {
@@ -171,7 +172,7 @@ export default class Controller {
         }
       });
     } else {
-      return this.httpClient.get(`mateBoard/findAllContent${sort}/${pageNumber}`,
+      return this.httpClient.get(`mateBoard/findAllContent/${sort}/${pageNumber}`,
       {
         params: searchQuery,
         paramsSerializer: params => {

@@ -1,6 +1,7 @@
 // const redis = require('redis');
 const fs = require('fs');
-
+const Sequelize = require('Sequelize');
+const Op = Sequelize.Op
 const MateBoard = require('../models/MateBoard');
 const CheckToken = require('../middleware/CheckToken');
 const CurrentDate = require('../middleware/CurrentDate');
@@ -43,9 +44,9 @@ exports.insertMateBoard = async (request, result) => {
     // console.log(request.body);
     request.body = JSON.parse(request.body.data);
     
-    let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
+    // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
     // console.log("geocode Keyword:", geocodeKeyword);
-    const geocodeResult = await geocode2(geocodeKeyword);
+    // const geocodeResult = await geocode2(geocodeKeyword);
     // console.log("geocode Result:", geocodeResult);
 
     const usersIndexNumber = await Users.findOne({
@@ -73,8 +74,8 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardAddress2: request.body.mateBoardAddress2,
         mateBoardAddress3: request.body.mateBoardAddress3,
         mateBoardAddress4: request.body.mateBoardAddress4,
-        mateBoardLat: geocodeResult.lat,
-        mateBoardLng: geocodeResult.lng,
+        mateBoardLat: request.body.mateBoardLat,
+        mateBoardLng: request.body.mateBoardLng,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
         mateBoardRegistDate: currentTimeStampDate,
@@ -115,8 +116,12 @@ exports.insertMateBoard = async (request, result) => {
         mateBoardFee: parseInt(request.body.amount),
         mateBoardContent1: request.body.detailContent,
         mateBoardContent2: request.body.cautionContent,
-        mateBoardLat: geocodeResult.lat,
-        mateBoardLng: geocodeResult.lng,
+        mateBoardLat: request.body.mateBoardLat,
+        mateBoardLng: request.body.mateBoardLng,
+        mateBoardAddress1: request.body.mateBoardAddress1,
+        mateBoardAddress2: request.body.mateBoardAddress2,
+        mateBoardAddress3: request.body.mateBoardAddress3,
+        mateBoardAddress4: request.body.mateBoardAddress4,
         mateBoardPhotos: matePhotosList.toString(),
         mateBoardCategory: parseInt(request.body.mateBoardCategory),
         mateBoardRegistDate: currentTimeStampDate,
@@ -172,7 +177,12 @@ exports.findAllMateBoardDesc = async (request, result) => {
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
   if(checkTokenResult.result === true) {
-    let pageNumber = request.params.pageNumber;
+    const { pageNumber, sort } = request.params;
+    const { searchRegion, searchKind, searchType, searchAmount } = request.query;
+    const searchKindReplace = searchKind.replace('강아지', 1).replace('고양이', 2).replace('기타', 3).split(',');
+
+    console.log('request.query ', request.query);
+
     const limit = 9;
     let offset = 0;
 
@@ -180,39 +190,130 @@ exports.findAllMateBoardDesc = async (request, result) => {
       offset = limit * (pageNumber - 1);
     }
 
-    await MateBoard.findAndCountAll({
-      // await MateBoard.findAll
-      // await MateBoard.findAndCountAll({ // .findAndCountAll() 사용시 결과값으로 rows 개수를 결과에 포함하여 출력한다.
-      // attributes: ["animalsUsersIndexNumber"],
-      include: [
-        {
-          model: Users,
-          as: "Users",
-          attributes: [ "account" ]
+    // 구함, 지원 조건문
+    let whereMateBoard = { mateBoardStatus: 1 };
+    whereMateBoard.mateBoardFee = { [Op.gte]: Number(searchAmount) };
+
+    if (searchType === '1') {
+      whereMateBoard.mateboardCategory = 1;
+    } else if (searchType === '2') {
+      whereMateBoard.mateboardCategory = 2;
+    } else {
+      whereMateBoard.mateboardCategory = {
+        [Op.in]: [1, 2]
+      };
+    }
+
+    // 동물 종류 카테고리
+    if (searchKindReplace[0] === '' || searchKindReplace[0] === '전체') {
+      // 동물 종류 선택 안하는 경우 (전체 검색)
+      await MateBoard.findAndCountAll({
+        include: [
+          {
+            model: Users,
+            as: "Users",
+            attributes: [ "account" ]
+          },
+        ],
+        where: whereMateBoard,
+        offset: offset,
+        limit: limit,
+        order: [['mateBoardRegistDate', `${sort}`]],
+      }).then((response) => {
+        if (response.count == 0) {
+          console.log("게시글 검색 결과가 존재하지 않습니다.")
+          result.status(304).send({
+            responseCode: 304,
+            data: { count: 0, rows: [] },
+            message: 'no result',
+          });
+        } else {
+          console.log("게시글 검색 결과를 반환합니다.")
+          result.status(200).send({
+            responseCode: 200,
+            data: response,
+          });
         }
-      ],
-      where: {
-        mateBoardStatus: 1,
-      },
-      offset: offset,
-      limit: limit,
-      order: [['mateBoardRegistDate', 'DESC']],
-    }).then((response) => {
-      if (response == null) {
-        console.log("게시글 검색 결과가 존재하지 않습니다.")
-        result.status(403).send({
-          responseCode: 403,
-          data: { count: 0, rows: [] },
-          message: 'no result',
-        });
-      } else {
-        console.log("게시글 검색 결과를 반환합니다.")
-        result.status(200).send({
-          responseCode: 200,
-          data: response,
-        });
-      }
-    });
+      });
+    } else {
+      // 동물 종류 선택 하는 경우 - include Animals 추가
+      let whereAnimals = { animalsInfoActivate: 1 };
+
+      whereAnimals = { animalsCategory1: [] };
+      searchKindReplace.forEach((el) => {
+        whereAnimals.animalsCategory1.push(Number(el));
+      });
+
+      await MateBoard.findAndCountAll({
+        include: [
+          {
+            model: Users,
+            as: "Users",
+            attributes: [ "account" ]
+          },
+          {
+            model: Animals,
+            as: "Animals",
+            where: whereAnimals,
+          },
+        ],
+        where: whereMateBoard,
+        offset: offset,
+        limit: limit,
+        order: [['mateBoardRegistDate', `${sort}`]],
+      }).then((response) => {
+        if (response.count == 0) {
+          console.log("게시글 검색 결과가 존재하지 않습니다.")
+          result.status(304).send({
+            responseCode: 304,
+            data: { count: 0, rows: [] },
+            message: 'no result',
+          });
+        } else {
+          console.log("게시글 검색 결과를 반환합니다.")
+          result.status(200).send({
+            responseCode: 200,
+            data: response,
+          });
+        }
+      });
+    }
+
+
+    // await MateBoard.findAndCountAll({
+    //   include: [
+    //     {
+    //       model: Users,
+    //       as: "Users",
+    //       attributes: [ "account" ]
+    //     },
+    //     {
+    //       model: Animals,
+    //       as: "Animals",
+    //       where: whereAnimals,
+    //     },
+    //   ],
+    //   where: whereMateBoard,
+    //   offset: offset,
+    //   limit: limit,
+    //   order: [['mateBoardRegistDate', `${sort}`]],
+    // }).then((response) => {
+    //   // console.log('response ', response.rows);
+    //   if (response.count == 0) {
+    //     console.log("게시글 검색 결과가 존재하지 않습니다.")
+    //     result.status(304).send({
+    //       responseCode: 304,
+    //       data: { count: 0, rows: [] },
+    //       message: 'no result',
+    //     });
+    //   } else {
+    //     console.log("게시글 검색 결과를 반환합니다.")
+    //     result.status(200).send({
+    //       responseCode: 200,
+    //       data: response,
+    //     });
+    //   }
+    // });
   } else {
     console.log("인증키가 유효하지 않습니다.");
     result.status(500).send({
@@ -398,8 +499,20 @@ exports.updateMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
+  let currentTimeStampDate = new Date(currentTimeStamp);
+  currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
+
+  console.log('request.body ', request.body);
+
+  request.body = JSON.parse(request.body);
 
   if(checkTokenResult.result == true) {
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
     
     let matePhotosList = new Array(request.files.length);
     
@@ -416,10 +529,17 @@ exports.updateMateBoard = async (request, result) => {
           mateBoardFee: parseInt(request.body.amount),
           mateBoardContent1: request.body.detailContent,
           mateBoardContent2: request.body.cautionContent,
+          mateBoardAddress1: request.body.mateBoardAddress1,
+          mateBoardAddress2: request.body.mateBoardAddress2,
+          mateBoardAddress3: request.body.mateBoardAddress3,
+          mateBoardAddress4: request.body.mateBoardAddress4,
+          mateBoardLat: request.body.mateBoardLat,
+          mateBoardLng: request.body.mateBoardLng,
           mateBoardPhotos: matePhotosList.toString(),
           mateBoardCategory: parseInt(request.body.mateBoardCategory),
-          mateBoardModifyDate: new Date(currentTimeStamp),
-          usersIndexNumber: parseInt(request.body.usersIndexNumber)
+          mateBoardModifyDate: currentTimeStampDate,
+          usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
+
         },
         {
           where: {
@@ -458,10 +578,16 @@ exports.updateMateBoard = async (request, result) => {
           mateBoardFee: parseInt(request.body.amount),
           mateBoardContent1: request.body.detailContent,
           mateBoardContent2: request.body.cautionContent,
+          mateBoardLat: request.body.mateBoardLat,
+          mateBoardLng: request.body.mateBoardLng,
+          mateBoardAddress1: request.body.mateBoardAddress1,
+          mateBoardAddress2: request.body.mateBoardAddress2,
+          mateBoardAddress3: request.body.mateBoardAddress3,
+          mateBoardAddress4: request.body.mateBoardAddress4,
           mateBoardPhotos: matePhotosList.toString(),
           mateBoardCategory: parseInt(request.body.mateBoardCategory),
-          mateBoardModifyDate: new Date(currentTimeStamp),
-          usersIndexNumber: parseInt(request.body.usersIndexNumber),
+          mateBoardModifyDate: currentTimeStampDate,
+          usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
           animalsIndexNumber: parseInt(request.body.animalsIndexNumber),
         },
         {
