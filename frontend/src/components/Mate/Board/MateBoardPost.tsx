@@ -45,7 +45,7 @@ interface MateBoardPageNumberInterface {
 }
 
 export default function MateBoardPost(props:MateBoardPostInterface) {
-  const { postList, timeSort, setTimeSort, matePageNumber } = props;
+  const { postList, timeSort, setTimeSort, matePageNumber, setMatePageNumber, postTotalCount } = props;
   const userInfo = useRecoilValue<UserType[]>(userState);
   const navigater = useNavigate();
   const [mateBoardView, setMateBoardView] = useRecoilState<mateBoardViewType>(mateBoardViewState);
@@ -142,7 +142,6 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           <h1>등록된 게시글이 없습니다</h1>
         </div>
         }
-        {/* {timeSort === 'newest' && */}
         {viewChange ?
           postList.map((el: MateBoardPostListInterface) => {
             return (
@@ -169,22 +168,12 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           })}
           </div>
         }
-        {/* {timeSort === 'oldest' &&
-        // 백엔드 코드 재호출 기능으로 적용 필요하다고 판단
-          postList.slice(-endIndex, -startIndex).map((el: MateBoardPostListInterface, index:number) => {
-            return (
-            <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
-              <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
-            </div>
-            );
-          })
-        } */}
       </div>
       <div className={style.bottom}>
         <div></div>
         <div className={style.bottomPageButton}>
           {props.postTotalCount > 0 && 
-          <MateBoardPostButton matePageNumber={props.matePageNumber} setMatePageNumber={props.setMatePageNumber} postTotalCount={props.postTotalCount}/>
+          <MateBoardPostButton matePageNumber={matePageNumber} setMatePageNumber={setMatePageNumber} postTotalCount={postTotalCount}/>
           }
         </div>
         <div className={style.bottomWriteButton}>

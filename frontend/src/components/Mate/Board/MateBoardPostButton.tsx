@@ -9,11 +9,13 @@ interface MateBoardPostButtonInterface {
 
 export default function MateBoardPostButton(props:MateBoardPostButtonInterface) {
   const { matePageNumber, setMatePageNumber, postTotalCount } = props;
-  const pageTotal = Math.ceil(postTotalCount/9);
   const navigater = useNavigate();
-  const buttons: JSX.Element[] = [];
+  const pageTotal = Math.ceil(postTotalCount/9);
   const pageTotalNumber = Math.ceil(postTotalCount/9);
-  const pageLastNumber = (Math.floor((Number(matePageNumber))/3) + 3) <= pageTotalNumber ? (Math.floor((Number(matePageNumber))/3) + 3) : pageTotalNumber;
+  // const pageLastNumber = (Math.floor((Number(matePageNumber))/3) + 3) <= pageTotalNumber ? (Math.floor((Number(matePageNumber))/3) + 3) : pageTotalNumber;
+  const pageLastNumber = Math.min((Math.floor((Number(matePageNumber) - 1) / 3) + 1) * 3, pageTotalNumber);
+  const pageStartNumber = Math.max(pageLastNumber - 2, 1);
+  const buttons: JSX.Element[] = [];
 
   const changeFirstPageFunction = ():void => {
     // << 버튼
@@ -64,14 +66,15 @@ export default function MateBoardPostButton(props:MateBoardPostButtonInterface) 
   buttons.push(
     <button type='button' key={'prev'} disabled={matePageNumber === '1' ? true : false} onClick={changePrevPageFunction}>&lt;</button>
   );
-  for(let i = Math.floor((Number(matePageNumber))/3); i < pageLastNumber; i++) {
-    if(Number(matePageNumber) === i+1) {
+
+  for (let i = pageStartNumber; i <= pageLastNumber; i++) {
+    if(Number(matePageNumber) === i) {
       buttons.push(
-        <button type='button' key={matePageNumber} className={style.bottomPageButtonActive} onClick={() => changePageNumberFunction(i+1)}>{i+1}</button>
+        <button type='button' key={i} className={style.bottomPageButtonActive} onClick={() => changePageNumberFunction(i)}>{i}</button>
       )
     } else {
       buttons.push(
-        <button type='button' key={matePageNumber+1} onClick={() => changePageNumberFunction(i+1)}>{i+1}</button>
+        <button type='button' key={i} onClick={() => changePageNumberFunction(i)}>{i}</button>
       )
     }
   }
