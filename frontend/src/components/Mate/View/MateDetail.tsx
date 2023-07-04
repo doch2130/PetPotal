@@ -5,7 +5,7 @@ import { useModal } from '../../../hooks/useModal';
 import { Params, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAlert } from '../../../hooks/useAlert';
-import moment from 'moment';
+// import moment from 'moment';
 import Controller from '../../../api/controller';
 // import geocoding from '../../../api/geocoding';
 import PictureBox from '../../UI/PictureBox';
@@ -382,7 +382,8 @@ export default function MateDetail() {
           <div className={style.contentBottom}>
             <div>
               {/* <p>2023-04-17 15:24</p> */}
-              <p>{moment(data?.data.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p>
+              {/* <p>{moment(data?.data.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p> */}
+              <p>{`${data?.data.mateBoardRegistDate.split('T')[0]} ${data?.data.mateBoardRegistDate.split('T')[1].split(':')[0]}:${data?.data.mateBoardRegistDate.split('T')[1].split(':')[1]}`}</p>
               {data?.data.Users.account === userInfo[0].account &&
               <div>
                 <button type='button' onClick={() => matePostUpdate(data?.data.mateBoardIndexNumber)}>수정</button>

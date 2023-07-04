@@ -1,7 +1,7 @@
 import { MouseEvent, MouseEventHandler, useState } from 'react';
 import { useConfirm } from '../../hooks/useConfirm';
 import { useAlert } from '../../hooks/useAlert';
-import moment from 'moment';
+// import moment from 'moment';
 import style from './AnimalCard.module.css';
 // import animalImage from '../../assets/matepage/MateImg_3.png';
 import emptyHeart from '../../assets/icon/empty_heart.png';
@@ -104,7 +104,8 @@ export default function AnimalCard(props:animalCardInterface) {
         <div className={style.time}>
           {/* <p>2023-04-17 18:22</p> */}
           {/* <p>{`${postData.mateBoardRegistDate.split('T')[0].split('-')[0]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[1]}-${postData.mateBoardRegistDate.split('T')[0].split('-')[2]} ${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[1]}`}</p> */}
-          <p>{moment(postData?.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p>
+          {/* <p>{moment(postData?.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p> */}
+          <p>{`${postData.mateBoardRegistDate.split('T')[0]} ${postData.mateBoardRegistDate.split('T')[1].split(':')[0]}:${postData.mateBoardRegistDate.split('T')[1].split(':')[1]}`}</p>
         </div>
       </div>
     </div>
