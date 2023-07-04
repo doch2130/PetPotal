@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(
   session({
     name: 'petpotal',
-    secret: 'pettotal',
+    secret: 'petpotal',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -67,5 +67,5 @@ app.listen(port, () => {
   let currentTime = new Date();
   currentTime.setHours(currentTime.getHours() + 9);
   console.log("Process Start:", currentTime);
-  console.log(`pettotal backend listening on port ${port}`);
+  console.log(`petpotal backend listening on port ${port}`);
 });
