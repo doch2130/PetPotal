@@ -6,7 +6,7 @@ import { mateBoardViewState, mateBoardViewType } from '../../recoil/mateBoardVie
 import Controller from '../../api/controller';
 import style from './MyWrite.module.css';
 import { useAlert } from '../../hooks/useAlert';
-import moment from 'moment';
+// import moment from 'moment';
 import MyBoardPostButton from './MyBoardPostButton';
 import MyBoardNotPage from './MyBoardNotPage';
 import AnimalCard from '../UI/AnimalCard';
@@ -68,8 +68,9 @@ export default function MyWrite() {
       try {
         const result = await controller.myMateBoardPost(userInfo[0].account);
         // console.log('getMyMateBoard ', result);
-        const reverse = [...result.data.data.rows].reverse();
-        setMyMateBoardList(reverse);
+        // const reverse = [...result.data.data.rows].reverse();
+        // setMyMateBoardList(reverse);
+        setMyMateBoardList(result.data.data.rows);
         setTotalPostCount(result.data.data.count);
         return ;
       } catch (err:any) {
@@ -169,8 +170,11 @@ export default function MyWrite() {
             <p>{el.mateBoardIndexNumber}</p>
             <p>{el.mateBoardCategory === 1 ? '구함' : '지원'}</p>
             <p>{el.mateBoardTitle}</p>
-            <p>{moment(el.mateBoardRegistDate).format('YYYY-MM-DD') === compareDate ? moment(el.mateBoardRegistDate).format('HH:mm')
-            : moment(el.mateBoardRegistDate).format('YYYY-MM-DD')}</p>
+            {/* <p>{moment(el.mateBoardRegistDate).format('YYYY-MM-DD') === compareDate ? moment(el.mateBoardRegistDate).format('HH:mm')
+            : moment(el.mateBoardRegistDate).format('YYYY-MM-DD')}</p> */}
+            <p>{ el.mateBoardRegistDate.split('T')[0] === compareDate ?
+            `${el.mateBoardRegistDate.split('T')[1].split(':')[0]}:${el.mateBoardRegistDate.split('T')[1].split(':')[1]}`
+            : el.mateBoardRegistDate.split('T')[0] }</p>
         </div>
         )
       })}
