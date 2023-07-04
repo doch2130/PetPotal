@@ -194,6 +194,7 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
         } catch (err:any) {
           // console.log('err ', err);
           if(err.response.data.responseCode === 403 && err.response.data.data === 3) {
+            closeConfirm();
             openAlert({
               title: '회원정보 수정 실패',
               type: 'error',
