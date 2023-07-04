@@ -4,6 +4,10 @@ const fs = require("fs");
 
 const CheckToken = require("../CheckToken");
 
+if(!fs.existsSync(`./data`)) {
+    fs.mkdirSync(`./data`);
+}
+
 const ImageFileHandler = (dirName) => {
     if(!fs.existsSync(`./data/${dirName}`)) {
         fs.mkdirSync(`./data/${dirName}`);
