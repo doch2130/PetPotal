@@ -93,8 +93,16 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             {...register('animalsName',
             {
               required: {value: true, message: '이름을 입력해주세요'},
+              minLength: {
+                value: 1,
+                message: '1글자 이상 20자 이하로 입력해주세요',
+              },
+              maxLength: {
+                value: 20,
+                message : '1글자 이상 20자 이하로 입력해주세요',
+              },
               pattern: {
-                value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,18}[A-Za-z0-9가-힣]$/,
+                value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,19}$/,
                 message: '20자 이내 영문, 한글, 숫자만 입력가능합니다.',
               }
             },
@@ -181,9 +189,17 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             {...register('animalsCategory2',
             {
               required: {value: true, message: '품종을 입력해주세요'},
+              minLength: {
+                value: 1,
+                message: '1글자 이상 30자 이하로 입력해주세요',
+              },
+              maxLength: {
+                value: 30,
+                message : '1글자 이상 30자 이하로 입력해주세요',
+              },
               pattern: {
-                value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,19}$/,
-                message: '20자 이내 영문, 한글, 숫자만 입력가능합니다.',
+                value: /^[A-Za-z0-9가-힣][A-Za-z0-9가-힣\s]{0,29}$/,
+                message: '30자 이내 영문, 한글, 숫자만 입력가능합니다.',
               }
             },
             )}
