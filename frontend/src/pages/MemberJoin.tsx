@@ -233,7 +233,10 @@ export default function MemberJoin() {
                   required: {value: true, message: '값을 입력해주세요'},
                   minLength: {value: 3, message: '3글자 ~ 12글자 사이의 값을 입력해주세요'},
                   maxLength: {value: 12, message: '3글자 ~ 12글자 사이의 값을 입력해주세요'},
-                  pattern: /^[A-Za-z0-9]*$/i,
+                  pattern: {
+                    value: /^[A-Za-z0-9]*$/i,
+                    message: '3글자 ~ 12글자 이내 영문, 숫자만 입력가능합니다.',
+                  }
                 },
               )}
               className={style.joinInput}
@@ -299,6 +302,10 @@ export default function MemberJoin() {
                 maxLength: {
                   value: 30,
                   message : '1글자 이상 30자 이하로 입력해주세요',
+                },
+                pattern: {
+                  value: /^[A-Za-z0-9가-힣]{1,30}$/,
+                  message: '30자 이내 영문, 한글, 숫자만 입력가능합니다.',
                 }
               })}
               className={style.joinInput}
@@ -324,6 +331,10 @@ export default function MemberJoin() {
                 maxLength: {
                   value: 30,
                   message : '1글자 이상 30자 이하로 입력해주세요',
+                },
+                pattern: {
+                  value: /^[A-Za-z0-9가-힣]{1,30}$/,
+                  message: '30자 이내 영문, 한글, 숫자만 입력가능합니다.',
                 }
               })}
               className={style.joinInput}
