@@ -36,10 +36,6 @@ module.exports = () => {
               const token = jwt.sign(
                 {
                   account: response.dataValues.account,
-                  address1: response.dataValues.address1,
-                  address2: response.dataValues.address2,
-                  address3: response.dataValues.address3,
-                  address4: response.dataValues.address4,
                 },
                 process.env.JWT_SECRET,
                 { 
@@ -49,6 +45,10 @@ module.exports = () => {
               );
               const data = {
                 account: account,
+                address1: response.dataValues.address1,
+                address2: response.dataValues.address2,
+                address3: response.dataValues.address3,
+                address4: response.dataValues.address4,
                 token: token
               }
 
