@@ -43,14 +43,21 @@ export default function MyInfoPasswordChangeModal(props:MyInfoPasswordChangeModa
       content: '해당 비밀번호로 변경하시겠습니까?',
       callback: async () => {
         try {
-          const result = await controller.userChangePassword(data);
+          // const result = await controller.userChangePassword(data);
+          await controller.userChangePassword(data);
           // console.log('result ', result);
           closeConfirm();
           onClose();
           setCertification(false);
+          openAlert({
+            title: '회원정보 비밀번호 변경 성공',
+            type: 'success',
+            content: '비밀번호가 변경되었습니다.',
+          });
         } catch (err:any) {
           // console.log('err ', err);
           if(err.response.data.responseCode === 403 && err.response.data.data === 2) {
+            closeConfirm();
             openAlert({
               title: '회원정보 비밀번호 변경 실패',
               type: 'error',

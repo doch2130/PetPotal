@@ -132,9 +132,10 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
       content: '해당 정보로 수정하시겠습니까?',
       callback: async () => {
         try {
-          const result = await controller.myPetModify(data);
-          console.log('data ', data);
-          console.log('result ', result);
+          // const result = await controller.myPetModify(data);
+          await controller.myPetModify(data);
+          // console.log('data ', data);
+          // console.log('result ', result);
           closeConfirm();
           let tempIndex = -1;
           petList.forEach((el:any, index:number):void => {
