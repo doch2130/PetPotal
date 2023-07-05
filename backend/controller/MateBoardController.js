@@ -1,18 +1,15 @@
-// const redis = require('redis');
 const fs = require('fs');
-const Sequelize = require('Sequelize');
+const Sequelize = require('sequelize');
 const Op = Sequelize.Op
-const MateBoard = require('../models/MateBoard');
-const CheckToken = require('../middleware/CheckToken');
-const CurrentDate = require('../middleware/CurrentDate');
 
-const {
-  SingleFileHandler,
-  MultiFileHandler,
-} = require('../middleware/filehandler/MulterFileHandler');
+const { SingleFileHandler, MultiFileHandler } = require('../middleware/filehandler/MulterFileHandler');
+
+const MateBoard = require('../models/MateBoard');
 const Animals = require('../models/Animals');
 const Users = require('../models/Users');
-const { geocode2 } = require("../controller/NaverMapController");
+
+const CheckToken = require('../middleware/CheckToken');
+const CurrentDate = require('../middleware/CurrentDate');
 
 /**
  * 게시글 작성 메서드
@@ -37,18 +34,9 @@ exports.insertMateBoard = async (request, result) => {
   let currentTimeStampDate = new Date(currentTimeStamp);
   currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
 
-  // console.log("currentTimeStamp String:", currentTimeStamp);
-  console.log("currentTimeStamp Date:", currentTimeStampDate);
-
   if(checkTokenResult.result == true) {
-    // console.log(request.body);
     request.body = JSON.parse(request.body.data);
     
-    // let geocodeKeyword = `${request.body.mateBoardAddress1} ${request.body.mateBoardAddress2} ${request.body.mateBoardAddress3}`;
-    // console.log("geocode Keyword:", geocodeKeyword);
-    // const geocodeResult = await geocode2(geocodeKeyword);
-    // console.log("geocode Result:", geocodeResult);
-
     const usersIndexNumber = await Users.findOne({
       attributes: [ "usersIndexNumber" ],
       where: {
@@ -172,7 +160,8 @@ exports.insertMateBoard = async (request, result) => {
  * @param {*} request 
  * @param {*} result 
  */
-exports.findAllMateBoardDesc = async (request, result) => {
+// exports.findAllMateBoardDesc = async (request, result) => {
+exports.findAllMateBoard = async (request, result) => {
   let inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
@@ -181,8 +170,6 @@ exports.findAllMateBoardDesc = async (request, result) => {
     const { searchRegion, searchKind, searchType, searchAmount } = request.query;
     const searchKindReplace = searchKind.replace('강아지', 1).replace('고양이', 2).replace('기타', 3).split(',');
 
-    // console.log('request.query ', request.query);
-
     const limit = 9;
     let offset = 0;
 
@@ -190,16 +177,12 @@ exports.findAllMateBoardDesc = async (request, result) => {
       offset = limit * (pageNumber - 1);
     }
 
-
-    // console.log('searchRegion ', searchRegion.split(','));
     let tempSearchRegion = searchRegion.split(',');
 
     let whereMateBoardAddress = [];
     let tempWhereMateBoardAddress = {};
     if(searchRegion !== '') {
       tempSearchRegion.forEach((el) => {
-        // console.log('el ', el);
-        // console.log('el ', el.split(' '));
         const tempSi = el.split(' ')[0];
         const tempGu = el.split(' ')[1];
         // [Op.and]: [{a: 5}, {b: 6}] // (a = 5) AND (b = 6)
@@ -208,7 +191,6 @@ exports.findAllMateBoardDesc = async (request, result) => {
         } else {
           tempWhereMateBoardAddress = { [Op.and]: [{mateBoardAddress1: tempSi}, {mateBoardAddress2: tempGu}] };
         }
-        // console.log('tempWhereMateBoardAddress ', tempWhereMateBoardAddress);
         whereMateBoardAddress.push(tempWhereMateBoardAddress);
       })
     }
@@ -331,42 +313,6 @@ exports.findAllMateBoardDesc = async (request, result) => {
         }
       });
     }
-
-
-    // await MateBoard.findAndCountAll({
-    //   include: [
-    //     {
-    //       model: Users,
-    //       as: "Users",
-    //       attributes: [ "account" ]
-    //     },
-    //     {
-    //       model: Animals,
-    //       as: "Animals",
-    //       where: whereAnimals,
-    //     },
-    //   ],
-    //   where: whereMateBoard,
-    //   offset: offset,
-    //   limit: limit,
-    //   order: [['mateBoardRegistDate', `${sort}`]],
-    // }).then((response) => {
-    //   // console.log('response ', response.rows);
-    //   if (response.count == 0) {
-    //     console.log("게시글 검색 결과가 존재하지 않습니다.")
-    //     result.status(304).send({
-    //       responseCode: 304,
-    //       data: { count: 0, rows: [] },
-    //       message: 'no result',
-    //     });
-    //   } else {
-    //     console.log("게시글 검색 결과를 반환합니다.")
-    //     result.status(200).send({
-    //       responseCode: 200,
-    //       data: response,
-    //     });
-    //   }
-    // });
   } else {
     console.log("인증키가 유효하지 않습니다.");
     result.status(500).send({
@@ -385,14 +331,6 @@ exports.findByUsersAccount = async (request, result) => {
   const inputToken = request.headers.token;
   const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
-  let pageNumber = request.params.pageNumber;
-  const limit = 9;
-  let offset = 0;
-
-  if(pageNumber > 1) {
-    offset = limit * (pageNumber - 1);
-  }
-
   if(checkTokenResult.result === true) {
     await MateBoard.findAndCountAll({
       // attributes: ["animalsUsersIndexNumber"],
@@ -407,8 +345,6 @@ exports.findByUsersAccount = async (request, result) => {
         mateBoardStatus: 1,
         "$Users.account$": request.params.usersAccount,
       },
-      offset: offset,
-      limit: limit,
       order: [['mateBoardRegistDate', 'DESC']],
     }).then((response) => {
       if(response == null) {
@@ -442,6 +378,77 @@ exports.findByUsersAccount = async (request, result) => {
     });
   }
 };
+
+
+/**
+ * 사용자 계정을 매개변수로 글 목록(구직)을 조회하는 함수
+ * @param {*} request 
+ * @param {*} result 
+ */
+exports.findByUsersAccount2 = async (request, result) => {
+  const inputToken = request.headers.token;
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+
+  let pageNumber = request.params.pageNumber;
+  const limit = 9;
+  let offset = 0;
+
+  if(pageNumber > 1) {
+    offset = limit * (pageNumber - 1);
+  }
+
+  if(checkTokenResult.result === true) {
+    await MateBoard.findAndCountAll({
+      // attributes: ["animalsUsersIndexNumber"],
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        mateBoardCategory: 2,
+        mateBoardStatus: 1,
+        "$Users.account$": request.params.usersAccount,
+      },
+      // offset: offset,
+      // limit: limit,
+      order: [['mateBoardRegistDate', 'DESC']],
+    }).then((response) => {
+      if(response == null) {
+        console.log("사용자 계정과 일치하는 게시글 검색 결과가 존재하지 않습니다.");
+        result.status(403).send({         
+          responseCode: 403,
+          data: { count: 0, rows: [] },
+          message: 'no result',
+        });
+      } else {
+        console.log("사용자 계정과 일치하는 게시글 검색 결과를 전송합니다.");
+        result.status(200).send({
+          responseCode: 200,
+          data: response,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log("사용자 계정과 일치하는 게시글 조회 실패");
+      console.error(err);
+      result.status(500).send({
+        responseCode: 500,
+        data: { count: 0, rows: [] },
+        message: "사용자 계정과 일치하는 게시글 조회 실패"
+      })
+    })
+  } else {
+    result.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
+  }
+};
+
+
 
 /**
  * 게시글 내부 에디터의 첨부파일을 위한 함수
@@ -554,8 +561,6 @@ exports.updateMateBoard = async (request, result) => {
   let currentTimeStamp = CurrentDate.CurrentTimeStamp();
   let currentTimeStampDate = new Date(currentTimeStamp);
   currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
-
-  console.log('request.body ', request.body);
 
   request.body = JSON.parse(request.body);
 

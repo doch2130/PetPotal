@@ -12,9 +12,3 @@ sequelize.sync({ force: false})
     })
 
 module.exports = sequelize;
-
-// sequelize.authenticate((err) => {
-//     if(err) throw err;
-//     console.log("Sequelize connected");
-// });
-// module.exports = sequelize;

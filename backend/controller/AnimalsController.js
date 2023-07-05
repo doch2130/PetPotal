@@ -1,4 +1,3 @@
-const multer = require("multer");
 const fs = require("fs");
 
 const Animals = require("../models/Animals");
@@ -25,17 +24,12 @@ const ConvertAnimalsCategory2 = (animalsCategory2) => {
  * @param {*} request 
  * @param {*} result 
  */
-exports.insertAnimal = async(request, result) => {
+exports.insertAnimal = async (request, result) => {
     let inputToken = request.headers.token;
     let checkTokenResult = await CheckToken.CheckToken(1, inputToken);
 
     let currentTimeStamp = CurrentDate.CurrentTimeStamp();
     let convertedCategory2 = ConvertAnimalsCategory2(request.body.animalsCategory2);
-    // console.log(request.body);
-    // console.log(request.file);
-    // console.log(request.files)
-    // console.log(`사용자 ${request.headers.account} 가 insertAnimal을 요청합니다.`);
-    // console.log("multer:\n", request.files);
 
     if(checkTokenResult.result == true) {
         const usersIndexNumber = await Users.findOne({
@@ -119,8 +113,7 @@ exports.findByUsersAccount = async(request, response) => {
                 account: checkTokenResult.account
             }
         });        
-        // console.log("findByAccount's IndexNumber:", usersIndexNumber);
-        // console.log(usersIndexNumber.dataValues.usersIndexNumber);
+
         if(usersIndexNumber == null) {
             result.status(403).send({
                 responseCode: 403,
@@ -130,7 +123,6 @@ exports.findByUsersAccount = async(request, response) => {
         }
         else {
             await Animals.findAll({
-                // attributes: ["animalsUsersIndexNumber"],
                 where: { 
                     animalsUsersIndexNumber: usersIndexNumber.dataValues.usersIndexNumber,
                     animalsInfoActivate: 1
@@ -181,7 +173,7 @@ exports.findByUsersAccount = async(request, response) => {
  * @param {*} request 
  * @param {*} response 
  */
-exports.updateInfo = async(request, response) => {
+exports.updateInfo = async (request, response) => {
     const inputToken = request.headers.token;
     const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
     

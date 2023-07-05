@@ -1,13 +1,11 @@
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
-
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const jwt = require('jsonwebtoken');
-
 const SaveData = require("../redis/SaveData");
 let redisConfig = require('../../config/redisClient.json');
-const dotenv = require('dotenv');
 
 dotenv.config({
   path: './config/.env',

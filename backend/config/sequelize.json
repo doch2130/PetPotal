@@ -1,6 +1,6 @@
 {
-    "username": "root",
-    "password": "1234",
+    "username": "petpotal",
+    "password": "petpotal1234!",
     "database": "petpotal",
     "host": "127.0.0.1",
     "port": "3306",

@@ -66,26 +66,24 @@ module.exports.geocode2 = async(query) => {
   .then((res) => {
     // TODO: check if response is ok
     console.log('api 데이터 수신중');
-    // console.log(res);
-    // console.log(res.data);
     return res.data;
   })
   .then((data) => {
-    if (data.addresses.length > 0) {
-      console.log("검색 완료");
+    if (data.addresses.length > 1) {
+      console.log("api 데이터가 2개 이상 존재합니다.");
       result = {
         lat: data.addresses[0].y, 
         lng: data.addresses[0].x
       };
     } else if (data.addresses.length === 0) {
-      console.log("검색 완료 결과가 0개 입니다.");
+      console.log("api 데이터가 없습니다.");
       result = {
         lat: -1, 
         lng: -1
       };
     } else {
-      console.log("검색 완료3");
       // console.log('data ', data);
+      console.log("api 데이터가 1개 존재합니다.");
       result ={
         lat: data.addresses[0].y, 
         lng: data.addresses[0].x

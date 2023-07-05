@@ -1,18 +1,15 @@
-const passport = require('passport');
-
 const fs = require('fs');
+const dotenv = require('dotenv');
+const passport = require('passport');
 const bcrypt = require("bcrypt");
 const nodeMailer = require("nodemailer");
 
 const Users = require('../models/Users');
 
-const Crypt = require('../middleware/Crypt');
 const CurrentDate = require('../middleware/CurrentDate');
 const CheckToken = require('../middleware/CheckToken');
 const DeleteToken = require('../middleware/DeleteToken');
 const RandomString = require('../middleware/RandomString');
-
-const dotenv = require('dotenv');
 
 dotenv.config({
   path: './config/.env',
@@ -35,7 +32,7 @@ const signIn = (request, response, done) => {
             message: 'Login Failure',
           });
         } else {
-          // signInTimeUpdate(request.body.account);
+          signInTimeUpdate(request.body.account);
           response.cookie('token', users, {
             httpOnly: true,
             signed: true,
@@ -365,56 +362,7 @@ const findUsersInfo = async (request, response) => {
     });
   })
 };
-// const findUsersInfo = async (request, response) => {
-//   await CheckToken.CheckToken(1, request.headers.token)
-//   .then((res) => {
-//     if(request.body.account == res.account) {
-//       Users.findOne({
-//           attributes: [
-//             'account',
-//             'name',
-//             'nickName',
-//             'phone',
-//             'email',
-//             'address1',
-//             'address2',
-//             'address3',
-//             'address4',
-//           ],
-//           where: { 
-//             account: request.body.account, 
-//           },
-//       })
-//       .then((res) => {
-//         response.status(200).send({
-//           responseCode: 200,
-//           message: 'Success',
-//           data: res,
-//         });
-//       })
-//       .catch((err) => {
-//         response.status(400).send({
-//           responseCode: 400,
-//           message: 'Failed',
-//           data: err,
-//         });
-//       });
-//     } else {
-//       response.status(403).send({
-//         responseCode: 403,
-//         data: false,
-//         message: "해당 회원이 존재하지 않습니다."
-//       })
-//     }
-//     }).catch((err) => {
-//       response.status(403).send({
-//         responseCode: 403,
-//         data: false,
-//         message: "마이페이지 조회를 위한 DB조회 실패",
-//         error: err
-//       })
-//     })
-// };
+
 /**
  * 회원정보를 변경하는 메서드
  * @param {*} request
@@ -424,8 +372,6 @@ const updateUsers = async (request, response) => {
   // console.log('request.body ', request.body);
   const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  let newHashed, newHashedPass;
-  const salt = parseInt(process.env.USER_SALT);
 
   if (checkTokenResult.result == true) {
     if(request.body.password != undefined || request.body.password != '' || request.body.password != null) {
@@ -440,7 +386,6 @@ const updateUsers = async (request, response) => {
         if(comparePassResult === true) {
           Users.update(
             {
-              // name: request.body.name,
               nickName: request.body.nickName,
               address1: request.body.address1,
               address2: request.body.address2,
@@ -578,7 +523,6 @@ const updatePassword = async(request, response) => {
       message: "인증키가 유효하지 않습니다."
     })
   }
-
 }
 
 
@@ -588,10 +532,6 @@ const updatePassword = async(request, response) => {
  * @param {*} response 
  */
 const selectUsersProfileImage = async (request, response) => {
-  // console.log('request.query.account' , request.query.account);
-  // console.log('request.body.account' , request.body.account);
-  // console.log(request);
-
   await Users.findOne({
     attributes: ['profileImageFileName'],
     where: { account: request.query.account },
@@ -769,14 +709,9 @@ const updateProfileImage = async (request, response) => {
  */
 const dormancyUsers = async (request, response) => {
   const currentTimeStamp = CurrentDate.CurrentTimeStamp();
-  const checkTokenResult = await CheckToken.CheckToken(
-    1,
-    request.headers.token
-  );
+  const checkTokenResult = await CheckToken.CheckToken(1, request.headers.token);
 
-  // console.log(request.body.account);
-
-  if (checkTokenResult == true) {
+  if (checkTokenResult.result == true) {
     Users.update(
       {
         modifiedDate: currentTimeStamp,
@@ -1023,11 +958,8 @@ const loginStatusCheck = async (req, res) => {
       });
       return;
     }
-    // console.log('req:\n', req.session);
 
-    // const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, req.user.toekn, token);
     const checkTokenResult = await CheckToken.CheckTokenLoginStatus(1, token);
-    // console.log('checkTokenResult : ', checkTokenResult);
 
     if (checkTokenResult.status === true) {
       const result = await Users.findOne({

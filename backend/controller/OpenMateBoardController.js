@@ -2,9 +2,6 @@ const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
 const MateBoard = require('../models/MateBoard');
-const CheckToken = require('../middleware/CheckToken');
-const CurrentDate = require('../middleware/CurrentDate');
-
 const Animals = require('../models/Animals');
 const Users = require('../models/Users');
 
