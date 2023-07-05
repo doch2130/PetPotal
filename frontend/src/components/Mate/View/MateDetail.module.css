@@ -58,6 +58,10 @@
   margin: 5px auto;
 }
 
+.title {
+  margin-top: 2rem;
+}
+
 .content1, .content2 {
   margin: 20px auto;
 }

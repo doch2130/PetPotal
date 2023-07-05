@@ -121,7 +121,7 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
   });
   
   const onSubmit = async (data:MateUpdateFormInput):Promise<void> => {
-    console.log('data ', data);
+    // console.log('data ', data);
     if(mateBoardCategory === '1') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
@@ -55,10 +54,6 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
   const controller = new Controller();
   const { openAlert } = useAlert();
 
-  const itemsPerPage = 9;
-  const startIndex = (Number(matePageNumber) - 1) * itemsPerPage;
-  const endIndex = Number(matePageNumber) * itemsPerPage;
-
   // const detailPostMoveHandler = (mateBoardIndexNumber:number):void => {
   const detailPostMoveHandler = (el:MateBoardPostListInterface):void => {
     // navigater('/mate/detail/1');
@@ -93,11 +88,19 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
   }
 
   const timeSortChangeFunction = (e:any):void => {
-    console.log('e.target.value ', e.target.value);
+    // console.log('e.target.value ', e.target.value);
+
+    if(e.target.value === 'oldest') {
+      openAlert({
+        title: '정렬 서비스 준비 중입니다.',
+        type: 'error',
+        content: '서비스 준비중 입니다',
+      });
+      return ;
+    }
 
     // 정렬에 따라서 데이터 호출을 다시 해야할 듯
     // offset으로 데이터를 가져오기 때문에 전체 데이터에 대한 정렬이 아니라서 1페이지 기준으로만 변경이 된다.
-
     setTimeSort(e.target.value);
     return ;
   }
@@ -112,7 +115,8 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
           <p>정렬</p>
           <select onChange={timeSortChangeFunction}>
             <option value='newest'>최신순</option>
-            <option value='oldest'>오래된 순</option>
+            {/* 서비스 준비중으로 인한 disabled 처리 */}
+            <option value='oldest' disabled={true}>오래된 순</option>
           </select>
         </div>
       </div>
@@ -145,7 +149,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
         {viewChange ?
           postList.map((el: MateBoardPostListInterface) => {
             return (
-            <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
+            <div className={style.AnimalCardWrap} key={`${el.mateBoardIndexNumber}Card`}>
               <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
             </div>
             );
@@ -161,7 +165,7 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
             </div>
           {postList.map((el: MateBoardPostListInterface) => {
             return (
-              <div key={el.mateBoardIndexNumber}>
+              <div key={`${el.mateBoardIndexNumber}Table`}>
                 <MateBoardPostTable detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
               </div>
             )

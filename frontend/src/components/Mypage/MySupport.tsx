@@ -30,7 +30,7 @@ interface MateBoardPostListInterface {
   mateBoardLat: number;
 }
 
-export default function MyWrite() {
+export default function MySupport() {
   const navigater = useNavigate();
   const historyValue = useParams();
   const controller = new Controller();
@@ -38,8 +38,8 @@ export default function MyWrite() {
   const [mateBoardView, setMateBoardView] = useRecoilState<mateBoardViewType>(mateBoardViewState);
   const { viewChange } = mateBoardView;
   const { openAlert } = useAlert();
-  const [ myMateBoardList, setMyMateBoardList ] = useState<MateBoardPostListInterface[]>([]);
-  const [ printMyMateBoardList, setPrintMyMateBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  const [ myMateSupportBoardList, setmyMateSupportBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  const [ printmyMateSupportBoardList, setPrintmyMateSupportBoardList ] = useState<MateBoardPostListInterface[]>([]);
   const [ postPageNumber, setPostPageNumber ] = useState<string>('1');
   const [ totalPostCount, setTotalPostCount ] = useState<number>(0);
   const date = new Date();
@@ -50,12 +50,12 @@ export default function MyWrite() {
     const historyKeyword = historyValue.page;
     const historyPostKeyword = historyValue.postNumber;
 
-    if(historyKeyword === 'write' && historyPostKeyword === undefined) {
-      navigater('/mypage/write/1');
+    if(historyKeyword === 'support' && historyPostKeyword === undefined) {
+      navigater('/mypage/support/1');
       return ;
     }
 
-    if(historyKeyword === 'write' && historyPostKeyword) {
+    if(historyKeyword === 'support' && historyPostKeyword) {
       setPostPageNumber(historyPostKeyword);
     }
 
@@ -65,12 +65,11 @@ export default function MyWrite() {
   useEffect(():void => {
     const getMyMateBoardPost = async () => {
       try {
-        // const result = await controller.myMateBoardPost(userInfo[0].account);
-        const result = await controller.myMateBoardPost(userInfo[0].account);
+        const result = await controller.myMateSupportBoardPost(userInfo[0].account);
         // console.log('getMyMateBoard ', result);
         // const reverse = [...result.data.data.rows].reverse();
-        // setMyMateBoardList(reverse);
-        setMyMateBoardList(result.data.data.rows);
+        // setmyMateSupportBoardList(reverse);
+        setmyMateSupportBoardList(result.data.data.rows);
         setTotalPostCount(result.data.data.count);
         return ;
       } catch (err:any) {
@@ -102,14 +101,14 @@ export default function MyWrite() {
   }
 
   useEffect(():void => {
-    // console.log('myMateBoardList ', myMateBoardList);
+    // console.log('myMateSupportBoardList ', myMateSupportBoardList);
     // console.log('totalPostCount ', totalPostCount);
     // console.log('postPageNumber ', postPageNumber);
-    if(myMateBoardList.length > 0) {
-      // setPrintMyMateBoardList(myMateBoardList?.slice((Number(postPageNumber)-1)*9, 9*Number(postPageNumber)));
-      setPrintMyMateBoardList(myMateBoardList?.slice((Number(postPageNumber)-1)*8, 8*Number(postPageNumber)));
+    if(myMateSupportBoardList.length > 0) {
+      // setPrintmyMateSupportBoardList(myMateSupportBoardList?.slice((Number(postPageNumber)-1)*9, 9*Number(postPageNumber)));
+      setPrintmyMateSupportBoardList(myMateSupportBoardList?.slice((Number(postPageNumber)-1)*8, 8*Number(postPageNumber)));
     }
-  }, [myMateBoardList, postPageNumber]);
+  }, [myMateSupportBoardList, postPageNumber]);
 
   return (
     <div className={style.wrap}>
@@ -134,15 +133,15 @@ export default function MyWrite() {
         }
       </div>
 
-      {myMateBoardList?.length === 0 && postPageNumber !== '1' ?
-      <MyBoardNotPage url={'/mypage/write/1'} /> :
-      myMateBoardList?.length === 0 && postPageNumber === '1' ? 
+      {myMateSupportBoardList?.length === 0 && postPageNumber !== '1' ?
+      <MyBoardNotPage url={'/mypage/support/1'} /> :
+      myMateSupportBoardList?.length === 0 && postPageNumber === '1' ? 
       <h2 className={style.zeroContent}>작성한 글이 없습니다.</h2>
       :
       viewChange ?
       <>
       <div className={style.bodyAniamlCard}>
-        {printMyMateBoardList.map((el:MateBoardPostListInterface) => {
+        {printmyMateSupportBoardList.map((el:MateBoardPostListInterface) => {
           return (
             <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
               <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
@@ -153,7 +152,7 @@ export default function MyWrite() {
       
       <div className={style.wrapBottom}>
         {totalPostCount > 0 && <MyBoardPostButton postPageNumber={postPageNumber} setPostPageNumber={setPostPageNumber}
-        totalPostCount={totalPostCount} pageUrl={'/mypage/write'} />}
+        totalPostCount={totalPostCount} pageUrl={'/mypage/support'} />}
       </div>
       </>
       :
@@ -164,8 +163,8 @@ export default function MyWrite() {
         <p>제목</p>
         <p>날짜</p>
       </div>
-      {/* {myMateBoardList.map((el:MateBoardPostListInterface) => { */}
-      {printMyMateBoardList.map((el:MateBoardPostListInterface) => {
+      {/* {myMateSupportBoardList.map((el:MateBoardPostListInterface) => { */}
+      {printmyMateSupportBoardList.map((el:MateBoardPostListInterface) => {
         return (
         <div className={style.body} key={el.mateBoardIndexNumber} onClick={() => detailPostMoveHandler(el)}>
             <p>{el.mateBoardIndexNumber}</p>
@@ -182,7 +181,7 @@ export default function MyWrite() {
 
       <div className={style.wrapBottom}>
         {totalPostCount > 0 && <MyBoardPostButton postPageNumber={postPageNumber} setPostPageNumber={setPostPageNumber}
-        totalPostCount={totalPostCount} pageUrl={'/mypage/write'} />}
+        totalPostCount={totalPostCount} pageUrl={'/mypage/support'} />}
       </div>
       </>
       }

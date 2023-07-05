@@ -180,25 +180,12 @@ export default class Controller {
         }
       });
     }
-    // return this.httpClient.get(`mateBoard/findAllContent/${pageNumber}`,
-    // return this.httpClient.get(`mateBoard/findAllContentDesc/${pageNumber}`,
-    // {
-    //   params: searchQuery,
-    //   paramsSerializer: params => {
-    //     return qs.stringify(params, { arrayFormat: 'brackets' })
-    //   }
-    // })
   }
 
   // 메이트 게시판 - 상세 글 가져오기
   async mateBoardDetailPost(mateBoardIndexNumber) {
     return this.httpClient.get(`mateBoard/findByIndex/${mateBoardIndexNumber}`);
   }
-
-  // // 메이트 게시판 - 좋아요 게시글 가져오기
-  // async mateLikeBoardList(account) {
-  //   return this.httpClient.get(`mateBoard/mateLikeBoardList?account=${account}`);
-  // }
 
   // 메이트 게시판 - 상세 글 삭제
   async mateBoardDeletePost(mateBoardIndexNumber) {
@@ -215,6 +202,11 @@ export default class Controller {
   // 마이 페이지 - 메이트 본인 글 가져오기
   async myMateBoardPost(account) {
     return this.httpClient.get(`mateBoard/findByUser/${account}`);
+  }
+
+  // 마이 페이지 - 메이트 지원한 글 가져오기
+  async myMateSupportBoardPost(account) {
+    return this.httpClient.get(`mateBoard/findByUser2/${account}`);
   }
 
 }

@@ -1,9 +1,7 @@
 import { KeyboardEvent, useRef, useState } from 'react'
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../recoil/user';
 import { useAlert } from '../../hooks/useAlert';
-import { useModal } from '../../hooks/useModal';
-import { useConfirm } from '../../hooks/useConfirm';
 import Controller from '../../api/controller';
 import MyInfo from './MyInfo';
 import style from './MyInfoCertification.module.css';
@@ -24,10 +22,8 @@ export default function MyInfoCertification() {
   const [ certification, setCertification ] = useState<Boolean>(false);
   const controller = new Controller();
   const { openAlert } = useAlert();
-  const { openModal, closeModal } = useModal();
-  const { openConfirm, closeConfirm } = useConfirm();
   const password = useRef<HTMLInputElement>(null);
-  const [userInfo, setUserInfo] = useRecoilState<UserType[]>(userState);
+  const userInfo = useRecoilValue<UserType[]>(userState);
   const [userData, setUserData] = useState<userDataInterface>({
     account: '',
     name: '',

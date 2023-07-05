@@ -3,8 +3,8 @@ import { useConfirm } from '../../hooks/useConfirm';
 import { useAlert } from '../../hooks/useAlert';
 import Controller from '../../api/controller';
 import MyPetModifyModal from './MyPetModifyModal';
-import style from './MyPetBox.module.css';
 import defaultImg from '../../assets/matepage/MateDefaultImage.png';
+import style from './MyPetBox.module.css';
 
 interface MyPetBoxInterface {
   petData: myPetInfoInterface;

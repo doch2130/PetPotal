@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-// import { useGetMateBoardListQuery } from '../../../hooks/queries/useGetMateBoardListQuery';
+import { useQuery } from '@tanstack/react-query';
+import { useAlert } from '../../../hooks/useAlert';
 import Controller from '../../../api/controller';
 import RegionData from './RegionData';
 import KindData from './KindData';
@@ -12,7 +12,6 @@ import MateBoardPost from './MateBoardPost';
 import MateBoardNotPage from './MateBoardNotPage';
 import close from '../../../assets/icon/plus.png';
 import style from './MateBoard.module.css';
-import { useAlert } from '../../../hooks/useAlert';
 
 interface searchQueryInterface {
   searchRegion: string;
@@ -30,7 +29,6 @@ export default function MateBoard() {
   const [ kindDataList, setKindDataList ] = useState<String[]>([]);
   const [ boxPostType, setBoxPostType ] = useState<String[]>([]);
   const controller = new Controller();
-  // const boxPostAmount = useRef<HTMLInputElement>(null);
   const [ boxPostAmountValue, setBoxPostAmountValue ] = useState<number>(0);
   const [ searchQuery, setSearchQuery] = useState<searchQueryInterface>({
     searchRegion: '',
@@ -147,30 +145,13 @@ export default function MateBoard() {
 
   }, [historyValue]);
 
-
-  // React Query default
-  // useQuery({queryKey: '', queryFn: ()}) React Query V3 이전 방식
-  // const { status, data, error } = useGetMateBoardList(matePageNumber);
-  // function useGetMateBoardList(matePageNumber:string) {
-  //   return useQuery({
-  //     queryKey: [`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery],
-  //     queryFn: async () => {
-  //       const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
-  //       // console.log('result ', result);
-  //       // console.log('result ', result.data.data.rows);
-  //       setPostTotalCount(result.data.data.count);
-  //       // return result.data;
-  //       return result.data.data;
-  //     }
-  //   });
-  // }
-
   const fetchMateBoardList = async () => {
     try {
       const result = await controller.mateBoardList(matePageNumber, searchQuery, userInfo[0].account, timeSort);
       setPostTotalCount(result.data.data.count);
       return result.data.data;
     } catch (err:any) {
+      // console.log(err);
       if(err.response.status === 304) {
         const data = { count: 0, rows: [] };
         return data;
@@ -200,20 +181,15 @@ export default function MateBoard() {
       // postType
       setBoxPostType(boxPostType.filter(el => el !== e.target.value));
     }
-
     return ;
   }
 
-  const boxSearch = (e: React.MouseEvent<HTMLButtonElement>):void => {
-    // e.preventDefault();
+  const boxSearch = ():void => {
     // const boxPostAmountValue = Number(boxPostAmount.current?.value);
-    // console.log('boxPostAmountValue ', boxPostAmountValue);
     let boxPostTypeValue = '';
     if(boxPostType.length === 1 ) {
       boxPostTypeValue = boxPostType[0].toString();
     }
-
-
 
     const regionDataString = regionDataList.toString();
 
@@ -242,7 +218,7 @@ export default function MateBoard() {
     // console.log('updatedRegionDataString ', updatedRegionDataString);
 
     setSearchQuery({
-      // searchRegion: updateRegionDataList.toString(),
+      // searchRegion: regionDataList.toString(),
       searchRegion: updatedRegionDataString,
       searchKind: kindDataList.toString(),
       searchType: boxPostTypeValue,
@@ -388,7 +364,7 @@ export default function MateBoard() {
           <div className={style.boxAmount}>
             <span>금액</span>
             <div>
-              {/* <input ref={boxPostAmount} type='number' placeholder='0' min='0' value={boxPostAmount?.current?.value} /> */}
+              {/* <input ref={boxPostAmount} type='number' placeholder='0' min='0' defaultValue='0' /> */}
               <input type='number' placeholder='0' min='0' value={boxPostAmountValue} onChange={(e) => setBoxPostAmountValue(Number(e.target.value))} />
               <span>원 이상</span>
             </div>

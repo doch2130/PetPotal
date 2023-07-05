@@ -5,8 +5,8 @@ import { useAlert } from '../../hooks/useAlert';
 import Controller from '../../api/controller';
 import PictureBox from '../UI/PictureBox';
 import FileUploadButton from '../UI/FileUploadButton';
-import style from './MyPetAddModal.module.css';
 import defaultImg from '../../assets/matepage/MateDefaultImage.png';
+import style from './MyPetAddModal.module.css';
 
 interface MyPetAddModalInterface {
   onClose: Function;
@@ -95,7 +95,7 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
       formData.append('animalsIndexNumber', petData.animalsIndexNumber.toString());
       formData.append('animalsPhotos', files[0]);
       const result = await controller.myPetImageModify(formData);
-      console.log('result ', result);
+      // console.log('result ', result);
       setPetImage(result.data.data);
 
       let tempIndex = -1;

@@ -97,6 +97,15 @@ export default function LoginPage() {
     window.scrollTo(0, 0);
   }, []);
 
+  const preparingFunction = ():void => {
+    openAlert({
+      title: '기능 준비 중',
+      type: 'error',
+      content: '서비스 준비 중입니다.'
+    });
+    return ;
+  }
+
   return (
     <div className={style.wrap}>
       <div className={style.row}>
@@ -111,9 +120,9 @@ export default function LoginPage() {
             </div>
             <div className={style.findAccountWrap}>
               <p>
-                <span>아아디 찾기</span>
+                <span onClick={preparingFunction}>아아디 찾기</span>
                 <span> | </span>
-                <span>비밀번호 찾기</span>
+                <span onClick={preparingFunction}>비밀번호 찾기</span>
               </p>
             </div>
             <div className={style.loginButtonWrap}>

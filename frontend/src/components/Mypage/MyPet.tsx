@@ -1,33 +1,10 @@
 import { useEffect, useState } from 'react'
-import style from './MyPet.module.css';
 import { useModal } from '../../hooks/useModal';
-import MyPetAddModal from './MyPetAddModal';
-import Controller from '../../api/controller';
-import MyPetBox from './MyPetBox';
 import { useAlert } from '../../hooks/useAlert';
-
-// const tempDataArray: any[] | (() => any[]) = [
-//   {
-//     animalsName: '단추',
-//     animalsAge: 10,
-//     animalsGender: '수컷',
-//     animalsNeutered: '아니오',
-//     animalsWeight: 10.5,
-//     animalsCategory1: '강아지',
-//     animalsCategory2: '포메라니안',
-//     animalsPhotos: '/static/media/MainPage_Hoteling_Img_2.1be147f53fe8107cd837.jpg',
-//   },
-//   {
-//     animalsName: '가을',
-//     animalsAge: 8,
-//     animalsGender: '암컷',
-//     animalsNeutered: '예',
-//     animalsWeight: 5,
-//     animalsCategory1: '고양이',
-//     animalsCategory2: '페르시안',
-//     animalsPhotos: '/static/media/MainPage_Cat.272ff640f2d534141921.png',
-//   }
-// ]
+import MyPetAddModal from './MyPetAddModal';
+import MyPetBox from './MyPetBox';
+import Controller from '../../api/controller';
+import style from './MyPet.module.css';
 
 interface myPetInfoInterface {
   animalsIndexNumber: number;

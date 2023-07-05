@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import style from './MateBoardSlideImage.module.css';
 import mateSlideImage1 from '../../../assets/matepage/mateSlideImage_1.png';
 import mateSlideImage2 from '../../../assets/matepage/mateSlideImage_2.png';

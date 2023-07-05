@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import defaultImg from '../../assets/profile/default.png';
-import MyInfoModifyModal from './MyInfoModifyModal';
-import style from './MyInfo.module.css';
-import { useModal } from '../../hooks/useModal';
-import { useAlert } from '../../hooks/useAlert';
-import { useConfirm } from '../../hooks/useConfirm';
-import Controller from '../../api/controller';
 import { useEffect, useState } from 'react';
 import { UserType, userState } from '../../recoil/user';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../hooks/useModal';
+import { useAlert } from '../../hooks/useAlert';
+import { useConfirm } from '../../hooks/useConfirm';
+import Controller from '../../api/controller';
 import MyInfoPasswordChangeModal from './MyInfoPasswordChangeModal';
-// import { useQuery, useQueryClient } from '@tanstack/react-query';
+import MyInfoModifyModal from './MyInfoModifyModal';
+import defaultImg from '../../assets/profile/default.png';
+import style from './MyInfo.module.css';
 
 interface userDataInterface {
   account: '',
@@ -76,31 +75,6 @@ export default function MyInfo(props:MyInfoInterface) {
             return ;
           }
         }
-        // if(result.data.responseCode !== 200) {
-        //   openAlert({
-        //     title: '회원탈퇴 실패',
-        //     type: 'error',
-        //     content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
-        //   });
-        //   return ;
-        // }
-
-        // closeConfirm();
-        // openAlert({
-        //   title: '회원탈퇴 성공',
-        //   type: 'success',
-        //   content: '회원탈퇴가 정상적으로 완료되었습니다'
-        // });
-        // setUserInfo([{
-        //   account: '',
-        //   address1: '',
-        //   address2: '',
-        //   address3: '',
-        //   address4: '',
-        //   message: '',
-        //   responseCode: 0,
-        // }]);
-        // navigate('/');
       },
     });
   }
@@ -161,21 +135,6 @@ export default function MyInfo(props:MyInfoInterface) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfo]);
 
-  // 리액트 쿼리 테스트
-  // const { status, data, error } = useInfo(userInfo[0].account);
-  // function useInfo(account:String) {
-  //     return useQuery({
-  //       queryKey: ['userInfo'],
-  //       queryFn: async () => {
-  //         const res = await controller.userInfoLoad(account);
-  //         return res.data;
-  //       }
-  //     });
-  // }
-  // console.log('data ', data);
-  // console.log('status ', status);
-  // console.log('error ', error);
-  // console.log('profileImage ', profileImage);
   return (
     <div className={style.wrap}>
       <h2>회원정보</h2>

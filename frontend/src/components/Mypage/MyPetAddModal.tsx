@@ -1,14 +1,14 @@
 import { ChangeEvent, MouseEventHandler, useEffect, useState } from 'react'
-import style from './MyPetAddModal.module.css';
-import PictureBox from '../UI/PictureBox';
-import FileUploadButton from '../UI/FileUploadButton';
-import defaultImg from '../../assets/icon/animal.png';
 import { useForm, SubmitHandler} from 'react-hook-form';
+import { useRecoilValue } from 'recoil';
+import { UserType, userState } from '../../recoil/user';
 import { useAlert } from '../../hooks/useAlert';
 import { useConfirm } from '../../hooks/useConfirm';
 import Controller from '../../api/controller';
-import { useRecoilValue } from 'recoil';
-import { UserType, userState } from '../../recoil/user';
+import PictureBox from '../UI/PictureBox';
+import FileUploadButton from '../UI/FileUploadButton';
+import defaultImg from '../../assets/icon/animal.png';
+import style from './MyPetAddModal.module.css';
 
 interface myPetInfoInterface {
   animalsIndexNumber: number;

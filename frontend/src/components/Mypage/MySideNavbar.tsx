@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import style from './MySideNavbar.module.css';
 
-interface propsData {
+interface MySideNavbarInterface {
   pageValue: String;
 }
 
-export default function MySideNavbar(props:propsData) {
+export default function MySideNavbar(props:MySideNavbarInterface) {
   const { pageValue } = props;
 
   const menuDefault = style.menu;
@@ -42,7 +42,7 @@ export default function MySideNavbar(props:propsData) {
       </div>
       <div className={pageValue === 'support' ? menuActive : menuDefault}>
         <Link to='/mypage/support' className={style.wrapText}>내가 지원한 글</Link>
-        <Link to='/mypage/support' className={style.wrapImage}>
+        <Link to='/mypage/support' className={style.wrapImage} >
           <svg xmlns="http://www.w3.org/2000/svg" className="ionicon" viewBox="0 0 512 512">
             <path d="M432 320V144a32 32 0 00-32-32h0a32 32 0 00-32 32v112M368 256V80a32 32 0 00-32-32h0a32 32 0 00-32 32v160M240 241V96a32 32 0 00-32-32h0a32 32 0 00-32 32v224M304 240V48a32 32 0 00-32-32h0a32 32 0 00-32 32v192" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32"/>
             <path d="M432 320c0 117.4-64 176-152 176s-123.71-39.6-144-88L83.33 264c-6.66-18.05-3.64-34.79 11.87-43.6h0c15.52-8.82 35.91-4.28 44.31 11.68L176 320" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="32"/>
@@ -50,8 +50,8 @@ export default function MySideNavbar(props:propsData) {
         </Link>
       </div>
       <div className={pageValue === 'interest' ? menuActive : menuDefault}>
-        <Link to='/mypage/interest' className={style.wrapText}>관심 글</Link>
-        <Link to='/mypage/interest' className={style.wrapImage}>
+        <Link to='/mypage/interest' className={style.wrapText} >관심 글</Link>
+        <Link to='/mypage/interest' className={style.wrapImage} >
           <svg xmlns="http://www.w3.org/2000/svg" className="ionicon" viewBox="0 0 512 512">
             <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z" fill="none" stroke="currentColor" strokeMiterlimit="10" strokeWidth="32"/>
             <path d="M256 360a16 16 0 01-9-2.78c-39.3-26.68-56.32-45-65.7-56.41-20-24.37-29.58-49.4-29.3-76.5.31-31.06 25.22-56.33 55.53-56.33 20.4 0 35 10.63 44.1 20.41a6 6 0 008.72 0c9.11-9.78 23.7-20.41 44.1-20.41 30.31 0 55.22 25.27 55.53 56.33.28 27.1-9.31 52.13-29.3 76.5-9.38 11.44-26.4 29.73-65.7 56.41A16 16 0 01256 360z" />

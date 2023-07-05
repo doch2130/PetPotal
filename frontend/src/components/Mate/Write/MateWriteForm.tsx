@@ -11,7 +11,6 @@ import MateWritePetAdd from './MateWritePetAdd';
 import MateWriteTextEditorQuil from './MateWriteTextEditorQuil';
 import MateWriteMap from './MateWriteMap';
 import style from './MateWriteForm.module.css';
-import geocoding from '../../../api/geocoding';
 
 interface mateWriteFormInterface {
   imgFile: Array<File>;
@@ -85,7 +84,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   });
   
   const onSubmit = async (data:MateWriteFormInput):Promise<void> => {
-    console.log('data ', data);
     if(mateBoardCategory === '1') {
       if((getValues('petAge').includes('선택'))) {
         setError('petAge', {message: '나이를 선택해주세요'}, {shouldFocus: true });
@@ -143,22 +141,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   }
 
   useEffect(():void => {
-    // const mapGeocoding = async ():Promise<void> => {
-    //   const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();
-    //   if (address !== '') {
-    //     const result = await controller.naverMapGeocoding(address);
-    //     setMapData({
-    //       x: result.data[0],
-    //       y: result.data[1],
-    //       _lng: result.data[0],
-    //       _lat: result.data[1],
-    //     });
-    //   }
-    // }
-
-    // mapGeocoding();
-
-
     const searchAddressToCoordinate = ():void => {
       const navermaps = window.naver.maps;
       const address = (userInfo[0].address1 + ' ' + userInfo[0].address2 + ' ' + userInfo[0].address3 + ' ' + userInfo[0].address4).trim();

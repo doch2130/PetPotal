@@ -1,9 +1,9 @@
-import React, { MouseEventHandler } from 'react'
-import style from './MateWritePetAdd.module.css';
+import { MouseEventHandler } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Controller from '../../../api/controller';
 import { useConfirm } from '../../../hooks/useConfirm';
 import { useAlert } from '../../../hooks/useAlert';
+import Controller from '../../../api/controller';
+import style from './MateWritePetAdd.module.css';
 
 interface myPetInfoInterface {
   animalsIndexNumber: number;

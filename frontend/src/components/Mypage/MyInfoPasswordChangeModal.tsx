@@ -1,9 +1,9 @@
 import { MouseEventHandler } from 'react'
-import style from './MyInfoPasswordChangeModal.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAlert } from '../../hooks/useAlert';
 import { useConfirm } from '../../hooks/useConfirm';
 import Controller from '../../api/controller';
+import style from './MyInfoPasswordChangeModal.module.css';
 
 interface userChangePasswordFormInput {
   currentPassword: String;

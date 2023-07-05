@@ -4,22 +4,20 @@ import { UserType, userState } from '../../../recoil/user';
 import { useModal } from '../../../hooks/useModal';
 import { Params, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useConfirm } from '../../../hooks/useConfirm';
 import { useAlert } from '../../../hooks/useAlert';
-// import moment from 'moment';
 import Controller from '../../../api/controller';
-// import geocoding from '../../../api/geocoding';
 import PictureBox from '../../UI/PictureBox';
 import MateDetailMap from './MateDetailMap';
+import mateDefaultImage from '../../../assets/matepage/MateDefaultImage.png';
 import style from './MateDetail.module.css';
 
-import emptyHeart from '../../../assets/icon/empty_heart.png';
-import share from '../../../assets/icon/share.png';
-import star from '../../../assets/icon/star.png';
-import interest from '../../../assets/icon/people.png';
-import chatting from '../../../assets/icon/chatting.png';
-import locationMap from '../../../assets/icon/location_map.png';
-import mateDefaultImage from '../../../assets/matepage/MateDefaultImage.png';
-import { useConfirm } from '../../../hooks/useConfirm';
+// import emptyHeart from '../../../assets/icon/empty_heart.png';
+// import share from '../../../assets/icon/share.png';
+// import star from '../../../assets/icon/star.png';
+// import interest from '../../../assets/icon/people.png';
+// import chatting from '../../../assets/icon/chatting.png';
+// import locationMap from '../../../assets/icon/location_map.png';
 
 interface mapData {
   x: number;
@@ -200,40 +198,6 @@ export default function MateDetail() {
       });
     }
 
-    // const mapGeocoding = async () => {
-    //   const address = (`${data?.data.mateBoardAddress1} ${data?.data.mateBoardAddress2} ${data?.data.mateBoardAddress3} ${data?.data.mateBoardAddress4}`).trim();
-    //   console.log('address ', address);
-    //   if (address !== '') {
-    //     try {
-    //       // const result = await controller.naverMapGeocoding(address);
-    //       const result = await geocoding(address);
-    //       console.log('result ', result);
-    //       // setMapData({
-    //       //   x: result.data[0],
-    //       //   y: result.data[1],
-    //       //   _lng: result.data[0],
-    //       //   _lat: result.data[1],
-    //       // });
-    //     } catch (err) {
-    //       openAlert({
-    //         title: '맵 지오코딩 에러',
-    //         type: 'error',
-    //         content: '',
-    //       });
-    //     }
-    //   }
-    // }
-
-    // if(data) {
-    //   mapGeocoding();
-    //   setMapData({
-    //     x: data?.data.mateBoardLng,
-    //     y: data?.data.mateBoardLat,
-    //     _lng: data?.data.mateBoardLng,
-    //     _lat: data?.data.mateBoardLat,
-    //   });
-    // }
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -279,13 +243,25 @@ export default function MateDetail() {
         navigater(`/mate/detail/update/${mateBoardIndexNumber}`);
       }
     });
+    return ;
   }
+
+  const matePostContact = ():void => {
+    openAlert({
+      title: '메이트 연락하기 기능',
+      type: 'error',
+      content: '준비 중인 기능입니다.',
+    });
+    return ;
+  }
+
   return (
     <>
     <div className={style.wrap}>
       <div className={style.top}>
-        <img src={emptyHeart} alt='emptyHeart' />
-        <img src={share} alt='share' />
+        {/* 기능 준비 중 */}
+        {/* <img src={emptyHeart} alt='emptyHeart' /> */}
+        {/* <img src={share} alt='share' /> */}
       </div>
       <div className={style.body}>
         {/* 사진 */}
@@ -309,29 +285,27 @@ export default function MateDetail() {
         </div>
         {/* 내용 */}
         <div className={style.contentWrap}>
-          {/* <h2>나비</h2> */}
           <h2>{data?.data.Animals?.animalsName}</h2>
           <div className={style.genderAge}>
-            {/* <p>암컷</p> */}
-            {/* <p>11세</p> */}
             {data?.data.Animals && <p>{data?.data.Animals?.animalsGender === 1 ? '수컷' : '암컷'}</p>}
             {data?.data.Animals && <p>{data?.data.Animals?.animalsAge}세</p>}
           </div>
           <div className={style.breed}>
-            {/* <p>트레디셔널 페르시안</p> */}
             <p>{data?.data.Animals?.animalsCategory2}</p>
           </div>
-          <div className={style.grade}>
+          {/* 서비스 준비중 */}
+          {/* <div className={style.grade}>
             <img src={star} alt='star' />
             <p>4.6 (123)</p>
-          </div>
-          <div className={style.interest}>
+          </div> */}
+          {/* 서비스 준비중 */}
+          {/* <div className={style.interest}>
             <img src={interest} alt='interest' />
             <p>97명</p>
             <p>이 이 글에 관심을 가지고 있어요!</p>
-          </div>
-          {/* 채팅, 위치 버튼 */}
-          <div className={style.buttonGroup}>
+          </div> */}
+          {/* 채팅, 위치 버튼 - 미사용으로 주석처리 */}
+          {/* <div className={style.buttonGroup}>
             <div>
               <img src={chatting} alt='chatting' />
               <span>연락하기</span>
@@ -340,31 +314,20 @@ export default function MateDetail() {
               <img src={locationMap} alt='locationMap' />
               <span>위치보기</span>
             </div>
-          </div>
+          </div> */}
           {/* 내용 2 */}
           <div className={style.title}>
             <p>제목</p>
-            {/* <p>강아지 제목입니다.</p> */}
             <p>{data?.data.mateBoardTitle}</p>
           </div>
           <div className={style.content1}>
             <p>세부내용</p>
-            {/* <pre> */}
             <pre dangerouslySetInnerHTML={{__html: data?.data.mateBoardContent1}}>
-              {/* <p>날짜 : 202-04-15 토요일</p>
-              <p>시간 : 16시 ~ 17시</p>
-              <p>급여 : 10,000원</p>
-              <p> </p>
-              <p>주요 내용 :</p>
-              <p>1시간 동안 공원에서 산책 시켜주시면 됩니다.</p> */}
             </pre>
           </div>
           <div className={style.content2}>
             <p>*주의사항</p>
-            {/* <pre> */}
             <pre dangerouslySetInnerHTML={{__html: data?.data.mateBoardContent2}}>
-              {/* <p>공격성이 어느 정도 있는 고양이 입니다. 그래서 초보자 분은 하기 힘드실 수 있습니다.</p>
-              <p>그리고 심장이 안좋아서 약을 먹고 있습니다.</p> */}
             </pre>
           </div>
           <div className={style.locationMap}>
@@ -381,8 +344,6 @@ export default function MateDetail() {
           </div>
           <div className={style.contentBottom}>
             <div>
-              {/* <p>2023-04-17 15:24</p> */}
-              {/* <p>{moment(data?.data.mateBoardRegistDate).format('YYYY-MM-DD HH:mm')}</p> */}
               <p>{`${data?.data.mateBoardRegistDate.split('T')[0]} ${data?.data.mateBoardRegistDate.split('T')[1].split(':')[0]}:${data?.data.mateBoardRegistDate.split('T')[1].split(':')[1]}`}</p>
               {data?.data.Users.account === userInfo[0].account &&
               <div>
@@ -395,7 +356,7 @@ export default function MateDetail() {
         </div>
       </div>
       <div className={style.footer}>
-        <button type='button'>연락하기</button>
+        <button type='button' onClick={matePostContact}>연락하기</button>
       </div>
     </div>
     </>

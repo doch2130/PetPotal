@@ -1,12 +1,10 @@
 import { MouseEvent, MouseEventHandler, useState } from 'react';
 import { useConfirm } from '../../hooks/useConfirm';
 import { useAlert } from '../../hooks/useAlert';
-// import moment from 'moment';
-import style from './AnimalCard.module.css';
-// import animalImage from '../../assets/matepage/MateImg_3.png';
+import mateDefaultImage from '../../assets/matepage/MateDefaultImage.png';
 import emptyHeart from '../../assets/icon/empty_heart.png';
 import fullHeart from '../../assets/icon/full_heart.png';
-import mateDefaultImage from '../../assets/matepage/MateDefaultImage.png';
+import style from './AnimalCard.module.css';
 
 interface animalCardInterface {
   detailPostMoveHandler: Function;
@@ -44,33 +42,38 @@ export default function AnimalCard(props:animalCardInterface) {
   const postHeartHandler = (event:MouseEvent) => {
     // 상위 엘리먼트들로의 이벤트 전파를 중단
     event.stopPropagation();
-    if(userId !== '' && userId !== undefined) {
-      if(heart) {
-        openConfirm({
-          title: 'mateBoardHeart',
-          content: '좋아요를 해제하시겠습니까?',
-          callback: () => {
-            setHeart(false);
-            closeConfirm();
-          }
-        });
-      } else {
-        openConfirm({
-          title: 'mateBoardHeart',
-          content: '좋아요를 등록하시겠습니까?',
-          callback: () => {
-            setHeart(true);
-            closeConfirm();
-          }
-        });
-      }
-    } else {
-      openAlert({
-        title: 'mateBoardHeart Login',
-        type: 'error',
-        content: '로그인 이후 사용할 수 있습니다'
-      });
-    }
+    openAlert({
+      title: 'mateBoardHeart preparing',
+      type: 'error',
+      content: '서비스 준비 중입니다.',
+    });
+    // if(userId !== '' && userId !== undefined) {
+    //   if(heart) {
+    //     openConfirm({
+    //       title: 'mateBoardHeart',
+    //       content: '좋아요를 해제하시겠습니까?',
+    //       callback: () => {
+    //         setHeart(false);
+    //         closeConfirm();
+    //       }
+    //     });
+    //   } else {
+    //     openConfirm({
+    //       title: 'mateBoardHeart',
+    //       content: '좋아요를 등록하시겠습니까?',
+    //       callback: () => {
+    //         setHeart(true);
+    //         closeConfirm();
+    //       }
+    //     });
+    //   }
+    // } else {
+    //   openAlert({
+    //     title: 'mateBoardHeart Login',
+    //     type: 'error',
+    //     content: '로그인 이후 사용할 수 있습니다'
+    //   });
+    // }
   }
   
   const heartStyle = `${style.heart} ${heart ? style.heartActive : ''}`;

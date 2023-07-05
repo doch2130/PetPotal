@@ -5,27 +5,29 @@ interface MyBoardPostButtonInterface {
   postPageNumber: string;
   setPostPageNumber: Function;
   totalPostCount: number;
+  pageUrl: string;
 }
 
 export default function MyBoardPostButton(props:MyBoardPostButtonInterface) {
-  const { postPageNumber, setPostPageNumber, totalPostCount } = props;
-  const pageTotal = Math.ceil(totalPostCount/9);
+  const { postPageNumber, setPostPageNumber, totalPostCount, pageUrl } = props;
   const navigater = useNavigate();
+  const pageTotal = Math.ceil(totalPostCount/8);
+  const pageTotalNumber = Math.ceil(totalPostCount/8);
+  const pageLastNumber = Math.min((Math.floor((Number(postPageNumber) - 1) / 3) + 1) * 3, pageTotalNumber);
+  const pageStartNumber = Math.max(pageLastNumber - 2, 1);
   const buttons: JSX.Element[] = [];
-  const pageTotalNumber = Math.ceil(totalPostCount/9);
-  const pageLastNumber = (Math.floor((Number(postPageNumber))/3) + 3) <= pageTotalNumber ? (Math.floor((Number(postPageNumber))/3) + 3) : pageTotalNumber;
 
   const changeFirstPageFunction = ():void => {
     // << 버튼
     setPostPageNumber('1');
-    navigater(`/mypage/write/1`);
+    navigater(`${pageUrl}/1`);
     return ;
   }
 
   const changeLastPageFunction = ():void => {
     //  >> 버튼
     setPostPageNumber(pageTotal.toString());
-    navigater(`/mypage/write/${pageTotal.toString()}`);
+    navigater(`${pageUrl}/${pageTotal.toString()}`);
     return ;
   }
   
@@ -36,7 +38,7 @@ export default function MyBoardPostButton(props:MyBoardPostButtonInterface) {
     }
     const updateMatePageNumber = (Number(postPageNumber) - 1).toString();
     setPostPageNumber(updateMatePageNumber);
-    navigater(`/mypage/write/${updateMatePageNumber}`);
+    navigater(`${pageUrl}/${updateMatePageNumber}`);
     return ;
   }
 
@@ -47,14 +49,14 @@ export default function MyBoardPostButton(props:MyBoardPostButtonInterface) {
     }
     const updateMatePageNumber = (Number(postPageNumber) + 1).toString();
     setPostPageNumber(updateMatePageNumber);
-    navigater(`/mypage/write/${updateMatePageNumber}`);
+    navigater(`${pageUrl}/${updateMatePageNumber}`);
     return ;
   }
 
   const changePageNumberFunction = (changePageNumber:number):void => {
     // 숫자 버튼
     setPostPageNumber(changePageNumber.toString());
-    navigater(`/mypage/write/${changePageNumber}`);
+    navigater(`${pageUrl}/${changePageNumber}`);
     return ;
   }
 
@@ -64,14 +66,15 @@ export default function MyBoardPostButton(props:MyBoardPostButtonInterface) {
   buttons.push(
     <button type='button' key={'prev'} disabled={postPageNumber === '1' ? true : false} onClick={changePrevPageFunction}>&lt;</button>
   );
-  for(let i = Math.floor((Number(postPageNumber))/3); i < pageLastNumber; i++) {
-    if(Number(postPageNumber) === i+1) {
+
+  for (let i = pageStartNumber; i <= pageLastNumber; i++) {
+    if(Number(postPageNumber) === i) {
       buttons.push(
-        <button type='button' key={postPageNumber} className={style.bottomPageButtonActive} onClick={() => changePageNumberFunction(i+1)}>{i+1}</button>
+        <button type='button' key={i} className={style.bottomPageButtonActive} onClick={() => changePageNumberFunction(i)}>{i}</button>
       )
     } else {
       buttons.push(
-        <button type='button' key={postPageNumber+1} onClick={() => changePageNumberFunction(i+1)}>{i+1}</button>
+        <button type='button' key={i} onClick={() => changePageNumberFunction(i)}>{i}</button>
       )
     }
   }
@@ -83,4 +86,5 @@ export default function MyBoardPostButton(props:MyBoardPostButtonInterface) {
   );
 
   return <div className={style.wrap}>{buttons}</div>;
+
 }

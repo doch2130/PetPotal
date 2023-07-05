@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Outlet, Routes } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { UserType, userState } from './recoil/user';
@@ -37,12 +37,6 @@ function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // console.log('userInfo ', userInfo);
-
-  // useEffect(() => {
-  //   console.log("userInfo : ", userInfo);
-  // }, [userInfo]);
   
   return (
     <div className="App">

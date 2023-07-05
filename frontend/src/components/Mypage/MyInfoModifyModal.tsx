@@ -1,13 +1,12 @@
 import { ChangeEvent, MouseEventHandler, useEffect, useState } from 'react'
-import style from './MyInfoModifyModal.module.css';
-import PictureBox from '../UI/PictureBox';
-// import defaultImg from '../../assets/profile/default.png';
-import FileUploadButton from '../UI/FileUploadButton';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
-import Controller from '../../api/controller';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import { useAlert } from '../../hooks/useAlert';
 import { useConfirm } from '../../hooks/useConfirm';
+import PictureBox from '../UI/PictureBox';
+import FileUploadButton from '../UI/FileUploadButton';
+import Controller from '../../api/controller';
+import style from './MyInfoModifyModal.module.css';
 
 interface userDataInterface {
   account: String;
