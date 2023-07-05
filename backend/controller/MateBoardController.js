@@ -181,7 +181,7 @@ exports.findAllMateBoardDesc = async (request, result) => {
     const { searchRegion, searchKind, searchType, searchAmount } = request.query;
     const searchKindReplace = searchKind.replace('강아지', 1).replace('고양이', 2).replace('기타', 3).split(',');
 
-    console.log('request.query ', request.query);
+    // console.log('request.query ', request.query);
 
     const limit = 9;
     let offset = 0;
@@ -192,84 +192,43 @@ exports.findAllMateBoardDesc = async (request, result) => {
 
 
     // console.log('searchRegion ', searchRegion.split(','));
-    let temp = searchRegion.split(',');
-    // console.log('temp ', temp);
+    let tempSearchRegion = searchRegion.split(',');
 
-    // console.log(searchRegion.indexOf('서울특별시'));
-
-    // whereMateBoard.mateBoardFee = { [Op.gte]: Number(searchAmount) };
-    // let tempMateBoardAddress1 = { [Op.in]: [] };
-    let tempMateBoardAddress1 = [];
-    let test;
-
+    let whereMateBoardAddress = [];
+    let tempWhereMateBoardAddress = {};
     if(searchRegion !== '') {
-      temp.forEach((el) => {
-        console.log('el ', el);
-        console.log('el ', el.split(' '));
+      tempSearchRegion.forEach((el) => {
+        // console.log('el ', el);
+        // console.log('el ', el.split(' '));
         const tempSi = el.split(' ')[0];
         const tempGu = el.split(' ')[1];
         // [Op.and]: [{a: 5}, {b: 6}] // (a = 5) AND (b = 6)
-        if(tempGu === '전국') {
-          test = { mateBoardAddress1: tempSi };
+        if(tempGu === '전체') {
+          tempWhereMateBoardAddress = { mateBoardAddress1: tempSi };
         } else {
-          test = { [Op.and]: [{mateBoardAddress1: tempSi}, {mateBoardAddress2: tempGu}] };
+          tempWhereMateBoardAddress = { [Op.and]: [{mateBoardAddress1: tempSi}, {mateBoardAddress2: tempGu}] };
         }
-        console.log('test ', test);
-        // tempMateBoardAddress1[Op.in].push(test);
-        tempMateBoardAddress1.push(test);
+        // console.log('tempWhereMateBoardAddress ', tempWhereMateBoardAddress);
+        whereMateBoardAddress.push(tempWhereMateBoardAddress);
       })
     }
-    console.log('tempMateBoardAddress1 ', tempMateBoardAddress1);
-    // console.log('tempMateBoardAddress1 ', tempMateBoardAddress1[Op.in]);
+    // console.log('whereMateBoardAddress ', whereMateBoardAddress);
 
-
-    // 지역만 하는 결과는 일단 됬음
-    const testResult = await MateBoard.findAndCountAll({
-      include: [
-        {
-          model: Users,
-          as: "Users",
-          attributes: [ "account" ]
-        },
-      ],
-      // where: tempMateBoardAddress1,
-      where: {[Op.or]: tempMateBoardAddress1},
-      offset: offset,
-      limit: limit,
-      order: [['mateBoardRegistDate', `${sort}`]],
-    });
-    console.log('testResult ', testResult);
-
-
-    // const set = new Set(tempMateBoardAddress1);
-    // const uniqueArr = [...set];
-    // console.log('uniqueArr ', uniqueArr);
-
-    // whereMateBoard.mateBoardAddress1 = {}
-    // if(searchRegion.include('서울특별시')) {
-    // }
-
-    // whereMateBoard.mateBoardSeoul = '';
-    // whereMateBoard.mateBoardBusan = '';
-    // whereMateBoard.mateBoardDaegu = '';
-    // whereMateBoard.mateBoardIncheon = '';
-    // whereMateBoard.mateBoardGwangju = '';
-    // whereMateBoard.mateBoardDaejeon = '';
-    // whereMateBoard.mateBoardUlsan = '';
-    // whereMateBoard.mateBoardSejong = '';
-    // whereMateBoard.mateBoardGyeonggi = '';
-    // whereMateBoard.mateBoardGyeongnam = '';
-    // whereMateBoard.mateBoardGyeongbuk = '';
-    // whereMateBoard.mateBoardChungnam = '';
-    // whereMateBoard.mateBoardChungbuk = '';
-    // whereMateBoard.mateBoardJeonnam = '';
-    // whereMateBoard.mateBoardJeonbuk = '';
-    // whereMateBoard.mateBoardGangwon = '';
-    // whereMateBoard.mateBoardJeju = '';
-    
-
-
-    
+    // 지역만 필터 하는 결과는 일단 됬음
+    // const testResult = await MateBoard.findAndCountAll({
+    //   include: [
+    //     {
+    //       model: Users,
+    //       as: "Users",
+    //       attributes: [ "account" ]
+    //     },
+    //   ],
+    //   // where: tempMateBoardAddress1,
+    //   where: {[Op.or]: whereMateBoardAddress},
+    //   offset: offset,
+    //   limit: limit,
+    //   order: [['mateBoardRegistDate', `${sort}`]],
+    // });
 
     // 구함, 지원 조건문
     let whereMateBoard = { mateBoardStatus: 1 };
@@ -285,6 +244,19 @@ exports.findAllMateBoardDesc = async (request, result) => {
       };
     }
 
+    // 조건문 마지막 정리
+    let lastWhereMateBoard = {};
+    if(whereMateBoardAddress.length === 0) {
+      lastWhereMateBoard = whereMateBoard;
+    } else {
+      lastWhereMateBoard = {
+        [Op.and]: [
+          {[Op.or]: whereMateBoardAddress},
+          whereMateBoard
+        ]
+      };
+    }
+
     // 동물 종류 카테고리 (분기)
     if (searchKindReplace[0] === '' || searchKindReplace[0] === '전체') {
       // 동물 종류 선택 안하는 경우 (전체 검색)
@@ -296,7 +268,7 @@ exports.findAllMateBoardDesc = async (request, result) => {
             attributes: [ "account" ]
           },
         ],
-        where: whereMateBoard,
+        where: lastWhereMateBoard,
         offset: offset,
         limit: limit,
         order: [['mateBoardRegistDate', `${sort}`]],
@@ -338,7 +310,7 @@ exports.findAllMateBoardDesc = async (request, result) => {
             where: whereAnimals,
           },
         ],
-        where: whereMateBoard,
+        where: lastWhereMateBoard,
         offset: offset,
         limit: limit,
         order: [['mateBoardRegistDate', `${sort}`]],
