@@ -197,21 +197,50 @@ exports.findAllMateBoardDesc = async (request, result) => {
 
     // console.log(searchRegion.indexOf('서울특별시'));
 
+    // whereMateBoard.mateBoardFee = { [Op.gte]: Number(searchAmount) };
+    // let tempMateBoardAddress1 = { [Op.in]: [] };
     let tempMateBoardAddress1 = [];
+    let test;
 
-    temp.forEach((el) => {
-      console.log('el ', el);
-      console.log('el ', el.split(' '));
-      const tempSi = el.split(' ')[0];
-      if(tempSi !== '전국') {
-        tempMateBoardAddress1.push(el.split(' ')[0]);
-      }
-
-      // if(el.include('서울특별시')) {
-      //   tempMateBoardAddress1.push('서울특별시');
-      // }
-    })
+    if(searchRegion !== '') {
+      temp.forEach((el) => {
+        console.log('el ', el);
+        console.log('el ', el.split(' '));
+        const tempSi = el.split(' ')[0];
+        const tempGu = el.split(' ')[1];
+        // [Op.and]: [{a: 5}, {b: 6}] // (a = 5) AND (b = 6)
+        if(tempGu === '전국') {
+          test = { mateBoardAddress1: tempSi };
+        } else {
+          test = { [Op.and]: [{mateBoardAddress1: tempSi}, {mateBoardAddress2: tempGu}] };
+        }
+        console.log('test ', test);
+        // tempMateBoardAddress1[Op.in].push(test);
+        tempMateBoardAddress1.push(test);
+      })
+    }
     console.log('tempMateBoardAddress1 ', tempMateBoardAddress1);
+    // console.log('tempMateBoardAddress1 ', tempMateBoardAddress1[Op.in]);
+
+
+    // 지역만 하는 결과는 일단 됬음
+    const testResult = await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        },
+      ],
+      // where: tempMateBoardAddress1,
+      where: {[Op.or]: tempMateBoardAddress1},
+      offset: offset,
+      limit: limit,
+      order: [['mateBoardRegistDate', `${sort}`]],
+    });
+    console.log('testResult ', testResult);
+
+
     // const set = new Set(tempMateBoardAddress1);
     // const uniqueArr = [...set];
     // console.log('uniqueArr ', uniqueArr);
