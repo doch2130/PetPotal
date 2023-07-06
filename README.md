@@ -53,4 +53,4 @@ Source Code Github Link: https://github.com/PetPotal/PetPotal
 </div>
 
 <h3> 6. ErDiagram</h3>
-<img style="width: 700px" src="/frontend/src/assets/erd.png">
+<img style="width: 700px" src="/frontend/src/assets/petPotal_erd.png">
