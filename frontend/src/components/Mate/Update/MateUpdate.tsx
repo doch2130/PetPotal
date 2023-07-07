@@ -6,8 +6,11 @@ import Controller from '../../../api/controller'
 import MateUpdatePreview from './MateUpdatePreview';
 import MateUpdateForm from './MateUpdateForm';
 import style from './MateUpdate.module.css';
+import { useRecoilValue } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
 
 export default function MateUpdate() {
+  const userInfo = useRecoilValue<UserType[]>(userState);
   const { openAlert } = useAlert();
   const controller = new Controller();
   const historyValue = useParams<Params<string>>(); 
@@ -25,7 +28,7 @@ export default function MateUpdate() {
   // React Query default
   const fetchMateBoardDetail = async (matePostDetailNumber:string) => {
     try {
-      const result = await controller.mateBoardDetailPost(matePostDetailNumber);
+      const result = await controller.mateBoardDetailPost(matePostDetailNumber, userInfo[0].account);
       return result.data;
     } catch (err) {
       openAlert({

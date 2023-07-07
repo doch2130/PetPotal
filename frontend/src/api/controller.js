@@ -183,8 +183,13 @@ export default class Controller {
   }
 
   // 메이트 게시판 - 상세 글 가져오기
-  async mateBoardDetailPost(mateBoardIndexNumber) {
-    return this.httpClient.get(`mateBoard/findByIndex/${mateBoardIndexNumber}`);
+  async mateBoardDetailPost(mateBoardIndexNumber, account) {
+    if(account === '' || account === undefined) {
+      return this.httpClient.get(`openMateBoard/findByIndex/${mateBoardIndexNumber}`);
+    } else {
+      return this.httpClient.get(`mateBoard/findByIndex/${mateBoardIndexNumber}`);
+    }
+    // return this.httpClient.get(`mateBoard/findByIndex/${mateBoardIndexNumber}`);
   }
 
   // 메이트 게시판 - 상세 글 삭제

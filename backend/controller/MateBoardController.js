@@ -308,6 +308,15 @@ exports.findAllMateBoard = async (request, result) => {
             as: "Animals",
             where: whereAnimals,
           },
+          {
+            model: InterestPost,
+            as: 'InterestPost',
+            required: false,
+            attributes: ['interestPostStatus'],
+            where: {
+              usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+            },
+          }
         ],
         where: lastWhereMateBoard,
         offset: offset,

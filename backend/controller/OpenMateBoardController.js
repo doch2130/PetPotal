@@ -11,46 +11,180 @@ const Users = require('../models/Users');
  * @param {*} request 
  * @param {*} response
  */
-exports.findAllMateBoardDesc = async(request, response) => {
+// exports.findAllMateBoard = async(request, response) => {
 
-  let pageNumber = parseInt(request.params.pageNumber);
-  let limit = 9;
+//   let pageNumber = parseInt(request.params.pageNumber);
+//   let limit = 9;
+//   let offset = 0;
+
+//   if(pageNumber > 1) {
+//     offset = limit * (pageNumber - 1);
+//   }
+
+//   await MateBoard.findAndCountAll({
+//     include: [
+//       {
+//         model: Users,
+//         as: "Users",
+//         attributes: [ "account" ]
+//       }
+//     ],
+//     where: {
+//       mateBoardStatus: 1,
+//     },
+//     offset: offset,
+//     limit: limit,
+//     order: [['mateBoardRegistDate', 'DESC']],
+//   }).then((res) => {
+//     console.log("조회 결과가 존재하지 않습니다.");
+//     if (res.count == 0) {
+//       response.status(304).send({
+//         responseCode: 304,
+//         data: { count: 0, rows: [] },
+//         message: "조회 결과가 존재하지 않습니다.",
+//       });
+//     } else {
+//       console.log("조회 결과를 전송합니다.");
+//       response.status(200).send({
+//         responseCode: 200,
+//         data: res
+//       });
+//     }
+//   });
+// };
+
+
+exports.findAllMateBoard = async (request, result) => {
+  const { pageNumber, sort } = request.params;
+  const { searchRegion, searchKind, searchType, searchAmount } = request.query;
+  const searchKindReplace = searchKind.replace('강아지', 1).replace('고양이', 2).replace('기타', 3).split(',');
+
+  const limit = 9;
   let offset = 0;
 
   if(pageNumber > 1) {
     offset = limit * (pageNumber - 1);
   }
 
-  await MateBoard.findAndCountAll({
-    include: [
-      {
-        model: Users,
-        as: "Users",
-        attributes: [ "account" ]
+  let tempSearchRegion = searchRegion.split(',');
+
+  let whereMateBoardAddress = [];
+  let tempWhereMateBoardAddress = {};
+  if(searchRegion !== '') {
+    tempSearchRegion.forEach((el) => {
+      const tempSi = el.split(' ')[0];
+      const tempGu = el.split(' ')[1];
+      // [Op.and]: [{a: 5}, {b: 6}] // (a = 5) AND (b = 6)
+      if(tempGu === '전체') {
+        tempWhereMateBoardAddress = { mateBoardAddress1: tempSi };
+      } else {
+        tempWhereMateBoardAddress = { [Op.and]: [{mateBoardAddress1: tempSi}, {mateBoardAddress2: tempGu}] };
       }
-    ],
-    where: {
-      mateBoardStatus: 1,
-    },
-    offset: offset,
-    limit: limit,
-    order: [['mateBoardRegistDate', 'DESC']],
-  }).then((res) => {
-    console.log("조회 결과가 존재하지 않습니다.");
-    if (res.count == 0) {
-      response.status(304).send({
-        responseCode: 304,
-        data: { count: 0, rows: [] },
-        message: "조회 결과가 존재하지 않습니다.",
-      });
-    } else {
-      console.log("조회 결과를 전송합니다.");
-      response.status(200).send({
-        responseCode: 200,
-        data: res
-      });
-    }
-  });
+      whereMateBoardAddress.push(tempWhereMateBoardAddress);
+    })
+  }
+
+  // 구함, 지원 조건문
+  let whereMateBoard = { mateBoardStatus: 1 };
+  whereMateBoard.mateBoardFee = { [Op.gte]: Number(searchAmount) };
+
+  if (searchType === '1') {
+    whereMateBoard.mateboardCategory = 1;
+  } else if (searchType === '2') {
+    whereMateBoard.mateboardCategory = 2;
+  } else {
+    whereMateBoard.mateboardCategory = {
+      [Op.in]: [1, 2]
+    };
+  }
+
+  // 조건문 마지막 정리
+  let lastWhereMateBoard = {};
+  if(whereMateBoardAddress.length === 0) {
+    lastWhereMateBoard = whereMateBoard;
+  } else {
+    lastWhereMateBoard = {
+      [Op.and]: [
+        {[Op.or]: whereMateBoardAddress},
+        whereMateBoard
+      ]
+    };
+  }
+
+  // 동물 종류 카테고리 (분기)
+  if (searchKindReplace[0] === '' || searchKindReplace[0] === '전체') {
+    // 동물 종류 선택 안하는 경우 (전체 검색)
+    await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        },
+      ],
+      where: lastWhereMateBoard,
+      offset: offset,
+      limit: limit,
+      order: [['mateBoardRegistDate', `${sort}`]],
+    }).then((response) => {
+      if (response.count == 0) {
+        console.log("게시글 검색 결과가 존재하지 않습니다.")
+        result.status(304).send({
+          responseCode: 304,
+          data: { count: 0, rows: [] },
+          message: 'no result',
+        });
+      } else {
+        console.log("게시글 검색 결과를 반환합니다.")
+        result.status(200).send({
+          responseCode: 200,
+          data: response,
+        });
+      }
+    });
+  } else {
+    // 동물 종류 선택 하는 경우 - include Animals 추가
+    let whereAnimals = { animalsInfoActivate: 1 };
+
+    whereAnimals = { animalsCategory1: [] };
+    searchKindReplace.forEach((el) => {
+      whereAnimals.animalsCategory1.push(Number(el));
+    });
+
+    await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        },
+        {
+          model: Animals,
+          as: "Animals",
+          where: whereAnimals,
+        },
+      ],
+      where: lastWhereMateBoard,
+      offset: offset,
+      limit: limit,
+      order: [['mateBoardRegistDate', `${sort}`]],
+    }).then((response) => {
+      if (response.count == 0) {
+        console.log("게시글 검색 결과가 존재하지 않습니다.")
+        result.status(304).send({
+          responseCode: 304,
+          data: { count: 0, rows: [] },
+          message: 'no result',
+        });
+      } else {
+        console.log("게시글 검색 결과를 반환합니다.")
+        result.status(200).send({
+          responseCode: 200,
+          data: response,
+        });
+      }
+    });
+  }
 };
 
 /**

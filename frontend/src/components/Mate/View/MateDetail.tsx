@@ -150,7 +150,7 @@ export default function MateDetail() {
   // React Query default
   const fetchMateBoardDetail = async (matePostDetailNumber:string) => {
     try {
-      const result = await controller.mateBoardDetailPost(matePostDetailNumber);
+      const result = await controller.mateBoardDetailPost(matePostDetailNumber, userInfo[0].account);
       return result.data;
     } catch (err) {
       openAlert({
