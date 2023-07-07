@@ -118,6 +118,7 @@ export default function MateWriteTextEditorQuil({ placeholderText, name, setValu
         style={{ height: '200px' }}
         placeholder={placeholderText || ''}
         ref={quillRef}
+        value={initialValue}
       />
     </>
   );

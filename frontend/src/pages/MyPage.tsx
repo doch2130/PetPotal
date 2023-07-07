@@ -7,6 +7,7 @@ import MyWrite from '../components/Mypage/MyWrite';
 import style from './MyPage.module.css';
 import { useAlert } from '../hooks/useAlert';
 import MySupport from '../components/Mypage/MySupport';
+import MyInterestPost from '../components/Mypage/MyInterestPost';
 
 export default function MyPage() {
   const { page } = useParams<{ page: string}>();
@@ -15,7 +16,7 @@ export default function MyPage() {
   const navigater = useNavigate();
 
   useEffect(() => {
-    if(page === 'interest') {
+    if(page === 'support') {
       setPageValue('info');
       navigater('/mypage/info');
       openAlert({
@@ -42,12 +43,12 @@ export default function MyPage() {
       <div className={style.navWrap}>
         <MySideNavbar pageValue={pageValue} />
       </div>
-      <div className={pageValue === 'write' || pageValue === 'support' ? `${style.bodyWrap} ${style.bodyWrapWrite}` : style.bodyWrap }>
+      <div className={pageValue === 'write' || pageValue === 'support' || pageValue === 'interest' ? `${style.bodyWrap} ${style.bodyWrapWrite}` : style.bodyWrap }>
         {pageValue === 'info' ? <MyInfoCertification /> : null}
         {pageValue === 'pet' ? <MyPet /> : null}
         {pageValue === 'write' ? <MyWrite /> : null}
         {pageValue === 'support' ? <MySupport /> : null}
-        {pageValue === 'interest' ? <MyWrite /> : null}
+        {pageValue === 'interest' ? <MyInterestPost /> : null}
       </div>
     </div>
   )

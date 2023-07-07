@@ -35,7 +35,7 @@ interface MateInterestPostInterface {
   interestPostStatus?: number;
 }
 
-export default function MySupport() {
+export default function MyInterestPost() {
   const navigater = useNavigate();
   const historyValue = useParams();
   const controller = new Controller();
@@ -43,8 +43,8 @@ export default function MySupport() {
   const [mateBoardView, setMateBoardView] = useRecoilState<mateBoardViewType>(mateBoardViewState);
   const { viewChange } = mateBoardView;
   const { openAlert } = useAlert();
-  const [ myMateSupportBoardList, setmyMateSupportBoardList ] = useState<MateBoardPostListInterface[]>([]);
-  const [ printmyMateSupportBoardList, setPrintmyMateSupportBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  const [ myMateInterestBoardList, setMyMateInterestBoardList ] = useState<MateBoardPostListInterface[]>([]);
+  const [ printmyMateInterestBoardList, setPrintmyMateInterestBoardList ] = useState<MateBoardPostListInterface[]>([]);
   const [ postPageNumber, setPostPageNumber ] = useState<string>('1');
   const [ totalPostCount, setTotalPostCount ] = useState<number>(0);
   const date = new Date();
@@ -55,12 +55,12 @@ export default function MySupport() {
     const historyKeyword = historyValue.page;
     const historyPostKeyword = historyValue.postNumber;
 
-    if(historyKeyword === 'support' && historyPostKeyword === undefined) {
-      navigater('/mypage/support/1');
+    if(historyKeyword === 'interest' && historyPostKeyword === undefined) {
+      navigater('/mypage/interest/1');
       return ;
     }
 
-    if(historyKeyword === 'support' && historyPostKeyword) {
+    if(historyKeyword === 'interest' && historyPostKeyword) {
       setPostPageNumber(historyPostKeyword);
     }
 
@@ -70,11 +70,11 @@ export default function MySupport() {
   useEffect(():void => {
     const getMyMateBoardPost = async () => {
       try {
-        const result = await controller.myMateSupportBoardPost(userInfo[0].account);
+        const result = await controller.myMatePostInterest();
         // console.log('getMyMateBoard ', result);
         // const reverse = [...result.data.data.rows].reverse();
-        // setmyMateSupportBoardList(reverse);
-        setmyMateSupportBoardList(result.data.data.rows);
+        // setMyMateInterestBoardList(reverse);
+        setMyMateInterestBoardList(result.data.data.rows);
         setTotalPostCount(result.data.data.count);
         return ;
       } catch (err:any) {
@@ -106,14 +106,14 @@ export default function MySupport() {
   }
 
   useEffect(():void => {
-    // console.log('myMateSupportBoardList ', myMateSupportBoardList);
+    // console.log('myMateInterestBoardList ', myMateInterestBoardList);
     // console.log('totalPostCount ', totalPostCount);
     // console.log('postPageNumber ', postPageNumber);
-    if(myMateSupportBoardList.length > 0) {
-      // setPrintmyMateSupportBoardList(myMateSupportBoardList?.slice((Number(postPageNumber)-1)*9, 9*Number(postPageNumber)));
-      setPrintmyMateSupportBoardList(myMateSupportBoardList?.slice((Number(postPageNumber)-1)*8, 8*Number(postPageNumber)));
+    if(myMateInterestBoardList.length > 0) {
+      // setPrintmyMateInterestBoardList(myMateInterestBoardList?.slice((Number(postPageNumber)-1)*9, 9*Number(postPageNumber)));
+      setPrintmyMateInterestBoardList(myMateInterestBoardList?.slice((Number(postPageNumber)-1)*8, 8*Number(postPageNumber)));
     }
-  }, [myMateSupportBoardList, postPageNumber]);
+  }, [myMateInterestBoardList, postPageNumber]);
 
   return (
     <div className={style.wrap}>
@@ -138,18 +138,20 @@ export default function MySupport() {
         }
       </div>
 
-      {myMateSupportBoardList?.length === 0 && postPageNumber !== '1' ?
-      <MyBoardNotPage url={'/mypage/support/1'} /> :
-      myMateSupportBoardList?.length === 0 && postPageNumber === '1' ? 
-      <h2 className={style.zeroContent}>작성한 글이 없습니다.</h2>
+      {myMateInterestBoardList?.length === 0 && postPageNumber !== '1' ?
+      <MyBoardNotPage url={'/mypage/interest/1'} /> :
+      myMateInterestBoardList?.length === 0 && postPageNumber === '1' ? 
+      <h2 className={style.zeroContent}>관심 글이 없습니다.</h2>
       :
       viewChange ?
       <>
       <div className={style.bodyAniamlCard}>
-        {printmyMateSupportBoardList.map((el:MateBoardPostListInterface) => {
+        {printmyMateInterestBoardList.map((el:MateBoardPostListInterface) => {
           return (
             <div className={style.AnimalCardWrap} key={el.mateBoardIndexNumber}>
-              <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el} />
+              <AnimalCard detailPostMoveHandler={() => detailPostMoveHandler(el)} userId={userInfo[0].account} postData={el}
+              myMateInterestBoardList={myMateInterestBoardList} setMyMateInterestBoardList={setMyMateInterestBoardList}
+               />
             </div>
           )
         })}
@@ -157,7 +159,7 @@ export default function MySupport() {
       
       <div className={style.wrapBottom}>
         {totalPostCount > 0 && <MyBoardPostButton postPageNumber={postPageNumber} setPostPageNumber={setPostPageNumber}
-        totalPostCount={totalPostCount} pageUrl={'/mypage/support'} />}
+        totalPostCount={totalPostCount} pageUrl={'/mypage/interest'} />}
       </div>
       </>
       :
@@ -168,15 +170,12 @@ export default function MySupport() {
         <p>제목</p>
         <p>날짜</p>
       </div>
-      {/* {myMateSupportBoardList.map((el:MateBoardPostListInterface) => { */}
-      {printmyMateSupportBoardList.map((el:MateBoardPostListInterface) => {
+      {printmyMateInterestBoardList.map((el:MateBoardPostListInterface) => {
         return (
         <div className={style.body} key={el.mateBoardIndexNumber} onClick={() => detailPostMoveHandler(el)}>
             <p>{el.mateBoardIndexNumber}</p>
             <p>{el.mateBoardCategory === 1 ? '구함' : '지원'}</p>
             <p>{el.mateBoardTitle}</p>
-            {/* <p>{moment(el.mateBoardRegistDate).format('YYYY-MM-DD') === compareDate ? moment(el.mateBoardRegistDate).format('HH:mm')
-            : moment(el.mateBoardRegistDate).format('YYYY-MM-DD')}</p> */}
             <p>{ el.mateBoardRegistDate.split('T')[0] === compareDate ?
             `${el.mateBoardRegistDate.split('T')[1].split(':')[0]}:${el.mateBoardRegistDate.split('T')[1].split(':')[1]}`
             : el.mateBoardRegistDate.split('T')[0] }</p>
@@ -186,7 +185,7 @@ export default function MySupport() {
 
       <div className={style.wrapBottom}>
         {totalPostCount > 0 && <MyBoardPostButton postPageNumber={postPageNumber} setPostPageNumber={setPostPageNumber}
-        totalPostCount={totalPostCount} pageUrl={'/mypage/support'} />}
+        totalPostCount={totalPostCount} pageUrl={'/mypage/interest'} />}
       </div>
       </>
       }

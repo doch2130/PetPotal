@@ -17,5 +17,7 @@ router.get("/findByUser2/:usersAccount", MateBoardController.findByUsersAccount2
 router.get("/findByIndex/:mateBoardIndexNumber", MateBoardController.findByIndexNumber);
 router.put('/updateContent', uploadInsertContentHandler, MateBoardController.updateMateBoard);
 router.put("/deleteContent", MateBoardController.deleteMateBoard);
+router.post('/interestContent', MateBoardController.interestMateBoard);
+router.get('/findByUserInterest', MateBoardController.findByUsersInterest);
 
 module.exports = router;

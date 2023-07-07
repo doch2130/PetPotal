@@ -28,6 +28,11 @@ interface MateBoardPostListInterface {
   mateBoardAddress3: string;
   mateBoardLng: number;
   mateBoardLat: number;
+  InterestPost?: Array<MateInterestPostInterface>;
+}
+
+interface MateInterestPostInterface {
+  interestPostStatus?: number;
 }
 
 export default function MyWrite() {

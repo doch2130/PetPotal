@@ -18,6 +18,7 @@ interface searchQueryInterface {
   searchKind: string;
   searchType: string;
   searchAmount: number;
+  userAccount: String;
 }
 
 export default function MateBoard() {
@@ -35,6 +36,7 @@ export default function MateBoard() {
     searchKind: '',
     searchType: '',
     searchAmount: 0,
+    userAccount: userInfo[0].account,
   });
 
   const [ postTotalCount, setPostTotalCount ] = useState<number>(0);
@@ -133,6 +135,7 @@ export default function MateBoard() {
       searchKind: '',
       searchType: '',
       searchAmount: 0,
+      userAccount: userInfo[0].account,
     });
   }
 
@@ -223,6 +226,7 @@ export default function MateBoard() {
       searchKind: kindDataList.toString(),
       searchType: boxPostTypeValue,
       searchAmount: boxPostAmountValue,
+      userAccount: userInfo[0].account,
     })
     return ;
   }

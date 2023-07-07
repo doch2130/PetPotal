@@ -7,6 +7,7 @@ const { SingleFileHandler, MultiFileHandler } = require('../middleware/filehandl
 const MateBoard = require('../models/MateBoard');
 const Animals = require('../models/Animals');
 const Users = require('../models/Users');
+const InterestPost = require('../models/InterestPost');
 
 const CheckToken = require('../middleware/CheckToken');
 const CurrentDate = require('../middleware/CurrentDate');
@@ -239,6 +240,13 @@ exports.findAllMateBoard = async (request, result) => {
       };
     }
 
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
+
     // 동물 종류 카테고리 (분기)
     if (searchKindReplace[0] === '' || searchKindReplace[0] === '전체') {
       // 동물 종류 선택 안하는 경우 (전체 검색)
@@ -249,6 +257,15 @@ exports.findAllMateBoard = async (request, result) => {
             as: "Users",
             attributes: [ "account" ]
           },
+          {
+            model: InterestPost,
+            as: 'InterestPost',
+            required: false,
+            attributes: ['interestPostStatus'],
+            where: {
+              usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+            },
+          }
         ],
         where: lastWhereMateBoard,
         offset: offset,
@@ -562,7 +579,8 @@ exports.updateMateBoard = async (request, result) => {
   let currentTimeStampDate = new Date(currentTimeStamp);
   currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
 
-  request.body = JSON.parse(request.body);
+  // console.log('request.body ', request.body);
+  request.body = JSON.parse(request.body.data);
 
   if(checkTokenResult.result == true) {
     const usersIndexNumber = await Users.findOne({
@@ -738,6 +756,131 @@ exports.deleteMateBoard = async (request, result) => {
   }
   else {
     result.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
+  }
+};
+
+
+// 메이트 게시판 관심, 좋아요 기능 메서드
+exports.interestMateBoard = async (req, res) => {
+  const inputToken = req.headers.token;
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+  const currentTimeStamp = CurrentDate.CurrentTimeStamp();
+  let currentTimeStampDate = new Date(currentTimeStamp);
+  currentTimeStampDate.setHours(currentTimeStampDate.getHours() + 9);
+
+  if(checkTokenResult.result == true) {
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
+
+    if(req.body.type === 'add') {
+      try {
+        const result = await InterestPost.create({
+          interestPostStatus: 1,
+          interestPostRegistDate: currentTimeStampDate,
+          mateBoardIndexNumber: req.body.mateBoardIndexNumber,
+          usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+        });
+        // console.log('result add ', result);
+        res.status(200).send({
+          responseCode: 200,
+          message: 'Mate Board Post Interest Add',
+        });
+      } catch (err) {
+        res.status(400).send({
+          responseCode: 400,
+          message: 'Incorrect request',
+        });
+      };
+
+    } else if(req.body.type === 'delete') {
+      try {
+        const result = await InterestPost.destroy({
+          where: {
+            mateBoardIndexNumber: req.body.mateBoardIndexNumber,
+            usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+          }
+        });
+        // console.log('result delete ', result);
+        res.status(200).send({
+          responseCode: 200,
+          message: 'Mate Board Post Interest Delete',
+        });
+      } catch (err) {
+        res.status(400).send({
+          responseCode: 400,
+          message: 'Incorrect request',
+        });
+      };
+    } else {
+      res.send({
+        responseCode: 400,
+        message: 'Incorrect request',
+      });
+    }
+  } else {
+    res.send({
+      responseCode: 400,
+      message: 'Incorrect Key',
+    });
+  }
+};
+
+// 메이트 나의 좋아요 게시글 조회
+exports.findByUsersInterest = async (req, res) => {
+  const inputToken = req.headers.token;
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+
+  if(checkTokenResult.result == true) {
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
+    await MateBoard.findAndCountAll({
+      include: [
+        {
+          model: InterestPost,
+          as: 'InterestPost',
+          attributes: ['interestPostStatus'],
+          where: {
+            usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber),
+          },
+        }
+      ],
+      where: {
+        mateBoardStatus: 1,
+      },
+    }).then((result) => {
+      if(result.count === 0) {
+        res.status(200).send({
+          responseCode: 200,
+          message: '',
+          data: { count: 0, rows: [] },
+        });
+      } else {
+        res.status(200).send({
+          responseCode: 200,
+          message: '',
+          data: result,
+        });
+      }
+    }).catch((err) => {
+      console.log('err ', err);
+      res.status(400).send({
+        responseCode: 400,
+        message: 'Incorrect Request',
+      });
+    });
+  } else {
+    res.status(400).send({
       responseCode: 400,
       message: 'Incorrect Key',
     });

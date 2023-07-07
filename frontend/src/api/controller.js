@@ -199,14 +199,26 @@ export default class Controller {
     return this.httpClient.put(`mateBoard/updateContent`, object);
   }
 
-  // 마이 페이지 - 메이트 본인 글 가져오기
+  // 마이 페이지 - 메이트 작성 글 가져오기
   async myMateBoardPost(account) {
     return this.httpClient.get(`mateBoard/findByUser/${account}`);
   }
 
   // 마이 페이지 - 메이트 지원한 글 가져오기
+  // 내가 연락한 항목에 대해서 가져오기 / 생각의 차이로 인한 문제였던 듯
+  // 일단 보류
   async myMateSupportBoardPost(account) {
     return this.httpClient.get(`mateBoard/findByUser2/${account}`);
+  }
+
+  // 메이트 게시판 - 좋아요, 관심 체크하기
+  async matePostInterest(mateBoardIndexNumber, type) {
+    return this.httpClient.post(`mateBoard/interestContent`, {mateBoardIndexNumber, type});
+  }
+  
+  // 마이 페이지 - 좋아요, 관심 메이트 글 가져오기
+  async myMatePostInterest() {
+    return this.httpClient.get(`mateBoard/findByUserInterest`);
   }
 
 }
