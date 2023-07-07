@@ -12,11 +12,11 @@ const MateBoardRoute = require('./routes/MateBoardRoutes');
 const OpenMateBoardRoute = require("./routes/OpenMateBoardRoutes");
 
 const app = express();
-const port = 3010;
+const port = 6500;
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
-  // origin: [process.env.SERVER_HOST, process.env.SERVER2_HOST],
+  // origin: 'http://localhost:3000',
+  origin: [process.env.SERVER_HOST, process.env.SERVER2_HOST],
   credentials: true,
 };
 
