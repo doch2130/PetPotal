@@ -97,7 +97,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
     }
 
     openConfirm({
-      title: '글 작성 등록',
       content: '작성한 내용으로 등록하시겠습니까?',
       callback: async () => {
         closeConfirm();
@@ -110,14 +109,12 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           // const result = await controller.mateWrite(formData);
           await controller.mateWrite(formData);
           openAlert({
-            title: 'Mate Board Create Success',
             type: 'success',
             content: '메이트 게시글이 등록되었습니다.'
           });
           navigate('/mate/1');
         } catch (err:any) {
           openAlert({
-            title: 'Mate Board Create Error',
             type: 'error',
             content: '글 생성 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
           });
@@ -130,7 +127,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
 
   const handleSubmitCancle = ():void => {
     openConfirm({
-      title: '글 작성 취소',
       content: '글 작성을 취소하시겠습니까?',
       callback: () => {
         closeConfirm();
@@ -154,14 +150,12 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
             if (status === navermaps.Service.Status.ERROR) {
               if (!address) {
                 openAlert({
-                  title: 'Geocode Error, Please check address',
                   type: 'error',
                   content: '에러가 발생하였습니다.\r\n새로고침 후 이용해주세요.',
                 });
                 return ;
               }
               openAlert({
-                title: 'Geocode Error',
                 type: 'error',
                 content: '에러가 발생하였습니다.\r\n새로고침 후 이용해주세요.',
               });
@@ -209,7 +203,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
         if(err.response.data.responseCode === 403 && err.response.data.data === false) {
           // console.log('유저 정보 없음');
           openAlert({
-            title: '사용자 정보 불러오기 오류',
             type: 'error',
             content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
           });
@@ -220,7 +213,6 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
           return ;
         }
         openAlert({
-          title: '나의 펫 정보 불러오기 오류',
           type: 'error',
           content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
         });
@@ -237,6 +229,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
       <MateWritePetAdd onClose={closeModal} myPetList={myPetList} setMyPetList={setMyPetList} />
     );
     openModal({
+      size: 'sm',
       backDrop: false,
       content: <ModalContent />
     });

@@ -96,7 +96,6 @@ export default function MateUpdatePreview(props:MateUpdatePreviewInterface) {
     if(files.length > 5) {
       // alert('사진은 5개 이하만 등록 가능합니다.');
       openAlert({
-        title: '사진 개수 초과',
         type: 'error',
         content: '사진은 5개 이하만 등록 가능합니다'
       });

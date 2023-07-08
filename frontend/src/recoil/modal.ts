@@ -4,6 +4,7 @@ export interface ModalType {
   isOpen: boolean;
   backDrop: boolean;
   content: JSX.Element | string;
+  size: string;
   callback?: () => any;
 }
 
@@ -13,6 +14,7 @@ export const modalState = atom<ModalType>({
   default: {
     isOpen: false,
     backDrop: false,
+    size: 'lg',
     content: '',
   }
 });

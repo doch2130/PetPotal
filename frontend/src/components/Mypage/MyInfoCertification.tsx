@@ -46,7 +46,6 @@ export default function MyInfoCertification() {
 
     if(password.current.value === '') {
       openAlert({
-        title: '회원정보 비밀번호 미입력',
         type: 'error',
         content: '비밀번호를 입력해주세요.',
       });
@@ -57,7 +56,6 @@ export default function MyInfoCertification() {
       const result = await controller.userInfoLoad(userInfo[0].account, password.current.value);
       if(result.data.responseCode !== 200) {
         openAlert({
-          title: '회원정보 로드 실패',
           type: 'error',
           content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요.',
         });
@@ -69,14 +67,12 @@ export default function MyInfoCertification() {
       // console.log('err ', err.response.data.responseCode);
       if (err.response.data.responseCode === 500) {
         openAlert({
-          title: '회원정보 비밀번호 실패',
           type: 'error',
           content: '비밀번호가 일치하지 않습니다.',
         });
         return ;
       }
       openAlert({
-        title: '회원정보 비밀번호 에러',
         type: 'error',
         content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요.',
       });

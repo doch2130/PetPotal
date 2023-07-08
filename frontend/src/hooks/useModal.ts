@@ -5,6 +5,7 @@ import { modalState } from "../recoil/modal";
 type OpenModalType = {
   backDrop: boolean;
   content: JSX.Element | string;
+  size: string;
   callback?: () => any;
 };
 
@@ -20,13 +21,14 @@ export const useModal = () => {
     }), [setModalDataState]
   );
 
-  const openModal = useCallback(({ backDrop, content, callback }: OpenModalType) => 
+  const openModal = useCallback(({ backDrop, content, size, callback }: OpenModalType) => 
     setModalDataState(() => {
       bodyElement.style.overflow = 'hidden';
       return {
         isOpen: true,
         backDrop: backDrop,
         content: content,
+        size: size,
         callback: callback
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps

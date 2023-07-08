@@ -101,7 +101,6 @@ export default function MemberJoin() {
     if(result.data.message === '회원가입 완료') {
       // alert(result.data.message);
       openAlert({
-        title: '회원가입 성공',
         type: 'success',
         content: result.data.message,
       });
@@ -121,7 +120,6 @@ export default function MemberJoin() {
           return false;
         } else if(!getValues('account')) {
           openAlert({
-            title: '중복체크 실패',
             type: 'error',
             content: '값을 입력해주세요'
           });
@@ -135,7 +133,6 @@ export default function MemberJoin() {
           return false;
         } else if(!getValues('email')) {
           openAlert({
-            title: '중복체크 실패',
             type: 'error',
             content: '값을 입력해주세요'
           });
@@ -149,7 +146,6 @@ export default function MemberJoin() {
           return false;
         } else if(!getValues('phone')) {
           openAlert({
-            title: '중복체크 실패',
             type: 'error',
             content: '값을 입력해주세요'
           });
@@ -164,7 +160,6 @@ export default function MemberJoin() {
           return false;
         } else if(!getValues('nickName')) {
           openAlert({
-            title: '중복체크 실패',
             type: 'error',
             content: '값을 입력해주세요'
           });
@@ -199,14 +194,12 @@ export default function MemberJoin() {
 
       // alert('사용하실 수 있습니다');
       openAlert({
-        title: '중복체크 성공',
         type: 'success',
         content: '사용하실 수 있습니다'
       });
     } else {
       // alert('사용할 수 없습니다');
       openAlert({
-        title: '중복체크 실패',
         type: 'error',
         content: '사용할 수 없습니다'
       });

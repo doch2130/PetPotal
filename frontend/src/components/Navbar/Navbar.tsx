@@ -24,7 +24,6 @@ export default function Navbar() {
     if(keyword === '') {
       // alert('검색어를 입력해주세요');
       openAlert({
-        title: '검색어 경고',
         type: 'error',
         content: '검색어를 입력해주세요'
       });
@@ -55,14 +54,12 @@ export default function Navbar() {
 
   const logoutHandler = async () => {
     openConfirm({
-      title: '로그아웃',
       content: '로그아웃 하시겠습니까?',
       callback: async () => {
         const result = await controller.logout();
         if(result.data.responseCode === 200) {
           closeConfirm();
           openAlert({
-            title: '로그아웃 성공',
             type: 'success',
             content: '정상적으로 로그아웃 되었습니다'
           });
@@ -78,7 +75,6 @@ export default function Navbar() {
           navigate('/');
         } else {
           openAlert({
-            title: '로그아웃 실패',
             type: 'error',
             content: '새로고침 후 다시 시도해주세요'
           });
@@ -89,7 +85,6 @@ export default function Navbar() {
 
   const openPrepare = ():void => {
     openAlert({
-      title: '오픈 준비 중',
       type: 'error',
       content: '오픈 준비 중입니다.'
     });
@@ -101,6 +96,9 @@ export default function Navbar() {
       <article className={style.navbarContainer}>
         <section className={style.navbarWrapper}>
           <div className={style.navbarTop}>
+            <h1 className={style.navbarLogo}>
+              <Link to={'/'}>Pet Portal</Link>
+            </h1>
             <ul className={style.topInner}>
               {userInfo[0].account === '' ?
               <>

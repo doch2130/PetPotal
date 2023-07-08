@@ -64,7 +64,6 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
       return ;
     } catch (err) {
       openAlert({
-        title: '프로필 이미지 변경 오류',
         type: 'error',
         content: '프로필 변경 중 오류가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
       });
@@ -75,7 +74,6 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
   const duplicateCheckHandler = async(e: React.MouseEvent<HTMLButtonElement>) => {
     if(userData.nickName === getValues('nickName')) {
       openAlert({
-        title: '닉네임 중복 검사 실패',
         type: 'error',
         content: '기존과 동일한 닉네임입니다.',
       });
@@ -90,14 +88,12 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
       duplicateValue[0].isNickName = true;
       duplicateValue[0].nickName = getValues('nickName');
       openAlert({
-        title: '닉네임 중복 검사 성공',
         type: 'success',
         content: '사용할 수 있는 닉네임입니다',
       });
     } catch (err:any) {
       if(err.response.data.responseCode !== 200) {
         openAlert({
-          title: '닉네임 중복 검사 실패',
           type: 'error',
           content: '중복된 닉네임입니다',
         });
@@ -163,7 +159,6 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
     }
 
     openConfirm({
-      title: '회원정보 수정',
       content: '해당 정보로 수정하시겠습니까?',
       callback: async () => {
         try {
@@ -173,7 +168,6 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
           // console.log('result : ', result);
           closeConfirm();
           openAlert({
-            title: '회원정보 수정 성공',
             type: 'success',
             content: '회원정보가 수정되었습니다',
           });
@@ -195,7 +189,6 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
           if(err.response.data.responseCode === 403 && err.response.data.data === 3) {
             closeConfirm();
             openAlert({
-              title: '회원정보 수정 실패',
               type: 'error',
               content: '현재 비밀번호가 일치하지 않습니다.',
             });
@@ -203,7 +196,6 @@ export default function MyInfoModifyModal(props:MyInfoModifyModalInterface) {
           }
 
           openAlert({
-            title: '회원정보 수정 실패',
             type: 'error',
             content: '회원정보 수정에 실패했습니다.\r\n새로고침 후 다시 시도해주세요.',
           });

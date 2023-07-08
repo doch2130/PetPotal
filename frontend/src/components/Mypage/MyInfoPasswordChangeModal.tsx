@@ -39,7 +39,6 @@ export default function MyInfoPasswordChangeModal(props:MyInfoPasswordChangeModa
     // console.log('data ', data);
 
     openConfirm({
-      title: '비밀번호 변경 확인',
       content: '해당 비밀번호로 변경하시겠습니까?',
       callback: async () => {
         try {
@@ -50,7 +49,6 @@ export default function MyInfoPasswordChangeModal(props:MyInfoPasswordChangeModa
           onClose();
           setCertification(false);
           openAlert({
-            title: '회원정보 비밀번호 변경 성공',
             type: 'success',
             content: '비밀번호가 변경되었습니다.',
           });
@@ -59,7 +57,6 @@ export default function MyInfoPasswordChangeModal(props:MyInfoPasswordChangeModa
           if(err.response.data.responseCode === 403 && err.response.data.data === 2) {
             closeConfirm();
             openAlert({
-              title: '회원정보 비밀번호 변경 실패',
               type: 'error',
               content: '현재 비밀번호가 일치하지 않습니다.',
             });
@@ -67,7 +64,6 @@ export default function MyInfoPasswordChangeModal(props:MyInfoPasswordChangeModa
           }
 
           openAlert({
-            title: '회원정보 비밀번호 변경 에러',
             type: 'error',
             content: '비밀번호 변경 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
           });

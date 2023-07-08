@@ -3,7 +3,6 @@ import { useRecoilState } from "recoil";
 import { alertState } from "../recoil/alert";
 
 type OpenAlertType = {
-  title: string;
   content: JSX.Element | string;
   type: string;
   callback?: () => any;
@@ -21,12 +20,11 @@ export const useAlert = () => {
     }), [setAlertDataState]
   );
 
-  const openAlert = useCallback(({ title, content, type }: OpenAlertType) =>
+  const openAlert = useCallback(({ content, type }: OpenAlertType) =>
     setAlertDataState(() => {
       bodyElement.style.overflow = 'hidden';
       return {
         isOpen: true,
-        title: title,
         type: type,
         content: content
       }

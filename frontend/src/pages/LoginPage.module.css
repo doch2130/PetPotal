@@ -1,3 +1,7 @@
+.wrap {
+  margin-top: 2rem;
+}
+
 .wrap > .row {
   align-items: center;
   /* height: 50vh; */

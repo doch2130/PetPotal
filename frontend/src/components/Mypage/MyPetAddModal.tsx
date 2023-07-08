@@ -81,7 +81,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
     }
 
     openConfirm({
-      title: 'pet Add Modal',
       content: '반려동물을 등록하시겠습니까?',
       callback: async () => {
         try {
@@ -89,7 +88,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
           // const result = await controller.myPetAdd(userInfo.account, data);
           await controller.myPetAdd(userInfo.account, data);
           openAlert({
-            title: 'My Pet Add Success',
             type: 'success',
             content: '펫이 등록되었습니다.'
           });
@@ -97,7 +95,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
           setPetList([...petList, data]);
         } catch (err:any) {
           openAlert({
-            title: 'My Pet Add Error',
             type: 'error',
             content: '펫 등록 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요.'
           });

@@ -33,7 +33,7 @@ export default function MainHome() {
       </div>
       <div className={style.wrapCol}>
         <div className={style.wrapText}>
-          <h1>당신 근처의 Pet Potal</h1>
+          <h1>당신 근처의 <b className={style.underline_magical}>PetPotal</b></h1>
           <p>동네의 반려동물 서비스를 한 눈에 <br />원하는 서비스를 받아보세요!</p>
         </div>
       </div>

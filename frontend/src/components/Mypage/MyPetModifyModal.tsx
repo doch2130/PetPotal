@@ -109,7 +109,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
 
       if(tempIndex === -1) {
         openAlert({
-          title: '펫 이미지 변경 실패',
           type: 'error',
           content: '펫 이미지 변경 중 오류가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
         });
@@ -118,7 +117,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
       return ;
     } catch (err) {
       openAlert({
-        title: '펫 이미지 변경 오류',
         type: 'error',
         content: '펫 이미지 변경 중 오류가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
       });
@@ -128,7 +126,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
 
   const onSubmit:SubmitHandler<petFormInput> = async (data:petFormInput):Promise<void> => {
     openConfirm({
-      title: '나의 펫 정보 수정 확인 창',
       content: '해당 정보로 수정하시겠습니까?',
       callback: async () => {
         try {
@@ -163,7 +160,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
 
           if(tempIndex === -1) {
             openAlert({
-              title: '나의 펫 정보 수정 실패',
               type: 'error',
               content: '데이터 업데이트 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
             });
@@ -171,7 +167,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
           }
 
           openAlert({
-            title: '나의 펫 정보 수정 성공',
             type: 'success',
             content: '펫 정보가 수정되었습니다.',
           });
@@ -179,7 +174,6 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
           return ;
         } catch (err:any) {
           openAlert({
-            title: '나의 펫 정보 수정 오류',
             type: 'error',
             content: '데이터 업데이트 중 에러가 발생하였습니다.\r\n새로고침 후 이용 부탁드립니다.',
           });

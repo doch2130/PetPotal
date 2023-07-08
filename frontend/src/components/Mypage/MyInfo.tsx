@@ -43,7 +43,6 @@ export default function MyInfo(props:MyInfoInterface) {
   // 회원탈퇴
   const memberSignOut = ():void => {
     openConfirm({
-      title: '회원탈퇴',
       content: '정말로 회원을 탈퇴하시겠습니까?',
       callback: async () => {
         try {
@@ -51,7 +50,6 @@ export default function MyInfo(props:MyInfoInterface) {
           // await controller.memberSignOut(userInfo[0].account);
           closeConfirm();
           openAlert({
-            title: '회원탈퇴 성공',
             type: 'success',
             content: '회원탈퇴가 정상적으로 완료되었습니다'
           });
@@ -68,7 +66,6 @@ export default function MyInfo(props:MyInfoInterface) {
         } catch (err:any) {
           if(err.response.data.responseCode !== 200) {
             openAlert({
-              title: '회원탈퇴 실패',
               type: 'error',
               content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
             });
@@ -87,6 +84,7 @@ export default function MyInfo(props:MyInfoInterface) {
     );
 
     openModal({
+      size: 'md',
       backDrop: false,
       content: <ModalContent />
     });
@@ -99,6 +97,7 @@ export default function MyInfo(props:MyInfoInterface) {
     );
 
     openModal({
+      size: 'sm',
       backDrop: false,
       content: <ModalContent />
     });
@@ -120,7 +119,6 @@ export default function MyInfo(props:MyInfoInterface) {
         }
         else if (err.response.data.responseCode !== 200) {
           openAlert({
-            title: '회원정보 로드 실패',
             type: 'error',
             content: '에러가 발생했습니다.\r\n새로고침 후 다시 시도해주세요'
           });

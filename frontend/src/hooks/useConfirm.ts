@@ -3,7 +3,6 @@ import { useRecoilState } from "recoil";
 import { confirmState } from "../recoil/confirm";
 
 type OpenConfirmType = {
-  title: string;
   content: JSX.Element | string;
   callback?: () => any;
 };
@@ -20,12 +19,11 @@ export const useConfirm = () => {
     }), [setConfirmDataState]
   );
 
-  const openConfirm = useCallback(({ title, content, callback }: OpenConfirmType) =>
+  const openConfirm = useCallback(({ content, callback }: OpenConfirmType) =>
   setConfirmDataState(() => {
     bodyElement.style.overflow = 'hidden';
     return {
       isOpen: true,
-      title: title,
       content: content,
       callback: callback
     }

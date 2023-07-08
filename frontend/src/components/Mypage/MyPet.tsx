@@ -34,6 +34,7 @@ export default function MyPet() {
       <MyPetAddModal onClose={closeModal} petList={petList} setPetList={setPetList} />
     );
     openModal({
+      size: 'md',
       backDrop: false,
       content: <ModalContent />
     });
@@ -48,7 +49,6 @@ export default function MyPet() {
         return ;
       } catch (err:any) {
         openAlert({
-          title: '나의 펫 정보 불러오기 오류',
           type: 'error',
           content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 이용 부탁드립니다.',
         });

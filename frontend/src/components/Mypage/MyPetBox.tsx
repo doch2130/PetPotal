@@ -38,7 +38,6 @@ export default function MyPetBox(props:MyPetBoxInterface) {
   // 반려동물 정보 삭제
   const petDelete = (animalsIndexNumber:number) => {
     openConfirm({
-      title: '반려동물 정보 삭제',
       content: '해당 반려동물 정보를 삭제하시겠습니까?',
       callback: async () => {
         try {
@@ -47,7 +46,6 @@ export default function MyPetBox(props:MyPetBoxInterface) {
           // console.log('result2 ', result);
           closeConfirm();
           openAlert({
-            title: '반려동물 정보 삭제 성공',
             type: 'success',
             content: '해당 정보가 삭제되었습니다'
           });
@@ -55,7 +53,6 @@ export default function MyPetBox(props:MyPetBoxInterface) {
           setPetList(updatePetListData);
         } catch (err:any) {
           openAlert({
-            title: '삭제 실패',
             type: 'error',
             content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
           });
@@ -72,6 +69,7 @@ export default function MyPetBox(props:MyPetBoxInterface) {
     );
 
     openModal({
+      size: 'md',
       backDrop: false,
       content: <ModalContent />
     });

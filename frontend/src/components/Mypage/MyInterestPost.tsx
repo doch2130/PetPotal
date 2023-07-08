@@ -79,7 +79,6 @@ export default function MyInterestPost() {
         return ;
       } catch (err:any) {
         openAlert({
-          title: '나의 글 로딩 에러',
           type: 'error',
           content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
         });

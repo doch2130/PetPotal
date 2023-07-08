@@ -1,9 +1,8 @@
 .wrap {
   min-height: 400px;
-  /* height: 50vh; */
   display: flex;
   flex-wrap: wrap;
-  margin-top: -50px;
+  /* margin-top: -50px; */
 }
 
 .navWrap {
@@ -16,7 +15,7 @@
 
 .bodyWrap {
   min-height: 330px;
-  padding-top: 1rem;
+  padding-top: 3rem;
   flex: auto;
 }
 

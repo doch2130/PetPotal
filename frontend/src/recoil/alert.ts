@@ -2,7 +2,6 @@ import { atom } from "recoil";
 
 export interface AlertType {
   isOpen: boolean;
-  title: string;
   type: string;
   content: JSX.Element | string;
 }
@@ -14,7 +13,6 @@ export const alertState = atom<AlertType>({
 
   default: {
     isOpen: false,
-    title: '',
     type: '',
     content: '',
   }

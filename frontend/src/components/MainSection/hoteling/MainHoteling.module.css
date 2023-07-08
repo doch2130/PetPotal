@@ -154,3 +154,9 @@
     left: 45px;
   }
 }
+
+@media (max-width: 577px) {
+  .wrapCol:nth-of-type(1) {
+    min-width: 300px;
+  }
+}

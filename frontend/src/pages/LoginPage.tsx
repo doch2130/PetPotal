@@ -24,7 +24,6 @@ export default function LoginPage() {
     if(loginId.current === null || loginId.current.value === '') {
       // alert('아이디를 입력해주세요');
       openAlert({
-        title: '로그인 실패',
         type: 'error',
         content: '아이디를 입력해주세요'
       });
@@ -32,7 +31,6 @@ export default function LoginPage() {
     } else if (loginPw.current === null || loginPw.current.value === '') {
       // alert('비밀번호를 입력해주세요');
       openAlert({
-        title: '로그인 실패',
         type: 'error',
         content: '비밀번호를 입력해주세요'
       });
@@ -71,7 +69,6 @@ export default function LoginPage() {
 
     } catch (err) {
       openAlert({
-        title: '로그인 실패',
         type: 'error',
         content: '로그인 정보가 일치하지 않습니다'
       });
@@ -99,7 +96,6 @@ export default function LoginPage() {
 
   const preparingFunction = ():void => {
     openAlert({
-      title: '기능 준비 중',
       type: 'error',
       content: '서비스 준비 중입니다.'
     });

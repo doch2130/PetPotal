@@ -14,8 +14,11 @@ const Backdrop = (props:any) => {
 const ModalOverlay = (props:any) => {
   const { modalDataState } = props;
   
+  console.log('modalDataState.size ', modalDataState.size);
+  console.log('modalDataState.size ', modalDataState.size === undefined);
   return (
-    <div className={style.modal}>
+    <div className={modalDataState.size === 'lg' ? `${style.modal} ${style.lgModal}` :
+    modalDataState.size === 'md' ? `${style.modal} ${style.mdModal}`  : `${style.modal} ${style.smModal}`} >
       <div className={style.wrapClose} onClick={props.onClose as MouseEventHandler}>
         <img src={close} alt='closeBtn' />
       </div>

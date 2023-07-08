@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { UserType, userState } from '../../../recoil/user';
@@ -42,6 +42,7 @@ export default function MateBoard() {
   const [ postTotalCount, setPostTotalCount ] = useState<number>(0);
   const [ timeSort, setTimeSort ] = useState<string>('newest');
   const { openAlert } = useAlert();
+  const [ widthResize, setWidthResize ] = useState<number>(window.innerWidth);
 
   const isShowBoxRegionHandler = () => {
     setIsShowBoxRegion(!showBoxRegion);
@@ -139,6 +140,19 @@ export default function MateBoard() {
     });
   }
 
+
+  const resizeListener = useCallback(() => {
+    setWidthResize(window.innerWidth);
+  }, [setWidthResize]);
+  
+  useEffect(() => {
+    window.addEventListener('resize', resizeListener);
+
+    return () => {
+      window.removeEventListener('resize', resizeListener);
+    };
+  }, [resizeListener]);
+
   const historyValue = useParams();
   const [ matePageNumber, setMatePageNumber ] = useState<string>('1');
   useEffect(():void => {
@@ -160,7 +174,6 @@ export default function MateBoard() {
         return data;
       }
       openAlert({
-        title: '게시글 데이터 로딩 Error',
         type: 'error',
         content: '데이터 로딩 중 문제가 발생하였습니다.\r\n새로고침 후 이용해주세요.',
       });
@@ -235,7 +248,7 @@ export default function MateBoard() {
     <div className={style.wrap}>
       <div className={style.slideWrap}>
         {/* 슬라이드 이미지는 일단 보류 */}
-        <MateBoardSlideImage />
+        {widthResize >= 576 && <MateBoardSlideImage />}
       </div>
       <div className={style.bodyWrap}>
         <h2>메이트</h2>

@@ -73,7 +73,6 @@ export default function MateBoardPost(props:MateBoardPostInterface) {
     }
     
     openConfirm({
-      title: '로그인필요',
       content: '로그인 이후 작성 가능합니다.\r\n로그인 페이지로 이동하시겠습니까?',
       callback: () => {
         navigater('/login');

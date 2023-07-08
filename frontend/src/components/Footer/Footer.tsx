@@ -25,7 +25,6 @@ export default function Footer() {
   }
   const openPrepare = ():void => {
     openAlert({
-      title: '오픈 준비 중',
       type: 'error',
       content: '오픈 준비 중입니다.'
     });
@@ -34,7 +33,7 @@ export default function Footer() {
   
   return (
     <div className={style.wrap}>
-      <div className={style.row}>
+      <div className={style.row} style={{display: 'none'}}>
         <hr />
       </div>
 

@@ -59,7 +59,6 @@ export default function AnimalCard(props:animalCardInterface) {
     if(userId !== '' && userId !== undefined) {
       if(postHeart) {
         openConfirm({
-          title: 'mateBoardHeart',
           content: '좋아요를 해제하시겠습니까?',
           callback: async () => {
             setPostHeart(false);
@@ -79,7 +78,6 @@ export default function AnimalCard(props:animalCardInterface) {
               return ;
             } catch (err) {
               openAlert({
-                title: 'mateBoardHeart Error',
                 type: 'error',
                 content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
               });
@@ -89,7 +87,6 @@ export default function AnimalCard(props:animalCardInterface) {
         });
       } else {
         openConfirm({
-          title: 'mateBoardHeart',
           content: '좋아요를 등록하시겠습니까?',
           callback: async () => {
             setPostHeart(true);
@@ -102,7 +99,6 @@ export default function AnimalCard(props:animalCardInterface) {
               return ;
             } catch (err) {
               openAlert({
-                title: 'mateBoardHeart Error',
                 type: 'error',
                 content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
               });
@@ -113,7 +109,6 @@ export default function AnimalCard(props:animalCardInterface) {
       }
     } else {
       openAlert({
-        title: 'mateBoardHeart Login',
         type: 'error',
         content: '로그인 이후 사용할 수 있습니다'
       });

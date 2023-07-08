@@ -7,7 +7,6 @@ export default function MateBoardNotPage() {
   const navigater = useNavigate();
   useEffect(() => {
     openAlert({
-      title: '존재하지 않는 페이지',
       type: 'error',
       content: '존재하지 않는 페이지입니다.',
     });

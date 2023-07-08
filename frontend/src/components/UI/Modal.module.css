@@ -23,10 +23,17 @@
 }
 
 @media (min-width: 768px) {
-  .modal {
+  .lgModal {
     width: 50%;
-    min-width: 670px;
+    min-width: 630px;
     max-width: 768px;
+  }
+  .mdModal {
+    min-width: 500px;
+    max-width: 630px;
+  }
+  .smModal {
+    max-width: 500px;
   }
 }
 

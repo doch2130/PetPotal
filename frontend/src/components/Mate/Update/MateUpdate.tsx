@@ -32,7 +32,6 @@ export default function MateUpdate() {
       return result.data;
     } catch (err) {
       openAlert({
-        title: '게시글 상세 조회 에러',
         type: 'error',
         content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
       });

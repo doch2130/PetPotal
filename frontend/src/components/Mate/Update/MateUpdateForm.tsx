@@ -135,7 +135,6 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
     }
 
     openConfirm({
-      title: '글 수정',
       content: '수정한 내용으로 변경하시겠습니까?',
       callback: async () => {
         closeConfirm();
@@ -148,14 +147,12 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
           // const result = await controller.mateWrite(formData);
           await controller.mateBoardUpdatePost(formData);
           openAlert({
-            title: 'Mate Board Update Success',
             type: 'success',
             content: '메이트 게시글이 수정되었습니다.'
           });
           navigate('/mate/1');
         } catch (err:any) {
           openAlert({
-            title: 'Mate Board Update Error',
             type: 'error',
             content: '업데이트 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
           });
@@ -168,7 +165,6 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
 
   const handleSubmitCancle = ():void => {
     openConfirm({
-      title: '글 수정 취소',
       content: '글 수정을 취소하시겠습니까?',
       callback: () => {
         closeConfirm();
@@ -189,7 +185,6 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
         if(err.response.data.responseCode === 403 && err.response.data.data === false) {
           // console.log('유저 정보 없음');
           openAlert({
-            title: '사용자 정보 불러오기 오류',
             type: 'error',
             content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
           });
@@ -200,7 +195,6 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
           return ;
         }
         openAlert({
-          title: '나의 펫 정보 불러오기 오류',
           type: 'error',
           content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
         });
@@ -217,6 +211,7 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
       <MateWritePetAdd onClose={closeModal} myPetList={myPetList} setMyPetList={setMyPetList} />
     );
     openModal({
+      size: 'md',
       backDrop: false,
       content: <ModalContent />
     });

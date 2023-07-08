@@ -117,6 +117,7 @@ export default function MateDetail() {
 
   const modalMapOpen = ():void => {
     openModal({
+      size: 'lg',
       backDrop: true,
       content: <MateDetailMap height='350px' mapData={mapData} zoomControl={false} />
     });
@@ -154,7 +155,6 @@ export default function MateDetail() {
       return result.data;
     } catch (err) {
       openAlert({
-        title: '게시글 상세 조회 에러',
         type: 'error',
         content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
       });
@@ -207,7 +207,6 @@ export default function MateDetail() {
 
   const matePostDelete = async (mateBoardIndexNumber:number):Promise<void> => {
     openConfirm({
-      title: '메이트 글 삭제',
       content: '해당 글을 삭제하시겠습니까?',
       callback: async () => {
         try {
@@ -215,7 +214,6 @@ export default function MateDetail() {
           await controller.mateBoardDeletePost(mateBoardIndexNumber);
           closeConfirm();
           openAlert({
-            title: '메이트 글 삭제 성공',
             type: 'success',
             content: '해당 글이 삭제되었습니다.',
           });
@@ -224,7 +222,6 @@ export default function MateDetail() {
         } catch (err:any) {
           closeConfirm();
           openAlert({
-            title: '메이트 글 삭제 에러',
             type: 'error',
             content: '글 삭제 중 에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요.',
           });
@@ -236,7 +233,6 @@ export default function MateDetail() {
 
   const matePostUpdate = (mateBoardIndexNumber:number):void => {
     openConfirm({
-      title: '메이트 글 수정',
       content: '해당 글을 수정하시겠습니까?',
       callback: () => {
         closeConfirm();
@@ -248,7 +244,6 @@ export default function MateDetail() {
 
   const matePostContact = ():void => {
     openAlert({
-      title: '메이트 연락하기 기능',
       type: 'error',
       content: '준비 중인 기능입니다.',
     });

@@ -20,7 +20,6 @@ export default function MyPage() {
       setPageValue('info');
       navigater('/mypage/info');
       openAlert({
-        title: '준비중',
         type: 'error',
         content: '서비스 준비 중입니다.',
       });

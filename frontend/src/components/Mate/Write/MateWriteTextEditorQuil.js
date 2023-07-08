@@ -36,7 +36,6 @@ export default function MateWriteTextEditorQuil({ placeholderText, name, setValu
 
       } catch (error) {
         openAlert({
-          title: '텍스트에디터 이미지 에러',
           type: 'error',
           content: '에러가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요!',
         });
