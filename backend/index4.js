@@ -14,14 +14,29 @@ const OpenMateBoardRoute = require("./routes/OpenMateBoardRoutes");
 const app = express();
 const port = 6500;
 
-const corsOptions = {
-  // origin: 'http://localhost:3000',
-  origin: [process.env.SERVER_HOST, process.env.SERVER2_HOST],
-  credentials: true,
-};
+console.log('process.env.NODE_ENV ', process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'production') {
+  const corsOptions = {
+    origin: [process.env.SERVER_HOST, process.env.SERVER2_HOST],
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
+} else {
+  const corsOptions = {
+    origin: [process.env.LOCAL_HOST],
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
+}
+
+// const corsOptions = {
+//   origin: 'http://localhost:3000',
+//   // origin: [process.env.SERVER_HOST, process.env.SERVER2_HOST],
+//   credentials: true,
+// };
 
 app.use(morgan('dev'));
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(cookieParser('petpotal'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

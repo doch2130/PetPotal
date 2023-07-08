@@ -2,9 +2,10 @@
   "name": "petpotal",
   "version": "0.0.1",
   "description": "2023 study project",
-  "main": "app.js",
+  "main": "index4.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon index4.js",
+    "production": "cross-env NODE_ENV=production node index4",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "gruzam0615",
@@ -31,6 +32,7 @@
     "passport-local": "^1.0.0",
     "pm2": "^5.3.0",
     "redis": "^4.6.5",
-    "sequelize": "^6.30.0"
+    "sequelize": "^6.30.0",
+    "cross-env": "^7.0.3"
   }
 }
