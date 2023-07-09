@@ -237,7 +237,7 @@ export default function MateWriteForm(props:mateWriteFormInterface) {
   }
 
   const myPetInfoSelect = (e:ChangeEvent<HTMLSelectElement>) => {
-    console.log('pet select ', e);
+    // console.log('pet select ', e);
     if(e.target.value !== '선택') {
       const petFormUpdate = myPetList.filter((el:myPetInfoInterface) => el.animalsIndexNumber === Number(e.target.value));
       setValue('animalsIndexNumber', Number(e.target.value));

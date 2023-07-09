@@ -124,7 +124,7 @@ export default function AnimalCard(props:animalCardInterface) {
   }, [postData.InterestPost]);
 
   useEffect(() => {
-    setPostRepresentativeImage(postData.mateBoardPhotos);
+    setPostRepresentativeImage(postData.mateBoardPhotos.split(',')[0] || '');
   }, [postData.mateBoardPhotos]);
 
   return (
