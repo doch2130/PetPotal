@@ -70,7 +70,7 @@ exports.findAllMateBoard = async (request, result) => {
 
   let whereMateBoardAddress = [];
   let tempWhereMateBoardAddress = {};
-  if(searchRegion !== '') {
+  if(searchRegion !== '' && searchRegion !== '전국 전체') {
     tempSearchRegion.forEach((el) => {
       const tempSi = el.split(' ')[0];
       const tempGu = el.split(' ')[1];

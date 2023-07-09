@@ -62,6 +62,16 @@ export default function MateBoard() {
       return ;
     }
 
+    if(updateData === '전국 전체') {
+      setRegionDataList([updateData]);
+      return ;
+    }
+
+    if(regionDataList.includes('전국 전체')) {
+      setRegionDataList([updateData]);
+      return ;
+    }
+
     if(updateData.includes('전체')) {
       // xx 전체 항목 추가 시 xx xx구는 전부 삭제 되게 설정
       // console.log(updateData.indexOf('전체'));
