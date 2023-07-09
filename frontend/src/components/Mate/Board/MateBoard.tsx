@@ -183,6 +183,12 @@ export default function MateBoard() {
   // useQuery(key값, ()) Reacy Query V3 이후 방식
   const { status, data, error } = useQuery([`mateBoardList/${matePageNumber}/${timeSort}`, searchQuery], () => fetchMateBoardList());
 
+  // useEffect(() => {
+  //   if(matePostDetailNumber) {
+  //     refetch();
+  //   }
+  // }, [matePostDetailNumber, refetch]);
+
   if (status === 'loading') return <div className={style.reactQueryLoading}>Data Loading...</div>;
  
   if (error) return <div className={style.reactQueryError}>Data Load Error</div>;
