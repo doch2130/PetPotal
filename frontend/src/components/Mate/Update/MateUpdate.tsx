@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react'
-import { Params, useParams } from 'react-router-dom';
+import { Params, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useRecoilValue } from 'recoil';
+import { UserType, userState } from '../../../recoil/user';
 import { useAlert } from '../../../hooks/useAlert';
 import Controller from '../../../api/controller'
 import MateUpdatePreview from './MateUpdatePreview';
 import MateUpdateForm from './MateUpdateForm';
 import style from './MateUpdate.module.css';
-import { useRecoilValue } from 'recoil';
-import { UserType, userState } from '../../../recoil/user';
 
 export default function MateUpdate() {
+  const navigater = useNavigate();
   const userInfo = useRecoilValue<UserType[]>(userState);
-  const { openAlert } = useAlert();
   const controller = new Controller();
   const historyValue = useParams<Params<string>>(); 
+  const { openAlert } = useAlert();
   const [ matePostDetailNumber, setMatePostDetailNumber ] = useState<number | null>(null);
   const [ imgFile, setImgFile ] = useState<File[]>([]);
 
   useEffect(():void => {
-    const historyKeyword = Number(historyValue.matePostNumber);
+    // const historyKeyword = Number(historyValue.matePostNumber);
+    const historyKeyword = Number(historyValue.pageNumber);
     if(historyKeyword) {
       setMatePostDetailNumber(historyKeyword);
     }
@@ -28,9 +30,20 @@ export default function MateUpdate() {
   // React Query default
   const fetchMateBoardDetail = async (matePostDetailNumber:string) => {
     try {
-      const result = await controller.mateBoardDetailPost(matePostDetailNumber, userInfo[0].account);
+      // const result = await controller.mateBoardDetailPost(matePostDetailNumber, userInfo[0].account);
+      const result = await controller.mateBoardUpdateDataGet(matePostDetailNumber);
+      // console.log('result ' , result);
       return result.data;
-    } catch (err) {
+    } catch (err:any) {
+      // console.log('err ', err);
+      if(err.response.data.responseCode === 404) {
+        openAlert({
+          type: 'error',
+          content: '잘못된 접근 방식입니다.',
+        });
+        navigater(`/mate/detail/${matePostDetailNumber}`);
+        return ;
+      }
       openAlert({
         type: 'error',
         content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',

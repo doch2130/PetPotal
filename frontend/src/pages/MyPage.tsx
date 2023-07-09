@@ -8,12 +8,15 @@ import style from './MyPage.module.css';
 import { useAlert } from '../hooks/useAlert';
 import MySupport from '../components/Mypage/MySupport';
 import MyInterestPost from '../components/Mypage/MyInterestPost';
+import LoadingPage from './LoadingPage';
+import ErrorPage from './ErrorPage';
 
 export default function MyPage() {
   const { page } = useParams<{ page: string}>();
   const [pageValue, setPageValue] = useState<String>('');
   const { openAlert } = useAlert();
   const navigater = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if(page === 'support') {
@@ -26,11 +29,14 @@ export default function MyPage() {
       return ;
     }
 
+    // console.log('page ', page);
     if(page !== undefined) {
       setPageValue(page);
     } else {
       setPageValue('info');
     }
+    setIsLoading(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   useEffect(() => {
@@ -38,17 +44,23 @@ export default function MyPage() {
   }, []);
 
   return (
+    <>
+    {isLoading ?
     <div className={style.wrap}>
       <div className={style.navWrap}>
         <MySideNavbar pageValue={pageValue} />
       </div>
       <div className={pageValue === 'write' || pageValue === 'support' || pageValue === 'interest' ? `${style.bodyWrap} ${style.bodyWrapWrite}` : style.bodyWrap }>
-        {pageValue === 'info' ? <MyInfoCertification /> : null}
-        {pageValue === 'pet' ? <MyPet /> : null}
-        {pageValue === 'write' ? <MyWrite /> : null}
-        {pageValue === 'support' ? <MySupport /> : null}
-        {pageValue === 'interest' ? <MyInterestPost /> : null}
+        {pageValue === 'info' ? <MyInfoCertification /> :
+        pageValue === 'pet' ? <MyPet /> :
+        pageValue === 'write' ? <MyWrite /> :
+        pageValue === 'support' ? <MySupport /> :
+        pageValue === 'interest' ? <MyInterestPost /> :
+        <ErrorPage />
+        }
       </div>
     </div>
+    : <LoadingPage />}
+    </>
   )
 }

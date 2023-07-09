@@ -3,14 +3,19 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
 }
 
 .wrapCol {
-  /* flex: 1 0; */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .wrapCol label:nth-of-type(1) {
   font-weight: 700;
+  width: 68px;
+  display: inline-block;
 }
 
 .wrapRow:nth-of-type(1) > h2 {
@@ -22,38 +27,34 @@
 
 .wrapRow label {
   font-size: 1.4rem;
-  margin: 0px 2rem;
+  /* margin: 0px 2rem; */
 }
 
 .wrapRow input[type="text"] {
-  width: 350px;
+  width: 300px;
   height: 25px;
   font-size: 1rem;
   background: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 5px;
   padding: 5px 10px;
-}
-
-.wrapRow:not(:nth-of-type(1)) input[type="text"] {
-  width: 180px;
+  flex: auto;
 }
 
 .wrapRow .wrapCol select {
-  width: 200px;
+  /* width: 300px; */
+  width: 322px;
 }
 
-
-@media (min-width: 660px) {
-  .wrapCol {
-    min-width: 490px;
-  }
+.wrapPetWeight input[type="text"] {
+  width: 274px;
 }
 
 .mateWriteWraning {
   color: red;
   display: inline-block;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
+  margin-top: 5px;
 }
 
 .wrapPetGender label:not(:nth-of-type(1)) {
@@ -84,6 +85,7 @@
   border: 1px solid #000000;
   border-radius: 5px;
   padding: 5px 10px;
+  flex: auto;
 }
 
 .wrapPetWeight span {
@@ -136,6 +138,13 @@
 
 .buttonGroup button:hover {
   background-color: var(--main-default-dark-color);
+}
+
+@media (min-width: 660px) {
+  .wrapCol {
+    /* min-width: 490px; */
+    min-width: 400px;
+  }
 }
 
 @media (max-width: 660px) {

@@ -17,7 +17,7 @@ export default function Footer() {
     if(address === 'PetPotal') {
       navigater(`/`);
     } else if(address === 'Mate') {
-      navigater(`/mate/1`);
+      navigater(`/mate/board/1`);
     } else {
       navigater(`/${address}`);
     }

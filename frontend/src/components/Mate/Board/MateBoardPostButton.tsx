@@ -20,14 +20,14 @@ export default function MateBoardPostButton(props:MateBoardPostButtonInterface) 
   const changeFirstPageFunction = ():void => {
     // << 버튼
     setMatePageNumber('1');
-    navigater(`/mate/1`);
+    navigater(`/mate/board/1`);
     return ;
   }
 
   const changeLastPageFunction = ():void => {
     //  >> 버튼
     setMatePageNumber(pageTotal.toString());
-    navigater(`/mate/${pageTotal.toString()}`);
+    navigater(`/mate/board/${pageTotal.toString()}`);
     return ;
   }
   
@@ -38,7 +38,7 @@ export default function MateBoardPostButton(props:MateBoardPostButtonInterface) 
     }
     const updateMatePageNumber = (Number(matePageNumber) - 1).toString();
     setMatePageNumber(updateMatePageNumber);
-    navigater(`/mate/${updateMatePageNumber}`);
+    navigater(`/mate/board/${updateMatePageNumber}`);
     return ;
   }
 
@@ -49,14 +49,14 @@ export default function MateBoardPostButton(props:MateBoardPostButtonInterface) 
     }
     const updateMatePageNumber = (Number(matePageNumber) + 1).toString();
     setMatePageNumber(updateMatePageNumber);
-    navigater(`/mate/${updateMatePageNumber}`);
+    navigater(`/mate/board/${updateMatePageNumber}`);
     return ;
   }
 
   const changePageNumberFunction = (changePageNumber:number):void => {
     // 숫자 버튼
     setMatePageNumber(changePageNumber.toString());
-    navigater(`/mate/${changePageNumber}`);
+    navigater(`/mate/board/${changePageNumber}`);
     return ;
   }
 

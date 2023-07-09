@@ -15,7 +15,7 @@ interface latlng {
   _lat: number;
 }
 
-export default function MateViewMap(props:naverMap) {
+export default function MateDetailMap(props:naverMap) {
   const mapElement = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -181,6 +181,7 @@ export default function MateViewMap(props:naverMap) {
         return !!(addition && addition.value);
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

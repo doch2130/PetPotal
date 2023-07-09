@@ -239,7 +239,7 @@ export default function MyPetAddModal(props:MyPetAddModalInterface) {
             },
           )}
           id='petWeight' type='text' placeholder='무게를 입력해주세요' />
-          <span>KG</span>
+          <span>kg</span>
           <p className={style.petAddWarning}>{errors.animalsWeight?.message}</p>
         </div>
         <div className={style.myPetIsNeutered}>

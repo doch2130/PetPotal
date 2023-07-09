@@ -576,6 +576,79 @@ exports.findByIndexNumber = async (request, result) => {
   }
 };
 
+
+/**
+ * 게시글 수정 전 데이터 로드를 위한 메서드 (게시글의 색인번호를 매개변수로 활용)
+ */
+exports.updateLoadByIndexNumber = async (req, res) => {
+  let inputToken = req.headers.token;
+  const checkTokenResult = await CheckToken.CheckToken(1, inputToken);
+
+  if(checkTokenResult.result === true) {
+    const usersIndexNumber = await Users.findOne({
+      attributes: [ "usersIndexNumber" ],
+      where: {
+          account: checkTokenResult.account
+      }
+    });
+
+    await MateBoard.findOne({
+      include: [
+        {
+          model: Animals,
+          as: "Animals",
+          attributes: [
+            "animalsName", "animalsGender", "animalsNeutered",
+            "animalsAge", "animalsWeight",
+            "animalsCategory1", "animalsCategory2"
+          ]
+        },
+        {
+          model: Users,
+          as: "Users",
+          attributes: [ "account" ]
+        }
+      ],
+      where: {
+        mateBoardIndexNumber: req.params.mateBoardIndexNumber,
+        usersIndexNumber: parseInt(usersIndexNumber.dataValues.usersIndexNumber)
+      }
+    }).then((result) => {
+      if(result == null) {
+        console.log("해당 게시글이 존재하지 않습니다.");
+        res.status(404).send({
+          responseCode: 404,
+          data: null,
+          message: 'no result',
+        });
+      } else {
+        // console.log("1:", result.dataValues);
+        result.dataValues.mateBoardLat = parseFloat(result.dataValues.mateBoardLat);
+        result.dataValues.mateBoardLng = parseFloat(result.dataValues.mateBoardLng);
+        console.log("2:", result.dataValues);
+        res.status(200).send({
+          responseCode: 200,
+          data: result,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({
+        responseCode: 500,
+        data: false,
+        message: err
+      });
+    })
+  } else {
+    res.status(500).send({
+      responseCode: 500,
+      message: 'Incorrect Key',
+    });
+  }
+};
+
+
 /**
  * 게시글 수정을 위한 메서드
  * @param {*} request 

@@ -192,6 +192,11 @@ export default class Controller {
     // return this.httpClient.get(`mateBoard/findByIndex/${mateBoardIndexNumber}`);
   }
 
+  // 메이트 게시판 - 수정 - 상세 글 정보 가져오기
+  async mateBoardUpdateDataGet(mateBoardIndexNumber) {
+    return this.httpClient.get(`mateBoard/update/findByIndex/${mateBoardIndexNumber}`);
+  }
+
   // 메이트 게시판 - 상세 글 삭제
   async mateBoardDeletePost(mateBoardIndexNumber) {
     return this.httpClient.put(`mateBoard/deleteContent`, {

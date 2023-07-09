@@ -14,7 +14,6 @@ const OpenMateBoardRoute = require("./routes/OpenMateBoardRoutes");
 const app = express();
 const port = 6500;
 
-console.log('process.env.NODE_ENV ', process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'production') {
   const corsOptions = {
     origin: [process.env.SERVER_HOST, process.env.SERVER2_HOST],

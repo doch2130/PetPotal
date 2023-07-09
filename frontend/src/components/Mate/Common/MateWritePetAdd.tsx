@@ -106,8 +106,8 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             )}
             id='petNameModal' type='text' placeholder='이름을 입력해주세요'
           />
-          <p className={style.mateWriteWraning}>{errors.animalsName?.message}</p>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsName?.message}</p>
       </div>
 
       <div className={style.wrapRow}>
@@ -131,8 +131,8 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             type="radio" id='petGenderWomanModal' value="2"
           />
           <label htmlFor='petGenderWomanModal'>암컷</label>
-          <p className={style.mateWriteWraning}>{errors.animalsGender?.message}</p>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsGender?.message}</p>
       </div>
 
       <div className={style.wrapRow}>
@@ -157,8 +157,8 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             <option value="9">9</option>
             <option value="10">10</option>
           </select>
-          <p className={style.mateWriteWraning}>{errors.animalsAge?.message}</p>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsAge?.message}</p>
       </div>
 
       <div className={style.wrapRow}>
@@ -175,8 +175,8 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             <option value="2">고양이</option>
             <option value="3">기타</option>
           </select>
-          <p className={style.mateWriteWraning}>{errors.animalsCategory1?.message}</p>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsCategory1?.message}</p>
       </div>
 
       <div className={style.wrapRow}>
@@ -202,8 +202,8 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             )}
             id='petBreedsModal' type='text' placeholder='품종을 입력해주세요'
           />
-          <p className={style.mateWriteWraning}>{errors.animalsCategory2?.message}</p>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsCategory2?.message}</p>
       </div>
 
       <div className={style.wrapRow}>
@@ -225,9 +225,9 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             )}
             id='petWeightModal' type='text' placeholder='무게를 입력해주세요'
           />
-          <span>KG</span>
-          <p className={style.mateWriteWraning}>{errors.animalsWeight?.message}</p>
+          <span>kg</span>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsWeight?.message}</p>
       </div>
 
       <div className={style.wrapRow}>
@@ -260,8 +260,8 @@ export default function MateWritePetAdd(props:MateWritePetAddInterface) {
             type="radio" id='isNeuteredUnknownModal' value="3"
           />
           <label htmlFor='isNeuteredUnknownModal'>모름</label>
-          <p className={style.mateWriteWraning}>{errors.animalsNeutered?.message}</p>
         </div>
+        <p className={style.mateWriteWraning}>{errors.animalsNeutered?.message}</p>
       </div>
       <div className={style.buttonGroup}>
         <button type='button' onClick={onClose as MouseEventHandler}>취소</button>

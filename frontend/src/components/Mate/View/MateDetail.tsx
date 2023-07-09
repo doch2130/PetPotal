@@ -141,7 +141,11 @@ export default function MateDetail() {
   }, [mouseUpClientX]);
 
   useEffect(():void => {
-    const historyKeyword = Number(historyValue.matePostNumber);
+    // console.log('historyValue.matePostNumber ', historyValue.matePostNumber);
+    // console.log('historyValue.pageNumber ', historyValue.pageNumber);
+    // const historyKeyword = Number(historyValue.matePostNumber);
+    // matePostNumber = pageNumber, index.tsx route 설정으로 인한 변수이름
+    const historyKeyword = Number(historyValue.pageNumber);
     if(historyKeyword) {
       setMatePostDetailNumber(historyKeyword);
     }
@@ -153,7 +157,15 @@ export default function MateDetail() {
     try {
       const result = await controller.mateBoardDetailPost(matePostDetailNumber, userInfo[0].account);
       return result.data;
-    } catch (err) {
+    } catch (err:any) {
+      if(err.response.data.responseCode === 404) {
+        openAlert({
+          type: 'error',
+          content: '존재하지 않는 페이지입니다.',
+        });
+        navigater('/mate/board/1');
+        return ;
+      }
       openAlert({
         type: 'error',
         content: '데이터 로딩 중 에러가 발생하였습니다.\r\n새로고침 후 이용부탁드립니다.',
@@ -217,7 +229,7 @@ export default function MateDetail() {
             type: 'success',
             content: '해당 글이 삭제되었습니다.',
           });
-          navigater('/mate/1');
+          navigater('/mate/board/1');
           return ;
         } catch (err:any) {
           closeConfirm();
@@ -236,7 +248,7 @@ export default function MateDetail() {
       content: '해당 글을 수정하시겠습니까?',
       callback: () => {
         closeConfirm();
-        navigater(`/mate/detail/update/${mateBoardIndexNumber}`);
+        navigater(`/mate/update/${mateBoardIndexNumber}`);
       }
     });
     return ;

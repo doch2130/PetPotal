@@ -44,7 +44,7 @@ export default function AnimalCard(props:animalCardInterface) {
   const { userId, postData, detailPostMoveHandler } = props;
   const { openConfirm, closeConfirm } = useConfirm();
   const { openAlert } = useAlert();
-  const [ postRepresentativeImage, setPostRepresentativeImage ] = useState<string>(postData.mateBoardPhotos === null || undefined ? '' : postData.mateBoardPhotos.split(',')[0]);
+  const [ postRepresentativeImage, setPostRepresentativeImage ] = useState<string>(postData.mateBoardPhotos === null || postData.mateBoardPhotos === undefined ? '' : postData.mateBoardPhotos.split(',')[0]);
   const [ postHeart, setPostHeart ] = useState<Boolean>(postData.InterestPost === undefined || postData.InterestPost?.length === 0 ? false : true);
   const controller = new Controller();
   
@@ -121,7 +121,11 @@ export default function AnimalCard(props:animalCardInterface) {
   useEffect(():void => {
     setPostHeart(postData.InterestPost === undefined || postData.InterestPost?.length === 0 ? false : true);
     return ;
-  }, [postData.InterestPost])
+  }, [postData.InterestPost]);
+
+  useEffect(() => {
+    setPostRepresentativeImage(postData.mateBoardPhotos);
+  }, [postData.mateBoardPhotos]);
 
   return (
     <div className={style.wrap} onClick={detailPostMoveHandler as MouseEventHandler}>

@@ -19,5 +19,6 @@ router.put('/updateContent', uploadInsertContentHandler, MateBoardController.upd
 router.put("/deleteContent", MateBoardController.deleteMateBoard);
 router.post('/interestContent', MateBoardController.interestMateBoard);
 router.get('/findByUserInterest', MateBoardController.findByUsersInterest);
+router.get("/update/findByIndex/:mateBoardIndexNumber", MateBoardController.updateLoadByIndexNumber);
 
 module.exports = router;

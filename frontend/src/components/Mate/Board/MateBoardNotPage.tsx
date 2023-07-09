@@ -11,7 +11,7 @@ export default function MateBoardNotPage() {
       content: '존재하지 않는 페이지입니다.',
     });
 
-    navigater('/mate/1');
+    navigater('/mate/board/1');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

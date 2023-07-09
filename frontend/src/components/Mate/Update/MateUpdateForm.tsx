@@ -7,10 +7,11 @@ import { UserType, userState } from '../../../recoil/user';
 import { useAlert } from '../../../hooks/useAlert';
 import { useModal } from '../../../hooks/useModal';
 import Controller from '../../../api/controller';
-import MateWritePetAdd from '../Write/MateWritePetAdd';
-import MateWriteTextEditorQuil from '../Write/MateWriteTextEditorQuil';
-import MateWriteMap from '../Write/MateWriteMap';
+import MateWritePetAdd from '../Common/MateWritePetAdd';
+// import MateWriteTextEditorQuil from '../Write/MateWriteTextEditorQuil';
+// import MateWriteMap from '../Write/MateWriteMap';
 import style from './MateUpdateForm.module.css';
+import MateForm from '../../UI/MateForm';
 
 interface MateFormDataInterface {
   animalsIndexNumber: number;
@@ -54,7 +55,7 @@ interface MateUpdateFormInterface {
 
 interface MateUpdateFormInput {
   animalsIndexNumber: number;
-  mateBoardIndexNumber: number;
+  mateBoardIndexNumber?: number;
   title: String;
   mateBoardCategory: String;
   amount: Number;
@@ -150,11 +151,12 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
             type: 'success',
             content: '메이트 게시글이 수정되었습니다.'
           });
-          navigate('/mate/1');
+          // navigate('/mate/1');
+          navigate(`/mate/detail/${MateFormData.mateBoardIndexNumber}`);
         } catch (err:any) {
           openAlert({
             type: 'error',
-            content: '업데이트 중 오류가 발생하였습니다.\r\n새로 고침 후 다시 시도해주세요'
+            content: '업데이트 중 오류가 발생하였습니다.\r\n새로고침 후 다시 시도해주세요'
           });
         }
       }
@@ -202,7 +204,9 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
       }
     }
 
-    myPetInfoLoad();
+    if(userInfo[0].account !== '') {
+      myPetInfoLoad();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myPetList.length]);
 
@@ -211,7 +215,7 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
       <MateWritePetAdd onClose={closeModal} myPetList={myPetList} setMyPetList={setMyPetList} />
     );
     openModal({
-      size: 'md',
+      size: 'sm',
       backDrop: false,
       content: <ModalContent />
     });
@@ -228,6 +232,14 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
       setValue('petBreeds', petFormUpdate[0].animalsCategory2);
       setValue('petWeight', petFormUpdate[0].animalsWeight);
       setValue('isNeutered', petFormUpdate[0].animalsNeutered.toString());
+
+      setError('petName', {message: ''});
+      setError('petGender', {message: ''});
+      setError('petAge', {message: ''});
+      setError('petSpecies', {message: ''});
+      setError('petBreeds', {message: ''});
+      setError('petWeight', {message: ''});
+      setError('isNeutered', {message: ''});
     } else {
       setValue('animalsIndexNumber', Number(e.target.value));
       setValue('petName', '');
@@ -263,7 +275,12 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
 
   return (
     <>
-      <form className={style.wrap} onSubmit={handleSubmit(onSubmit)}>
+    <MateForm onSubmitHandler={handleSubmit(onSubmit)} register={register} errors={errors}
+      mateBoardCategory={mateBoardCategory} myPetInfoSelect={myPetInfoSelect} myPetList={myPetList}
+      petAddModal={petAddModal} setValue={setValue} mapData={mapData}
+      mateBoardContent1={MateFormData?.mateBoardContent1} mateBoardContent2={MateFormData?.mateBoardContent2}
+      />
+      {/* <form className={style.wrap} onSubmit={handleSubmit(onSubmit)}>
         <div className={style.wrapRow}>
           <div className={style.wrapCol}>
             <label htmlFor='title'>제목</label>
@@ -527,11 +544,10 @@ export default function MateUpdateForm(props:MateUpdateFormInterface) {
             </div>
           </div>
         </div>
-
-      </form>
+      </form> */}
       <div className={style.buttonGroup}>
         <button type='button' onClick={handleSubmitCancle}>취소</button>
-        <button type='button' onClick={handleSubmit(onSubmit)}>등록</button>
+        <button type='button' onClick={handleSubmit(onSubmit)}>수정</button>
       </div>
     </>
   )

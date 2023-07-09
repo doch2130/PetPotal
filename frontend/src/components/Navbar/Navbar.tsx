@@ -153,7 +153,8 @@ export default function Navbar() {
           <nav className={style.navbarBottom}>
             <ul className={style.menu}>
               <li className={style.menuItem}>
-                <Link to="/mate/1" className={style.menuItemLink}>메이트</Link>
+                {/* <Link to="/mate/1" className={style.menuItemLink}>메이트</Link> */}
+                <Link to="/mate/board/1" className={style.menuItemLink}>메이트</Link>
               </li>
               <li className={style.menuItem}>
                 <Link to="#" className={style.menuItemLink} onClick={openPrepare}>병원</Link>
