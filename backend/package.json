@@ -2,10 +2,10 @@
   "name": "petpotal",
   "version": "0.0.1",
   "description": "2023 study project",
-  "main": "index4.js",
+  "main": "index.js",
   "scripts": {
-    "start": "nodemon index4.js",
-    "production": "cross-env NODE_ENV=production node index4",
+    "start": "nodemon index.js",
+    "production": "cross-env NODE_ENV=production node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "gruzam0615",
